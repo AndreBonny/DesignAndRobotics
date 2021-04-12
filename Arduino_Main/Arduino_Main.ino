@@ -2,8 +2,8 @@
 #include "LedControl.h"
 
 #define FASE_PIN 20
-#define LASER_PIN_L 48
-#define LASER_PIN_R 49
+#define LASER_PIN_L 50
+#define LASER_PIN_R 51
 
 #define MOT_R 1
 #define MOT_L 4
@@ -79,8 +79,8 @@ void loop() {
     digitalWrite(LASER_PIN_L, HIGH); //Laser ON
     digitalWrite(LASER_PIN_R, HIGH); //Laser ON
     //Suoni??
-    draw_scanning_R();
-    draw_scanning_L();
+    draw_scanning();
+    
     t = millis();
     while (millis() - t < T_straight) {
       following_forward();
@@ -98,6 +98,7 @@ void loop() {
   }
 
   if (str == ROCK_INT) {
+    draw_scanning();
     play(ROCK_SONG);
     delay(5000);
     digitalWrite(LASER_PIN_L, LOW);
@@ -106,19 +107,32 @@ void loop() {
   }
 
   if (str == SPEAK) {
-    //Parlare
-    //poi QRCode
-    //Occhi??
-    //Alla fine END_SPEAK
     draw_openclose();
+    
     play(GREETINGS);
-    delay(16000);
+    for(int i=0; i<4; i++) {
+      draw_openclose();
+      delay(3250);
+    }
+    
     play(ADVERTISE);
-    delay(23000);
+    for(int i=0; i<6; i++) {
+      draw_openclose();
+      delay(3250);
+    }
+    
     play(QRCODE);
-    delay(16000);
+    for(int i=0; i<4; i++) {
+      draw_openclose();
+      delay(3250);
+    }
+    
     play(BYE_GREETINGS);
-    delay(15000);
+    for(int i=0; i<4; i++) {
+      draw_openclose();
+      delay(3250);
+    }
+    
     serial_write(END_SPEAK);
   }
 
@@ -126,6 +140,7 @@ void loop() {
     draw_openclose();
     t = millis();
     while (millis() - t < T_straight) {
+      draw_openclose();
       following_backward();
     }
     Stop();

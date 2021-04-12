@@ -119,7 +119,7 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
 
     //Serial.printf("(face_center_x, face_center_y), (img_center_x, img_center_y)\n");
     //Serial.printf("(%d, %d), (%d, %d)\n", face_center_x, face_center_y, img_center_x, img_center_y);
-
+    
 
   }
 }
@@ -147,7 +147,7 @@ void Face_tracking() {
 
     distanza = Distanza();
 
-    if ( distanza < SOGLIA_DIST || boxes != NULL) {
+    if ((distanza > 0 && distanza <= SOGLIA_DIST) || boxes != NULL) {
       count = 0;
     }
     else {
@@ -155,6 +155,8 @@ void Face_tracking() {
     }
 
     if (boxes != NULL) {
+      serial_write_debug("DETECTED!\n");
+      delay(100);
       ledcWrite(ledChannel, 10);
       draw_face_boxes(image_matrix, boxes);
       dl_lib_free(boxes->score);
@@ -162,7 +164,8 @@ void Face_tracking() {
       dl_lib_free(boxes->landmark);
       dl_lib_free(boxes);
     } else {
-      //serial_write_debug("No face detected!\n");
+      serial_write_debug("No face detected!\n");
+      delay(100);
       ledcWrite(ledChannel, 0);
     }
 

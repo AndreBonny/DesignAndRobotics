@@ -92,6 +92,7 @@ void loop()
     */
     case READY:
       serial_write(MOV);
+      delay(10);
       Cstate = SCANNING;
       break;
 
@@ -135,14 +136,26 @@ void loop()
         trovato = Search();
         if (trovato)
         {
+          serial_write_debug("TROVATO");
+          delay(100);
           Cstate = TRACKING;
-          
         }
       }
       if (!trovato)
         Cstate = BACK;
       break;
 
+    /* Second searching state
+       Start Face Trackin and cont the cycles where a face is found
+    */
+    case TRACKING:
+      serial_write(SPEAK);
+      ledcAnalogWrite(tilt_ch, tilt_center);
+      serial_write_debug("Starting TRACKING");
+      Face_tracking();
+      Cstate = BACK;
+      center_head();
+      break;
 
     /* End of one complete cycle
        Send RESEt and change state
@@ -160,23 +173,9 @@ void loop()
       data = serial_read();
       if (data.length() > 0 && data == END_RES_POS) {
         //restart for a new cycle
-        delay(10000);
+        delay(5000);
         Cstate = READY;
       }
       break;
-
-
-    /* Second searching state
-       Start Face Trackin and cont the cycles where a face is found
-    */
-    case TRACKING:
-      serial_write(SPEAK);
-      adjust_tilt();
-      Face_tracking();
-      Cstate = BACK;
-      center_head();
-      break;
-
-
   }
 }

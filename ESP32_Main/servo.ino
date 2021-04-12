@@ -43,7 +43,6 @@ void scan() {
   tilt_position = 100;
   ledcAnalogWrite(tilt_ch, tilt_position);
 
-
   int    pan_start = 60;
   int    pan_end = 140;
   int    t_stop = 25;
@@ -69,6 +68,7 @@ bool Search() {
   int t_stop = 40;
   int passo = 2;
   long distance = 0;
+  
   tilt_position = tilt_center;
   ledcAnalogWrite(tilt_ch, tilt_position);
 
@@ -81,6 +81,8 @@ bool Search() {
       if (n == 1) {
         distance = Distanza();
         //Serial.printf("l: %li cm Angle = %d \n", distance, i);
+        serial_write_debug("Distance (search): " + String(distance));
+        delay(100);
         n = 2;
       }
       if (distance <= SOGLIA_DIST && distance > 0) {
@@ -96,6 +98,8 @@ bool Search() {
     while (millis() - timer < t_stop) {
       if (n == 1) {
         distance = Distanza();
+        serial_write_debug("Distance (search): " + String(distance));
+        delay(100);
         //Serial.printf("l: %li cm Angle = %d \n", distance, i);
         n = 2;
       }
@@ -108,15 +112,11 @@ bool Search() {
   return false;
 }
 
-void adjust_tilt() {
-  ledcAnalogWrite(tilt_ch, 150);
-}
-
 void rock() {
 
-  int tilt_start = 90;
-  int tilt_end = 110;
-  int t_stop = 40;
+  int tilt_start = 70;
+  int tilt_end = 90;
+  int t_stop = 60;
   int passo = 2;
   
   ledcAnalogWrite(pan_ch, pan_position);
@@ -129,4 +129,5 @@ void rock() {
     ledcAnalogWrite(tilt_ch, i);
     delay(t_stop);
   }
+  
 }
