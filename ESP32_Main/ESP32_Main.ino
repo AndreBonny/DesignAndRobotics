@@ -20,7 +20,7 @@ State Cstate;
 #define END_ROCK_INT "13"
 
 #define LED_BUILTIN 4
-#define MAX_ERROR 5
+#define MAX_ERROR 10
 #define SOGLIA_DIST 130
 
 
@@ -36,7 +36,7 @@ int tilt_ch = 2;
 int pan_ch = 4;
 
 int tilt_center = 130;
-int pan_center = 87;
+int pan_center = 100;
 
 int tilt_position;
 int pan_position;
@@ -74,7 +74,7 @@ void setup() {
 
 
   Cstate = READY;
-  delay(100);
+  delay(2000);
 }
 
 
@@ -92,8 +92,8 @@ void loop()
     */
     case READY:
       serial_write(MOV);
-      delay(10);
       Cstate = SCANNING;
+      delay(500);
       break;
 
     /* Scan state
@@ -105,6 +105,8 @@ void loop()
         //body has finished to move
         ledcAnalogWrite(pan_ch, pan_center);
         Cstate = LOOKING;
+        //serial_write_debug("nxt LK");
+        //delay(500);
       }
       else
       {
@@ -125,6 +127,8 @@ void loop()
       } while (data.length() < 0 || data != END_ROCK_INT);
       center_head();
       Cstate = SEARCHING;
+      //serial_write_debug("nxt SRCH");
+      //delay(500);
       break;
 
     /* Ultrasound search state
@@ -132,35 +136,47 @@ void loop()
        then change state according to the result
     */
     case SEARCHING:
+      delay(1000);
       for (int i = 0; i < 4 && !trovato; i++) {
         trovato = Search();
-        if (trovato)
-        {
-          serial_write_debug("TROVATO");
-          delay(100);
-          Cstate = TRACKING;
-        }
       }
-      if (!trovato)
+      if (trovato) {
+        // Serial.printf("TROVATO");
+        //  serial_write_debug("Ult-F nxt TRK");
+        // delay(500);
+        Cstate = TRACKING;
+        trovato = false;
+      }
+      else {
+        //Serial.printf("NON TROVATO");
+        //serial_write_debug("Ult-NF nxt BCK");
+        //delay(500);
         Cstate = BACK;
+      }
+
       break;
 
     /* Second searching state
        Start Face Trackin and cont the cycles where a face is found
     */
     case TRACKING:
+      Serial.printf("Starting tracking");
       serial_write(SPEAK);
-      ledcAnalogWrite(tilt_ch, tilt_center);
-      serial_write_debug("Starting TRACKING");
+      ledcAnalogWrite(tilt_ch, 160);
+      //serial_write_debug("Str TRK");
+      //stop message read inside face_tracking function
       Face_tracking();
       Cstate = BACK;
-      center_head();
+      // serial_write_debug("end TRK nxt BCK");
+      // delay(500);
+
       break;
 
     /* End of one complete cycle
        Send RESEt and change state
     */
     case BACK:
+      center_head();
       serial_write(RES_POS);
       Cstate = WAIT;
       break;
