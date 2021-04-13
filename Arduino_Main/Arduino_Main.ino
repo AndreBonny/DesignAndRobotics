@@ -37,7 +37,7 @@ void setup() {
   Serial1.begin(115200);
   Serial1.setTimeout(1);
   Serial.begin(115200);
-  Serial3.begin(9600);
+  Serial3.begin(115200);
 
   serial_write_debug("START");
   while (serial_read() != ESP_READY) {
@@ -79,8 +79,8 @@ void loop() {
     digitalWrite(LASER_PIN_L, HIGH); //Laser ON
     digitalWrite(LASER_PIN_R, HIGH); //Laser ON
     //Suoni??
-    draw_scanning();
-    
+    draw_scanning_R();
+    draw_scanning_L();
     t = millis();
     while (millis() - t < T_straight) {
       following_forward();
@@ -88,7 +88,7 @@ void loop() {
     Stop();
     delay(200);
     serial_write(END_MOV);
-
+    serial_write_debug("Invio END_MOV");
     draw_openclose();
 
     // Dopo END_MOV decidere la fase di looking Parlare? e spegnere laser
@@ -98,55 +98,64 @@ void loop() {
   }
 
   if (str == ROCK_INT) {
-    draw_scanning();
+    serial_write_debug("Ricevuto ROCK_INT");
     play(ROCK_SONG);
     delay(5000);
     digitalWrite(LASER_PIN_L, LOW);
     digitalWrite(LASER_PIN_R, LOW);
     serial_write(END_ROCK_INT);
+    serial_write_debug("Invio END_ROCK_INT");
   }
 
   if (str == SPEAK) {
+    serial_write_debug("Ricevuto SPEAK");
     draw_openclose();
-    
+
     play(GREETINGS);
-    for(int i=0; i<4; i++) {
+    for (int i = 0; i < 4; i++) {
+      serial_write_debug("Traccia GREETINGS");
       draw_openclose();
       delay(3250);
     }
-    
+
     play(ADVERTISE);
-    for(int i=0; i<6; i++) {
+    for (int i = 0; i < 6; i++) {
+      serial_write_debug("Traccia ADVERTISE");
       draw_openclose();
       delay(3250);
     }
-    
+
     play(QRCODE);
-    for(int i=0; i<4; i++) {
+    for (int i = 0; i < 4; i++) {
+      serial_write_debug("Traccia QRCODE");
       draw_openclose();
       delay(3250);
     }
-    
+
     play(BYE_GREETINGS);
-    for(int i=0; i<4; i++) {
+    for (int i = 0; i < 4; i++) {
+      serial_write_debug("Traccia BYE_GREETINGS");
       draw_openclose();
       delay(3250);
     }
-    
+
     serial_write(END_SPEAK);
+    serial_write_debug("Invio END_SPEAK");
   }
 
+
   if (str == RES_POS) {
+    serial_write_debug("Riccevuto RES_POS");
     draw_openclose();
     t = millis();
     while (millis() - t < T_straight) {
-      draw_openclose();
       following_backward();
     }
     Stop();
     delay(200);
     draw_openclose();
     serial_write(END_RES_POS);
+    serial_write_debug("Invio END_RES_POS");
   }
 
 }

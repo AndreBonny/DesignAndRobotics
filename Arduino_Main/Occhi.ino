@@ -19,6 +19,7 @@ void Inizializza_Occhi() {
   }
 }
 
+
 byte open_eye_1_0[8] = {
   B00000000,
   B00111000,
@@ -237,36 +238,38 @@ void write_eye(byte eye[8], int index, int del) {
   }
 }
 
-void draw_scanning() {
+void draw_scanning_R() {
   write_eye(open_eye_1_0, 0, 500);
-  write_eye(open_eye_1_1, 1, 500);
-  
   write_eye(open_eye_2_0, 0, 500);
-  write_eye(open_eye_2_1, 1, 500);
-  
   write_eye(open_eye_3_0, 0, 500);
-  write_eye(open_eye_3_1, 1, 500);
-  
   //write_eye(open_eye_4_0, 0, 500);
   //write_eye(empty_eye, 0, 500);
+}
+
+void draw_scanning_L() {
+  write_eye(open_eye_1_1, 1, 500);
+  write_eye(open_eye_2_1, 1, 500);
+  write_eye(open_eye_3_1, 1, 500);
+  //write_eye(open_eye_4_1, 1, 500);
+  //write_eye(empty_eye, 1, 500);
 }
 
 void draw_openclose() {
   write_eye(open_eye_1_0, 0, 0);
   write_eye(open_eye_1_1, 1, 0);
-  delay(20);
+  delay(50);
 
   write_eye(open_eye_2_0, 0, 50);
   write_eye(open_eye_2_1, 1, 50);
-  delay(20);
+  delay(50);
 
   write_eye(open_eye_3_0, 0, 50);
   write_eye(open_eye_3_1, 1, 50);
-  delay(20);
+  delay(50);
 
   write_eye(open_eye_4_0, 0, 50);
   write_eye(open_eye_4_1, 1, 50);
-  delay(20);
+  delay(50);
 
   write_eye(closed_eye_0, 0, 200);
   write_eye(closed_eye_1, 1, 200);
@@ -274,31 +277,37 @@ void draw_openclose() {
 
   write_eye(open_eye_4_0, 0, 50);
   write_eye(open_eye_4_1, 1, 50);
-  delay(20);
+  delay(50);
 
   write_eye(open_eye_3_0, 0, 50);
   write_eye(open_eye_3_1, 1, 50);
-  delay(20);
+  delay(50);
 
   write_eye(open_eye_2_0, 0, 50);
   write_eye(open_eye_2_1, 1, 50);
-  delay(20);
+  delay(50);
 
   write_eye(open_eye_1_0, 0, 50);
   write_eye(open_eye_1_1, 1, 50);
-  
+  delay(50);
 }
 
-void draw_scarred() {
+
+
+void draw_scarred_R() {
   write_eye(open_eye_1_0, 0, 50);
-  write_eye(open_eye_1_1, 1, 50);
-  
   write_eye(scarred_eye_2_0, 0, 50);
-  write_eye(scarred_eye_2_1, 1, 50);
-  
   write_eye(scarred_eye_3_0, 0, 50);
-  write_eye(scarred_eye_3_1, 1, 50);
-  
   write_eye(scarred_eye_4_0, 0, 500);
+}
+
+void draw_scarred_L() {
+  write_eye(open_eye_1_1, 1, 50);
+  write_eye(scarred_eye_2_1, 1, 50);
+  write_eye(scarred_eye_3_1, 1, 50);
   write_eye(scarred_eye_4_1, 1, 500);
+}
+
+void prova() {
+  lc.setColumn(0, 2, B11001100);
 }

@@ -85,6 +85,7 @@ void loop()
     ledcAnalogWrite(tilt_ch, 150);
     Face_tracking();
     Serial.println("FINE TRACKING");
+    trovato = false;
   }
   if (!trovato) {
     Serial.println("NON TROVATO");
