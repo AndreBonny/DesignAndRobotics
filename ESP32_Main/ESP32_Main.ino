@@ -1,8 +1,13 @@
 #include <SR04.h>
+#include <WiFi.h>
+#include <WebServer.h>
+#include <AutoConnect.h>
+#include <DNSServer.h>
+
 #include "esp_camera.h"
 #include "fd_forward.h"
 
-enum State {READY, SCANNING, LOOKING, SEARCHING, SPEAKING, TRACKING, BACK, WAIT};
+enum State {READY, SCANNING, LOOKING, SEARCHING, SPEAKING, TRACKING, BACK, WAIT, INGAME};
 State Cstate;
 
 #define MOV "1"
@@ -18,6 +23,7 @@ State Cstate;
 #define FASE_2 "11"
 #define ROCK_INT "12"
 #define END_ROCK_INT "13"
+#define START_GAME "14"
 
 #define LED_BUILTIN 4
 #define MAX_ERROR 10
@@ -41,6 +47,11 @@ int pan_center = 100;
 int tilt_position;
 int pan_position;
 
+WebServer server(80);
+AutoConnect Portal(server);
+
+//DNSServer dnsServer;
+
 bool trovato = false;
 
 int Fase;
@@ -54,6 +65,10 @@ void setup() {
 
   Inizializza_servo();
   Inizializza_camera();
+  Serial.println("Before");
+  Inizializza_webserver();
+  Serial.println("After");
+  
   delay(100);
   serial_write(ESP_READY);
   delay(10);
@@ -73,16 +88,19 @@ void setup() {
     }*/
 
 
-  Cstate = READY;
+  Cstate = INGAME;
   delay(2000);
 }
 
-
+int inited = 0;
 
 void loop()
 {
 
-  String data;
+  String data = serial_read();
+  
+  if(data.length() > 0 && data == START_GAME)
+    Cstate = INGAME;
 
   //Phase 1
   switch (Cstate)
@@ -100,7 +118,7 @@ void loop()
        Move head while waiting for the END_MOV
     */
     case SCANNING:
-      data = serial_read();
+      //data = serial_read();
       if (data.length() > 0 && data == END_MOV) {
         //body has finished to move
         ledcAnalogWrite(pan_ch, pan_center);
@@ -192,6 +210,17 @@ void loop()
         delay(5000);
         Cstate = READY;
       }
+      break;
+   
+    case INGAME:
+      /*dnsServer.processNextRequest();
+      server.handleClient();
+      if(!inited) {
+        Serial.println("Waiting for connection");   
+        inited = 1;
+      }*/
+      Portal.begin();
+      Portal.handleClient();
       break;
   }
 }
