@@ -2,8 +2,8 @@ const int total_questions = 10;
 const int num_questions = 5;
 int current_question = 0;
 
-String questions[] = {"question1","question2","question3","question4","question5","question6","question7","question8","question9","question10"};
-String answers[] = {"answer1","answer2","answer3","answer4","answer5","answer6","answer7","answer8","answer9","answer10"};
+String questions[] = {"question1", "question2", "question3", "question4", "question5", "question6", "question7", "question8", "question9", "question10"};
+String answers[] = {"answer1", "answer2", "answer3", "answer4", "answer5", "answer6", "answer7", "answer8", "answer9", "answer10"};
 
 String randomQuestions[num_questions];
 String randomAnswers[num_questions];
@@ -12,8 +12,8 @@ bool currentlyConnected;
 IPAddress connectedIP;
 
 int contains(int *indexes, int num, int leng) {
-  for(int i=0; i<leng; i++) {
-    if(indexes[i] == num)
+  for (int i = 0; i < leng; i++) {
+    if (indexes[i] == num)
       return 1;
   }
   return 0;
@@ -21,18 +21,18 @@ int contains(int *indexes, int num, int leng) {
 
 int* get_random_indexes(int length, int upper_bound) {
   int* indexes = (int*) malloc(length * sizeof(int));
-  for(int i=0; i<length; i++)
+  for (int i = 0; i < length; i++)
     indexes[i] = -1;
-  if(length > upper_bound) {
+  if (length > upper_bound) {
     printf("Invalid! You are requesting more numbers than the upper_bound");
     return indexes;
   }
 
   int last_index = 0;
-  while(contains(indexes, -1, length)) {
+  while (contains(indexes, -1, length)) {
     //int num = (rand() % (upper_bound - 0)) + 0;
     int num = random(upper_bound);
-    if(!contains(indexes, num, length)) {
+    if (!contains(indexes, num, length)) {
       indexes[last_index] = num;
       last_index++;
     }
@@ -42,7 +42,7 @@ int* get_random_indexes(int length, int upper_bound) {
 
 void initialize_random_questions() {
   int* indexes = get_random_indexes(num_questions, total_questions);
-  for(int i=0; i<num_questions; i++) {
+  for (int i = 0; i < num_questions; i++) {
     randomQuestions[i] = questions[indexes[i]];
     randomAnswers[i] = answers[indexes[i]];
   }
@@ -68,27 +68,16 @@ void Inizializza_webserver() {
 
   server.on("/style.css", handle_css);
   server.on("/", handle_home_page);
-<<<<<<< HEAD
+
   server.on("/start", handle_question);
   server.on("/next", handle_next);
   server.on("/question", handle_question);
   server.on("/disconnect", handle_disconnect);
-  
+
   server.on("/background.jpg", []() {
     getSpiffImg("/background.jpg", "image/jpg");
-=======
-  server.on("/begin", handle_first_question);
-
-  server.on("/background", handle_bg);
-
-  /*server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/home_page.html", "text/html", false, prova);
   });
 
-  server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/style.css", "text/css", false, NULL);
->>>>>>> 5360d92e4463b89001e92a504e0199ad704d1ccf
-  });
   server.on("/logo_footer.png", []() {
     getSpiffImg("/logo_footer.png", "image/png");
   } );
@@ -100,12 +89,7 @@ void Inizializza_webserver() {
 }
 
 void configure_portal() {
-<<<<<<< HEAD
   AutoConnectConfig  Config("MuseumRobot", "");
-=======
-  // esp32ap
-  AutoConnectConfig  Config("", "passpass");    // SoftAp name is determined at runtime
->>>>>>> 5360d92e4463b89001e92a504e0199ad704d1ccf
 
   Config.autoReconnect = true;                  // Enable auto-reconnect
   Config.autoSave = AC_SAVECREDENTIAL_NEVER;    // No save credential
@@ -118,52 +102,31 @@ void configure_portal() {
   Portal.config(Config);                        // Configure AutoConnect
 }
 
-<<<<<<< HEAD
 void getSpiffImg(String path, String TyPe) {
   if (SPIFFS.exists(path)) {
     File file = SPIFFS.open(path, "r");
     server.streamFile(file, TyPe);
     file.close();
-=======
-void handle_bg() {
-  Serial.println("BACKGROUND");
-  String bytes = "";
-  File file = SPIFFS.open("/background.jpg", "r");
-  if(file) {
-    Serial.println("BEFORE");
-    char str[1024];
-    file.readBytes(str, 1024);
-    
-    Serial.println(str);
-    Serial.println("AFTER");
-    Serial.print("Str is empty?");
-   // Serial.println(str == "");
-    
-    server.send(200, "image/jpeg", str);
-  } else {
-    Serial.println("Failed to get background");
->>>>>>> 5360d92e4463b89001e92a504e0199ad704d1ccf
   }
 }
 
 void handle_css() {
   handle_page("/style.css", true);
 }
-<<<<<<< HEAD
 
 void handle_home_page() {
-  if(!currentlyConnected) {
+  if (!currentlyConnected) {
     currentlyConnected = true;
     current_question = 0;
-    
+
     initialize_random_questions();
-    for(int i=0; i<num_questions; i++) {
+    for (int i = 0; i < num_questions; i++) {
       Serial.print("Question #" + String(i) + " ");
       Serial.println(randomQuestions[i]);
       Serial.print("Answer #" + String(i) + " ");
       Serial.println(randomAnswers[i]);
     }
-    
+
     Serial.println("Home page");
     handle_page("/home_p.html", false);
   } else {
@@ -173,11 +136,11 @@ void handle_home_page() {
 
 void handle_question() {
   current_question++;
-  server.send(200, "text/html", sendQuestionPage(current_question, randomQuestions[current_question-1]));
+  server.send(200, "text/html", sendQuestionPage(current_question, randomQuestions[current_question - 1]));
 }
 
 void handle_next() {
-  if(current_question < num_questions) {
+  if (current_question < num_questions) {
     server.send(200, "text/html", sendPResults(current_question, "Correct!"));
   } else {
     currentlyConnected = false;
@@ -186,22 +149,15 @@ void handle_next() {
 }
 
 void handle_disconnect() {
-  if(currentlyConnected) {
-    // Portal.ConnectExit(connectedIP);
+  if (currentlyConnected) {
+    currentlyConnected = false;
+    server.send(200, "text/plain", "Disconnected");
+    server.close();
     WiFi.disconnect();
+    inited = 0;
+    Cstate = BACK;
   }
   currentlyConnected = false;
-  
-=======
-void handle_first_question() {
-  Serial.println("First question");
-  handle_page("/first_question.html", false);
-}
-
-void handle_home_page() {
-  Serial.println("Home page");
-  handle_page("/home_page.html", false);
->>>>>>> 5360d92e4463b89001e92a504e0199ad704d1ccf
 }
 
 void handle_page(String page_name, bool is_css) {
@@ -273,9 +229,9 @@ String sendPResults(int quest_num, String result) {
   ptr += "        }";
   ptr += "    </script>";
   ptr += "</html>";
-  
+
   return ptr;
-  
+
 }
 
 String sendQuestionPage(int quest_num, String question) {
@@ -329,7 +285,7 @@ String sendQuestionPage(int quest_num, String question) {
   ptr += "        }";
   ptr += "    </script>";
   ptr += "</html>";
-  
+
   return ptr;
 }
 

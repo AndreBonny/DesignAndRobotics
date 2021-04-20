@@ -93,7 +93,7 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
   for (int i = 0; i < boxes->len; i++) {
     //do {
     x = ((int)boxes->box[i].box_p[0]);
-    h_w =((int)boxes->box[i].box_p[2] - x + 1) / 2;
+    h_w = ((int)boxes->box[i].box_p[2] - x + 1) / 2;
 
     y = ((int)boxes->box[i].box_p[1]);
     h_h = ((int)boxes->box[i].box_p[3] - y + 1) / 2;
@@ -128,13 +128,13 @@ int Face_tracking() {
   String data;
   String msg;
 
-  if(Fase==1){
+  if (Fase == 1) {
     msg = END_SPEAK_1;
   }
-  else{
+  else {
     msg = END_SPEAK_2;
   }
-     
+
 
   do {
 
@@ -181,5 +181,5 @@ int Face_tracking() {
 
   } while (count < MAX_ERROR && !exit);
 
-  return 0; 
+  return 0;
 }

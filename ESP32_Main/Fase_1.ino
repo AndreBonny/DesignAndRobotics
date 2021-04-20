@@ -2,8 +2,8 @@ String data;
 
 
 
-void fase1(){
-    //Phase 1
+void fase1() {
+  //Phase 1
   switch (Cstate)
   {
     /* Start state
@@ -76,15 +76,15 @@ void fase1(){
       ledcAnalogWrite(tilt_ch, 160);
       //stop message read inside face_tracking function
       fine = Face_tracking();
-      if (fine == 1){
-      Cstate = BACK;
-      delay(200);
+      if (fine == 1) {
+        Cstate = BACK;
+        delay(200);
       }
-      else if(fine == 0){
+      else if (fine == 0) {
         serial_write(STOP_SPEAK_1);
         Cstate = SAD;
       }
-      else{
+      else {
         Cstate = BACK;
       }
       break;
@@ -99,11 +99,11 @@ void fase1(){
       break;
 
     /* Sad because person go away while it's talking
-    
+
     */
     case SAD:
-      ledcAnalogWrite(tilt_ch,110);
-      while(serial_read() != END_SPEAK_1){
+      ledcAnalogWrite(tilt_ch, 110);
+      while (serial_read() != END_SPEAK_1) {
         //Wait
       }
       Cstate = BACK;
@@ -123,7 +123,7 @@ void fase1(){
       }
       break;
 
-      default:
-        break;
+    default:
+      break;
   }
 }

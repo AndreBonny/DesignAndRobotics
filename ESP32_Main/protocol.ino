@@ -5,7 +5,7 @@ void serial_write(String input) {
 }
 
 void serial_write_debug(String input) {
-  input = "\n DEBUG ESP " + input +"\n";
+  input = "\n DEBUG ESP " + input + "\n";
   char* cString = (char*) malloc(sizeof(char) * (input.length() + 1));
   input.toCharArray(cString, input.length() + 1);
   Serial.write(cString);

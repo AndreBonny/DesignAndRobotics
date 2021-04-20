@@ -2,7 +2,7 @@
 int inited = 0;
 
 void fase2() {
-      //Phase 2
+  //Phase 2
   switch (Cstate)
   {
     /* Start state
@@ -28,11 +28,11 @@ void fase2() {
       else
       {
         /*ledcAnalogWrite(pan_ch,70);
-        delay(200);
-        ledcAnalogWrite(pan_ch,pan_center);
-        delay(200);
-        ledcAnalogWrite(pan_ch,130);
-        delay(200);*/
+          delay(200);
+          ledcAnalogWrite(pan_ch,pan_center);
+          delay(200);
+          ledcAnalogWrite(pan_ch,130);
+          delay(200);*/
       }
       break;
 
@@ -68,14 +68,14 @@ void fase2() {
       ledcAnalogWrite(tilt_ch, 160);
       //stop message read inside face_tracking function
       fine = Face_tracking();
-     if(fine == 0) {
+      if (fine == 0) {
         serial_write(STOP_SPEAK_2);
         Cstate = SAD;
       }
-      else if ( fine == 2){
+      else if ( fine == 2) {
         Cstate = INGAME;
       }
-      else{
+      else {
         Cstate = BACK;
       }
 
@@ -85,14 +85,14 @@ void fase2() {
       ledcAnalogWrite(tilt_ch, 160);
       //stop message read inside face_tracking function
       fine = Face_tracking();
-      if(fine == 0) {
+      if (fine == 0) {
         serial_write(STOP_SPEAK_2);
         Cstate = SAD;
       }
-      else if ( fine == 1){
+      else if ( fine == 1) {
         Cstate = BACK;
       }
-      else{
+      else {
         Cstate = BACK;
       }
 
@@ -121,8 +121,8 @@ void fase2() {
       break;
 
     case SAD:
-      ledcAnalogWrite(tilt_ch,110);
-      while(serial_read() != END_SPEAK_2){
+      ledcAnalogWrite(tilt_ch, 110);
+      while (serial_read() != END_SPEAK_2) {
         //Wait
       }
       Cstate = BACK;
@@ -130,15 +130,16 @@ void fase2() {
 
     case INGAME:
       if (!inited) {
-      Serial.println("Waiting for connection");
-      inited = 1;
+        Inizializza_webserver();
+        Serial.println("Waiting for connection");
+        inited = 1;
       }
       Portal.begin();
       Portal.handleClient();
       break;
-    
-     default:
-        break;
+
+    default:
+      break;
   }
 
 
