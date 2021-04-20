@@ -7,7 +7,7 @@
 #include "esp_camera.h"
 #include "fd_forward.h"
 
-enum State {READY, SCANNING, LOOKING, SEARCHING , TRACKING, BACK, WAIT, INGAME, SAD, MOVEMENT};
+enum State {READY, SCANNING, LOOKING, SEARCHING , TRACKING, BACK, WAIT, INGAME, SAD, MOVEMENT, EXPLAINING };
 State Cstate;
 
 #define ARD_READY "1"
@@ -61,7 +61,7 @@ AutoConnect Portal(server);
 bool trovato = false;
 
 int Fase;
-
+int fine;
 String msg = "";
 
 void setup() {

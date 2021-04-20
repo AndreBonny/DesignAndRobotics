@@ -120,18 +120,33 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
   }
 }
 
-bool Face_tracking() {
-
+int Face_tracking() {
+  int ret;
   int count = 0;
   long distanza;
   bool exit = false;
   String data;
+  String msg;
+
+  if(Fase==1){
+    msg = END_SPEAK_1;
+  }
+  else{
+    msg = END_SPEAK_2;
+  }
+     
 
   do {
 
     data = serial_read();
-    if (data.length() > 0 && data == END_SPEAK_1) {
+    if (data.length() > 0 && data == msg) {
       exit = true;
+      return 1;
+    }
+
+    if (data.length() > 0 && data == START_GAME) {
+      exit = true;
+      return 2;
     }
 
     camera_fb_t * frame;
@@ -166,10 +181,5 @@ bool Face_tracking() {
 
   } while (count < MAX_ERROR && !exit);
 
-  if(!exit){
-    return false;
-  }
-
-  return true;
-
+  return 0; 
 }

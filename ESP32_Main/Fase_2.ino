@@ -67,9 +67,34 @@ void fase2() {
       serial_write(SPEAK_2);
       ledcAnalogWrite(tilt_ch, 160);
       //stop message read inside face_tracking function
-      Face_tracking();
-      Cstate = BACK;
-      delay(200);
+      fine = Face_tracking();
+     if(fine == 0) {
+        serial_write(STOP_SPEAK_2);
+        Cstate = SAD;
+      }
+      else if ( fine == 2){
+        Cstate = INGAME;
+      }
+      else{
+        Cstate = BACK;
+      }
+
+      break;
+
+    case EXPLAINING:
+      ledcAnalogWrite(tilt_ch, 160);
+      //stop message read inside face_tracking function
+      fine = Face_tracking();
+      if(fine == 0) {
+        serial_write(STOP_SPEAK_2);
+        Cstate = SAD;
+      }
+      else if ( fine == 1){
+        Cstate = BACK;
+      }
+      else{
+        Cstate = BACK;
+      }
 
       break;
 
@@ -95,7 +120,14 @@ void fase2() {
       }
       break;
 
-      
+    case SAD:
+      ledcAnalogWrite(tilt_ch,110);
+      while(serial_read() != END_SPEAK_2){
+        //Wait
+      }
+      Cstate = BACK;
+      break;
+
     case INGAME:
       if (!inited) {
       Serial.println("Waiting for connection");
