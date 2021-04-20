@@ -1,0 +1,64 @@
+String get_home_page() {
+  String home_page = "";
+  home_page += "<!DOCTYPE html>";
+  home_page += "<html>";
+  home_page += "  <head>";
+  home_page += "    <meta name=viewport content=width=device-width, initial-scale=1.0, user-scalable=no>";
+  home_page += "    <title>Welcome page</title>";
+  home_page += "    <style type=\"text/css\">";
+  home_page += "      html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}";
+  home_page += "        body{margin-top: 50px; background-image: url(\"background.jpg\"); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%}";
+  home_page += "        h1 {color: white; font-size: 50px; margin: 50px auto 30px;}";
+  home_page += "        h3 {color: white; margin-bottom: 50px;}";
+  home_page += "        p {font-size: 25px; color: white; margin-bottom: 10px;}";
+  home_page += "        .button {display: block;width: 80px;background-color: #3498db;border: none;color: white;padding: 13px 30px;text-decoration: none; font-size: 25px;margin: 0px auto 35px;cursor: pointer;border-radius: 4px;}";
+  home_page += "        .button-on {background-color: #3498db;}";
+  home_page += "        .button-on:active {background-color: #2980b9;}";
+  home_page += "        .button-off {background-color: #34495e;}";
+  home_page += "        .button-off:active {background-color: #2c3e50;}";
+  home_page += "    </style>";
+  home_page += "  </head>";
+  home_page += "  <body>";
+  home_page += "    <h1>Space questionnaire</h1>";
+  home_page += "    <br><br><br><br><br><br><br><br><br><br>";
+  home_page += "    <p>The robot is studying also humans and is testing their knowledge about space.</p><br>";
+  home_page += "    <p>Answer as best as you can to increase the media!</p>";
+  home_page += "    <br><br>";
+  home_page += "    <a class=\"button button-on\" href=\"/begin\">Begin</a>";
+  home_page += "  </body>";
+  home_page += "</html>";
+  return home_page;
+}
+
+String get_first_question() {
+  String first_question = "";
+  first_question += "<!DOCTYPE html> ";
+  first_question += "  <html>";
+  first_question += "    <head>";
+  first_question += "      <meta name=viewport content=width=device-width, initial-scale=1.0, user-scalable=no>";
+  first_question += "      <title>LED Control</title>";
+  first_question += "      <style>";
+  first_question += "        html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}";
+  first_question += "          body{margin-top: 50px; background-image: url(\"background.jpg\"); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;}";
+  first_question += "          h1 {color: white; font-size: 50px; margin: 50px auto 30px;}";
+  first_question += "          h3 {color: white; margin-bottom: 50px;}";
+  first_question += "          p {font-size: 25px; color: white; margin-bottom: 10px;}";
+  first_question += "          .button {display: block;width: 80px;background-color: #3498db;border: none;color: white;padding: 13px 30px;text-decoration: none; font-size: 25px;margin: 0px auto 35px;cursor: pointer;border-radius: 4px;}";
+  first_question += "          .button-on {background-color: #3498db;}";
+  first_question += "          .button-on:active {background-color: #2980b9;}";
+  first_question += "          .button-off {background-color: #34495e;}";
+  first_question += "          .button-off:active {background-color: #2c3e50;}";
+  first_question += "      </style>";
+  first_question += "    </head>";
+  first_question += "    <body>";
+  first_question += "      <h1>Space questionnaire</h1>";
+  first_question += "      <h3>Answer this questions to make the robot happy!</h3>";
+  first_question += "      <br><br><br><br><br><br>";
+  first_question += "      <p>Question 1: </p>";
+  first_question += "      <h3>Is this museum beautiful?</h3>";
+  first_question += "      <a class=\"button button-on\" href=\"#\">True</a>";
+  first_question += "      <a class=\"button button-off\" href=\"#\">False</a>";
+  first_question += "    </body>";
+  first_question += "  </html>";
+  return first_question;
+}

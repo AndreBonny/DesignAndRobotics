@@ -1,9 +1,11 @@
 #include <SR04.h>
-#include <WiFi.h>
+//#include <WiFi.h>
 #include <WebServer.h>
 #include <AutoConnect.h>
-#include <DNSServer.h>
+//#include <DNSServer.h>
+//#include <ESPAsyncWebServer.h>
 
+#include "SPIFFS.h"
 #include "esp_camera.h"
 #include "fd_forward.h"
 
@@ -65,9 +67,7 @@ void setup() {
 
   Inizializza_servo();
   Inizializza_camera();
-  Serial.println("Before");
   Inizializza_webserver();
-  Serial.println("After");
   
   delay(100);
   serial_write(ESP_READY);
@@ -213,12 +213,10 @@ void loop()
       break;
    
     case INGAME:
-      /*dnsServer.processNextRequest();
-      server.handleClient();
       if(!inited) {
         Serial.println("Waiting for connection");   
         inited = 1;
-      }*/
+      }
       Portal.begin();
       Portal.handleClient();
       break;
