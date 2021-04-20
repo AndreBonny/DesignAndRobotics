@@ -48,11 +48,8 @@ void setup() {
   }
   serial_write_debug("ESP READY");
   // Controllo Fase
-  /*   if (digitalRead(FASE_PIN) == 1)
-     serial_write(FASE_1);
-     if (digitalRead(FASE_PIN) == 0)
-     serial_write(FASE_2);
-  */
+
+
   Inizializza_sensori();
   Inizializza_Motori();
   Inizializza_Occhi();
@@ -66,6 +63,12 @@ void setup() {
   delay(10);
   serial_write_debug("ARDUINO READY");
   draw_openclose();
+  delay(500);
+  if (digitalRead(FASE_PIN) == 1)
+    serial_write(FASE_1);
+  if (digitalRead(FASE_PIN) == 0)
+    serial_write(FASE_2);
+
 }
 
 

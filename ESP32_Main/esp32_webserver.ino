@@ -68,6 +68,7 @@ void Inizializza_webserver() {
 
   server.on("/style.css", handle_css);
   server.on("/", handle_home_page);
+<<<<<<< HEAD
   server.on("/start", handle_question);
   server.on("/next", handle_next);
   server.on("/question", handle_question);
@@ -75,6 +76,18 @@ void Inizializza_webserver() {
   
   server.on("/background.jpg", []() {
     getSpiffImg("/background.jpg", "image/jpg");
+=======
+  server.on("/begin", handle_first_question);
+
+  server.on("/background", handle_bg);
+
+  /*server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/home_page.html", "text/html", false, prova);
+  });
+
+  server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/style.css", "text/css", false, NULL);
+>>>>>>> 5360d92e4463b89001e92a504e0199ad704d1ccf
   });
   server.on("/logo_footer.png", []() {
     getSpiffImg("/logo_footer.png", "image/png");
@@ -87,7 +100,12 @@ void Inizializza_webserver() {
 }
 
 void configure_portal() {
+<<<<<<< HEAD
   AutoConnectConfig  Config("MuseumRobot", "");
+=======
+  // esp32ap
+  AutoConnectConfig  Config("", "passpass");    // SoftAp name is determined at runtime
+>>>>>>> 5360d92e4463b89001e92a504e0199ad704d1ccf
 
   Config.autoReconnect = true;                  // Enable auto-reconnect
   Config.autoSave = AC_SAVECREDENTIAL_NEVER;    // No save credential
@@ -100,17 +118,38 @@ void configure_portal() {
   Portal.config(Config);                        // Configure AutoConnect
 }
 
+<<<<<<< HEAD
 void getSpiffImg(String path, String TyPe) {
   if (SPIFFS.exists(path)) {
     File file = SPIFFS.open(path, "r");
     server.streamFile(file, TyPe);
     file.close();
+=======
+void handle_bg() {
+  Serial.println("BACKGROUND");
+  String bytes = "";
+  File file = SPIFFS.open("/background.jpg", "r");
+  if(file) {
+    Serial.println("BEFORE");
+    char str[1024];
+    file.readBytes(str, 1024);
+    
+    Serial.println(str);
+    Serial.println("AFTER");
+    Serial.print("Str is empty?");
+   // Serial.println(str == "");
+    
+    server.send(200, "image/jpeg", str);
+  } else {
+    Serial.println("Failed to get background");
+>>>>>>> 5360d92e4463b89001e92a504e0199ad704d1ccf
   }
 }
 
 void handle_css() {
   handle_page("/style.css", true);
 }
+<<<<<<< HEAD
 
 void handle_home_page() {
   if(!currentlyConnected) {
@@ -153,6 +192,16 @@ void handle_disconnect() {
   }
   currentlyConnected = false;
   
+=======
+void handle_first_question() {
+  Serial.println("First question");
+  handle_page("/first_question.html", false);
+}
+
+void handle_home_page() {
+  Serial.println("Home page");
+  handle_page("/home_page.html", false);
+>>>>>>> 5360d92e4463b89001e92a504e0199ad704d1ccf
 }
 
 void handle_page(String page_name, bool is_css) {

@@ -2,40 +2,45 @@
 //#include <WiFi.h>
 #include <WebServer.h>
 #include <AutoConnect.h>
-//#include <DNSServer.h>
-//#include <ESPAsyncWebServer.h>
 
 #include "SPIFFS.h"
 #include "esp_camera.h"
 #include "fd_forward.h"
 
-enum State {READY, SCANNING, LOOKING, SEARCHING, SPEAKING, TRACKING, BACK, WAIT, INGAME};
+enum State {READY, SCANNING, LOOKING, SEARCHING , TRACKING, BACK, WAIT, INGAME, SAD, MOVEMENT, EXPLAINING };
 State Cstate;
 
-#define MOV "1"
-#define LASER_OFF "2"
-#define RES_POS "3"
-#define SPEAK "4"
-#define END_MOV "5"
-#define ARD_READY "6"
-#define END_RES_POS "7"
-#define END_SPEAK "8"
-#define ESP_READY "9"
-#define FASE_1 "10"
-#define FASE_2 "11"
+#define ARD_READY "1"
+#define ESP_READY "2"
+#define FASE_1 "3"
+#define FASE_2 "4"
+#define MOV_1 "5"
+#define END_MOV_1 "6"
+#define RES_POS_1 "7"
+#define END_RES_POS_1 "8"
+#define SPEAK_1 "9"
+#define END_SPEAK_1 "10"
+#define STOP_SPEAK_1 "11"
 #define ROCK_INT "12"
 #define END_ROCK_INT "13"
-#define START_GAME "14"
+#define MOV_2 "14"
+#define END_MOV_2 "15"
+#define SPEAK_2 "16"
+#define END_SPEAK_2 "17"
+#define STOP_SPEAK_2 "18"
+#define RES_POS_2 "19"
+#define END_RES_POS_2 "20"
+#define START_GAME "21"
+#define START_GAME_YES "22"
+#define START_GAME_NO "23"
+#define END_GAME "24"
+#define CORRECT_ANSWER "25"
+#define WRONG_ANSWER "26"
 
-#define LED_BUILTIN 4
+
+
 #define MAX_ERROR 10
 #define SOGLIA_DIST 130
-
-
-// Per Flash
-int freq = 5000;
-int ledChannel = 3;
-int ledResolution = 12;
 
 // Pin e Channel servo
 int tilt_pin = 14;
@@ -52,23 +57,21 @@ int pan_position;
 WebServer server(80);
 AutoConnect Portal(server);
 
-//DNSServer dnsServer;
 
 bool trovato = false;
 
 int Fase;
+int fine;
+String msg = "";
 
 void setup() { 
   Serial.begin(115200);
   Serial.setTimeout(1);
-  //Flash
-  ledcSetup(ledChannel, freq, ledResolution);
-  ledcAttachPin(LED_BUILTIN, ledChannel);
 
   Inizializza_servo();
   Inizializza_camera();
   Inizializza_webserver();
-  
+
   delay(100);
   serial_write(ESP_READY);
   delay(10);
@@ -76,27 +79,29 @@ void setup() {
   while (serial_read() != ARD_READY) {
   }
   delay(10);
-  /*
-    if (serial_read() == FASE_1) {
-    Fase = 1;
-    }
-    else if (serial_read() == FASE_2) {
-    Fase = 2;
-    }
-    else {
-    //BHO
-    }*/
 
 
-  Cstate = INGAME;
+  do {
+    msg = serial_read();
+
+    if (msg == FASE_1) {
+      Fase = 1;
+    }
+    else if (msg == FASE_2) {
+      Fase = 2;
+    }
+
+  } while (msg.length() <= 0 );
+  Cstate = READY;
   delay(2000);
 }
 
-int inited = 0;
+
 
 void loop()
 {
 
+<<<<<<< HEAD
   String data = serial_read();
   
   if(data.length() > 0 && data == START_GAME)
@@ -221,5 +226,16 @@ void loop()
       Portal.begin();
       Portal.handleClient();
       break;
+=======
+  if (Fase == 1) {
+    fase1();
   }
+  else if (Fase == 2) {
+    fase2();
+>>>>>>> 5360d92e4463b89001e92a504e0199ad704d1ccf
+  }
+  else {
+    //BHO
+  }
+
 }

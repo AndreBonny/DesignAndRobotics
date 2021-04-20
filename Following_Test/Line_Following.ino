@@ -95,8 +95,53 @@ bool following_forward() {
   return false;
 }
 
-/*
-  void following_backward() {
+bool following_forward2() {
+
+  Input = readSens();
+
+  if (Input == 0) // Move Forward
+  {
+    avanti(MOT_R, V);
+    avanti(MOT_L, V);
+  }
+
+  if (Input == 1) // Turn right
+  {
+    indietro(MOT_R, V);
+    avanti(MOT_L, V);
+  }
+
+  if (Input == 2 || Input == 3) // Turn right
+  {
+    indietro(MOT_R, V+50);
+    avanti(MOT_L, V+50);
+  }
+
+  if (Input == -1) // turn left
+  {
+    avanti(MOT_R, V);
+    indietro(MOT_L, V);
+  }
+
+
+  if (Input == -2 || Input == -3) // Turn right
+  {
+    avanti(MOT_R, V+50);
+    indietro(MOT_L, V+50);
+  }
+
+  if (Input == 10) // stop
+  {
+    fermo(MOT_R);
+    fermo(MOT_L);
+    return true;
+  }
+
+  return false;
+}
+
+
+void following_backward() {
 
   if (!digitalRead(LS_PIN) && !digitalRead(RS_PIN)) // Move Forward
   {
@@ -121,20 +166,20 @@ bool following_forward() {
     fermo(MOT_R);
     fermo(MOT_L);
   }
-  }
+}
 
-  void follow() {
+void follow() {
 
   Serial3.println("Seguo Linea");
-  while (!following_forward()) {
+  while (!following_forward2()) {
   }
   Serial3.println("Arrivato");
   delay(3000);
   Serial3.println("Riparto");
-  go(200);
+  move_forward(200,V);
   Serial3.println("Mosso");
-  }
-*/
+}
+
 
 double readSens() {
 

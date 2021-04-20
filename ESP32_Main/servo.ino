@@ -68,7 +68,6 @@ bool Search() {
   int pan_end = 130;
   int t_stop = 40;
   int passo = 2;
-  long distance = 0;
   tilt_position = tilt_center;
   ledcAnalogWrite(tilt_ch, tilt_position);
   ledcAnalogWrite(pan_ch, pan_start);
