@@ -58,7 +58,7 @@ bool trovato = false;
 
 int Fase;
 
-void setup() {
+void setup() { 
   Serial.begin(115200);
   Serial.setTimeout(1);
   //Flash
@@ -217,6 +217,7 @@ void loop()
         Serial.println("Waiting for connection");   
         inited = 1;
       }
+      Portal.onConnect(onConnect);
       Portal.begin();
       Portal.handleClient();
       break;

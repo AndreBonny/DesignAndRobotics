@@ -1,98 +1,107 @@
+const int total_questions = 10;
+const int num_questions = 5;
+int current_question = 0;
 
+String questions[] = {"question1","question2","question3","question4","question5","question6","question7","question8","question9","question10"};
+String answers[] = {"answer1","answer2","answer3","answer4","answer5","answer6","answer7","answer8","answer9","answer10"};
 
-/* Put your SSID & Password */
-const char* ssid = "esp32ap";  // Enter SSID here
-const char* password = "12345678";  //Enter Password here
+String randomQuestions[num_questions];
+String randomAnswers[num_questions];
 
-const byte DNS_PORT = 53;
+bool currentlyConnected;
+IPAddress connectedIP;
 
-/* Put IP Address details */
-//IPAddress local_ip(192,168,1,1);
-IPAddress local_ip(8, 8, 4, 4);
-//IPAddress gateway(192,168,1,1);
-IPAddress gateway(8, 8, 4, 4);
-IPAddress subnet(255, 255, 255, 0);
+int contains(int *indexes, int num, int leng) {
+  for(int i=0; i<leng; i++) {
+    if(indexes[i] == num)
+      return 1;
+  }
+  return 0;
+}
 
-uint8_t LED1pin = 4;
-bool LED1status = LOW;
+int* get_random_indexes(int length, int upper_bound) {
+  int* indexes = (int*) malloc(length * sizeof(int));
+  for(int i=0; i<length; i++)
+    indexes[i] = -1;
+  if(length > upper_bound) {
+    printf("Invalid! You are requesting more numbers than the upper_bound");
+    return indexes;
+  }
 
-uint8_t LED2pin = 5;
-bool LED2status = LOW;
+  int last_index = 0;
+  while(contains(indexes, -1, length)) {
+    //int num = (rand() % (upper_bound - 0)) + 0;
+    int num = random(upper_bound);
+    if(!contains(indexes, num, length)) {
+      indexes[last_index] = num;
+      last_index++;
+    }
+  }
+  return indexes;
+}
 
-String prova(const String& var) {
-  return "ciao";
+void initialize_random_questions() {
+  int* indexes = get_random_indexes(num_questions, total_questions);
+  for(int i=0; i<num_questions; i++) {
+    randomQuestions[i] = questions[indexes[i]];
+    randomAnswers[i] = answers[indexes[i]];
+  }
+}
+
+void onConnect(IPAddress& ipaddr) {
+  Serial.print("WiFi connected with ");
+  Serial.print(WiFi.SSID());
+  Serial.print(", IP:");
+  Serial.println(ipaddr.toString());
+  connectedIP = ipaddr;
 }
 
 void Inizializza_webserver() {
+  currentlyConnected = false;
   WiFi.mode(WIFI_AP);
-  WiFi.softAP(ssid, password);//, 0, 0, 1); // ssid, password, channel, ssid_hidden, max_connection
-  WiFi.softAPConfig(local_ip, gateway, subnet);
-  delay(100);
 
   // Initialize SPIFFS for file system
-  if(!SPIFFS.begin(true)){
+  if (!SPIFFS.begin(true)) {
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
   }
 
   server.on("/style.css", handle_css);
   server.on("/", handle_home_page);
-  server.on("/start", handle_first_question);
-
-  server.on("/background.jpg", []() { getSpiffImg("/background.jpg", "image/jpg"); });
-  server.on("/logo_footer.png", []() { getSpiffImg("/logo_footer.png", "image/png"); } );
-
-  /*server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/home_page.html", "text/html", false, prova);
-  });
-
-  server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/style.css", "text/css", false, NULL);
-  });
-
-  server.on("/begin", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(SPIFFS, "/first_question.html", "text/html", false, NULL);
-  }
-
-  server.on("/background", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/background.jpg", "image/jpeg");
-  });*/
+  server.on("/start", handle_question);
+  server.on("/next", handle_next);
+  server.on("/question", handle_question);
+  server.on("/disconnect", handle_disconnect);
   
+  server.on("/background.jpg", []() {
+    getSpiffImg("/background.jpg", "image/jpg");
+  });
+  server.on("/logo_footer.png", []() {
+    getSpiffImg("/logo_footer.png", "image/png");
+  } );
+
   server.onNotFound(handle_NotFound);
 
-  //dnsServer.start(DNS_PORT, "*", local_ip);
   configure_portal();
-  //Portal.begin();
-  //server.begin();
   Serial.println("HTTP server started");
 }
 
 void configure_portal() {
-  // esp32ap
-  AutoConnectConfig  Config("", "");    // SoftAp name is determined at runtime
+  AutoConnectConfig  Config("MuseumRobot", "");
 
   Config.autoReconnect = true;                  // Enable auto-reconnect
   Config.autoSave = AC_SAVECREDENTIAL_NEVER;    // No save credential
   Config.boundaryOffset = 64;                   // Reserve 64 bytes for the user data in EEPROM.
   Config.portalTimeout = 60000;                 // Sets timeout value for the captive portal
   Config.retainPortal = true;                   // Retains the portal function after timed-out
-  Config.homeUri = "/";               // Sets home path of Sketch application
+  Config.homeUri = "/";                         // Sets home path of Sketch application
   Config.title = "My menu";                     // Customize the menu title
 
-  //AutoConnectAux aux("/mqtt_settings", "MQTT_SETTINGS");
-  //ACText(header, "MQTT broker settings");
-  //ACText(caption, "Publishing the wifi");
-
-  //aux.add({header, caption});
-  //Portal.join(aux);
-  Config.menuItems = AC_MENUITEM_HOME | AC_MENUITEM_DISCONNECT;
-
-  //Portal.disableMenu(AC_MENUITEM_CONFIGNEW | AC_MENUITEM_OPENSSIDS | AC_MENUITEM_RESET);
   Portal.config(Config);                        // Configure AutoConnect
 }
 
-void getSpiffImg(String path, String TyPe) { 
- if(SPIFFS.exists(path)){ 
+void getSpiffImg(String path, String TyPe) {
+  if (SPIFFS.exists(path)) {
     File file = SPIFFS.open(path, "r");
     server.streamFile(file, TyPe);
     file.close();
@@ -102,14 +111,48 @@ void getSpiffImg(String path, String TyPe) {
 void handle_css() {
   handle_page("/style.css", true);
 }
-void handle_first_question() {
-  Serial.println("First question");
-  handle_page("/first_q.html", false);
-}
 
 void handle_home_page() {
-  Serial.println("Home page");
-  handle_page("/home_p.html", false);
+  if(!currentlyConnected) {
+    currentlyConnected = true;
+    current_question = 0;
+    
+    initialize_random_questions();
+    for(int i=0; i<num_questions; i++) {
+      Serial.print("Question #" + String(i) + " ");
+      Serial.println(randomQuestions[i]);
+      Serial.print("Answer #" + String(i) + " ");
+      Serial.println(randomAnswers[i]);
+    }
+    
+    Serial.println("Home page");
+    handle_page("/home_p.html", false);
+  } else {
+    server.send(404, "text/plain", "I am sorry, there is already someone playing.");
+  }
+}
+
+void handle_question() {
+  current_question++;
+  server.send(200, "text/html", sendQuestionPage(current_question, randomQuestions[current_question-1]));
+}
+
+void handle_next() {
+  if(current_question < num_questions) {
+    server.send(200, "text/html", sendPResults(current_question, "Correct!"));
+  } else {
+    currentlyConnected = false;
+    handle_home_page();
+  }
+}
+
+void handle_disconnect() {
+  if(currentlyConnected) {
+    // Portal.ConnectExit(connectedIP);
+    WiFi.disconnect();
+  }
+  currentlyConnected = false;
+  
 }
 
 void handle_page(String page_name, bool is_css) {
@@ -119,34 +162,126 @@ void handle_page(String page_name, bool is_css) {
     while (file.available()) {
       page += (char)file.read();
     }
-    if(is_css)
+    if (is_css)
       server.send(200, "text/css", page);
     else
       server.send(200, "text/html", page);
   } else
-      Serial.println("Failed to get page"); 
-}
-
-void handle_led1off() {
-  LED1status = LOW;
-  Serial.println("GPIO4 Status: OFF");
-  server.send(200, "text/html", SendHTML(false, LED2status));
-}
-
-void handle_led2on() {
-  LED2status = HIGH;
-  Serial.println("GPIO5 Status: ON");
-  server.send(200, "text/html", SendHTML(LED1status, true));
-}
-
-void handle_led2off() {
-  LED2status = LOW;
-  Serial.println("GPIO5 Status: OFF");
-  server.send(200, "text/html", SendHTML(LED1status, false));
+    Serial.println("Failed to get page");
 }
 
 void handle_NotFound() {
   server.send(404, "text/plain", "Not found");
+}
+
+String sendPResults(int quest_num, String result) {
+  String ptr = "";
+  ptr += "<!DOCTYPE html>";
+  ptr += "<html>";
+  ptr += "    <head>";
+  ptr += "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\", user-scalable=no>";
+  ptr += "        <title>Welcome page</title>";
+  ptr += "        <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">";
+  ptr += "    </head>";
+  ptr += "    <body>";
+  ptr += "        <img class=\"background\" src=\"/background.jpg\"/>";
+  ptr += "        <main>";
+  ptr += "            <div class=\"cover cover-header\">";
+  ptr += "                <h2>" + String(quest_num) + ". Question</h3>";
+  ptr += "            </div>";
+  ptr += "            <div class=\"cover cover-main\">";
+  ptr += "                <div class=\"cover__text-blur\">";
+  ptr += "                    <div class=\"cover__text\">";
+  ptr += "                        <h4>" + result + "</h4>";
+  ptr += "                    </div>";
+  ptr += "                </div>";
+  ptr += "            </div>";
+  ptr += "            <div class=\"cover cover-footer\">";
+  ptr += "                <a href=\"/question\" class=\"button\"> Next </a>";
+  ptr += "            </div>";
+  ptr += "        </main>";
+  ptr += "    </body>";
+  ptr += "    <script type=\"text/javascript\">";
+  ptr += "        if(window.innerHeight <= 600) {";
+  ptr += "            let ps = document.getElementsByTagName(\"p\");";
+  ptr += "            for(i=0; i<ps.length; i++) {";
+  ptr += "                ps[i].style.fontSize = \"10px\";";
+  ptr += "            }";
+  ptr += "            let hs = document.getElementsByTagName(\"h4\");";
+  ptr += "            for(i=0; i<hs.length; i++) {";
+  ptr += "                hs[i].style.fontSize = \"15px\";";
+  ptr += "            }";
+  ptr += "        }";
+  ptr += "        if(window.innerHeight >= 1000) {";
+  ptr += "            let ps = document.getElementsByTagName(\"p\");";
+  ptr += "            for(i=0; i<ps.length; i++) {";
+  ptr += "                ps[i].style.fontSize = \"30px\";";
+  ptr += "            }";
+  ptr += "            let hs = document.getElementsByTagName(\"h4\");";
+  ptr += "            for(i=0; i<hs.length; i++) {";
+  ptr += "                hs[i].style.fontSize = \"45px\";";
+  ptr += "            }";
+  ptr += "        }";
+  ptr += "    </script>";
+  ptr += "</html>";
+  
+  return ptr;
+  
+}
+
+String sendQuestionPage(int quest_num, String question) {
+  String ptr = "";
+  ptr += "<!DOCTYPE html>";
+  ptr += "<html>";
+  ptr += "    <head>";
+  ptr += "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\", user-scalable=no>";
+  ptr += "        <title>Welcome page</title>";
+  ptr += "        <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">";
+  ptr += "    </head>";
+  ptr += "    <body>";
+  ptr += "        <img class=\"background\" src=\"/background.jpg\"/>";
+  ptr += "        <main>";
+  ptr += "            <div class=\"cover cover-header\">";
+  ptr += "                <h2>" + String(quest_num) + ". Question</h3>";
+  ptr += "            </div>";
+  ptr += "            <div class=\"cover cover-main\">";
+  ptr += "                <div class=\"cover__text-blur\">";
+  ptr += "                    <div class=\"cover__text\">";
+  ptr += "                        <h4>" + question + "</h4>";
+  ptr += "                    </div>";
+  ptr += "                </div>";
+  ptr += "            </div>";
+  ptr += "            <div class=\"cover cover-footer\">";
+  ptr += "                <a href=\"/disconnect\" class=\"button\"> False </a>";
+  ptr += "                <a href=\"/next\" class=\"button\"> True </a>";
+  ptr += "            </div>";
+  ptr += "        </main>";
+  ptr += "    </body>";
+  ptr += "    <script type=\"text/javascript\">";
+  ptr += "        if(window.innerHeight <= 600) {";
+  ptr += "            let ps = document.getElementsByTagName(\"p\");";
+  ptr += "            for(i=0; i<ps.length; i++) {";
+  ptr += "                ps[i].style.fontSize = \"10px\";";
+  ptr += "            }";
+  ptr += "            let hs = document.getElementsByTagName(\"h4\");";
+  ptr += "            for(i=0; i<hs.length; i++) {";
+  ptr += "                hs[i].style.fontSize = \"15px\";";
+  ptr += "            }";
+  ptr += "        }";
+  ptr += "        if(window.innerHeight >= 1000) {";
+  ptr += "            let ps = document.getElementsByTagName(\"p\");";
+  ptr += "            for(i=0; i<ps.length; i++) {";
+  ptr += "                ps[i].style.fontSize = \"30px\";";
+  ptr += "            }";
+  ptr += "            let hs = document.getElementsByTagName(\"h4\");";
+  ptr += "            for(i=0; i<hs.length; i++) {";
+  ptr += "                hs[i].style.fontSize = \"45px\";";
+  ptr += "            }";
+  ptr += "        }";
+  ptr += "    </script>";
+  ptr += "</html>";
+  
+  return ptr;
 }
 
 String SendHTML(uint8_t led1stat, uint8_t led2stat) {
