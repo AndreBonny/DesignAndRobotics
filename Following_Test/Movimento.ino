@@ -51,10 +51,10 @@ void indietro(int mot, int speed) {
 };
 
 
-void move(int mot, int speed){
+void move(int mot, int speed) {
 
-  speed = max(min(speed,255),-255);
-  
+  speed = max(min(speed, 255), -255);
+
   if (speed > 0) {
     avanti(mot, speed);
   }
@@ -64,41 +64,45 @@ void move(int mot, int speed){
   else {
     fermo(mot);
   }
-  
+
 }
+
 
 /*
-int limitatore(int speed){
-  if(speed>)
-}*/
+  int limitatore(int speed) {
+  if (speed > 0)
+    speed =  max(min(255, speed), 80);
+  if (speed < 0)
+    speed =  min(max(-255, speed), -80);
+  }*/
 
-void move_forward(int t) {
-  avanti(MOT_R, V);
-  avanti(MOT_L, V);
+void move_forward(int t, int speed) {
+  avanti(MOT_R, speed);
+  avanti(MOT_L, speed);
   delay(t);
   fermo(MOT_R);
   fermo(MOT_L);
 }
 
-void move_backward(int t) {
-  indietro(MOT_R, V);
-  indietro(MOT_L, V);
+void move_backward(int t, int speed) {
+  indietro(MOT_R, speed);
+  indietro(MOT_L, speed);
   delay(t);
   fermo(MOT_R);
   fermo(MOT_L);
 }
 
-void turn_right(int t) {
-  avanti(MOT_L, Omega);
-  indietro(MOT_R, Omega);
+void turn_right(int t, int speed) {
+  avanti(MOT_L, speed);
+  indietro(MOT_R, speed);
   delay(t);
   fermo(MOT_R);
   fermo(MOT_L);
 }
 
-void turn_left(int t) {
-  indietro(MOT_L, Omega);
-  avanti(MOT_R, Omega);
+void turn_left(int t, int speed) {
+  indietro(MOT_L, speed);
+  avanti(MOT_R, speed);
   delay(t);
   fermo(MOT_R);
   fermo(MOT_L);

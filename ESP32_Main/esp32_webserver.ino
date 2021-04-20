@@ -102,7 +102,7 @@ void handle_bg() {
     Serial.println(str);
     Serial.println("AFTER");
     Serial.print("Str is empty?");
-    Serial.println(str == "");
+   // Serial.println(str == "");
     
     server.send(200, "image/jpeg", str);
   } else {

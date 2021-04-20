@@ -15,7 +15,6 @@
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
-#define LED_BUILTIN 4
 bool initCamera() {
   //  Serial.printf("Initializing the camera...\n");
   camera_config_t config;
@@ -91,13 +90,10 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
   img_center_x = (int)(image_matrix->w / 2);
   img_center_y = (int)(image_matrix->h / 2);
 
-  int confidence = 10;
-  int movement = 5;
-
   for (int i = 0; i < boxes->len; i++) {
     //do {
     x = ((int)boxes->box[i].box_p[0]);
-    h_w = ((int)boxes->box[i].box_p[2] - x + 1) / 2;
+    h_w =((int)boxes->box[i].box_p[2] - x + 1) / 2;
 
     y = ((int)boxes->box[i].box_p[1]);
     h_h = ((int)boxes->box[i].box_p[3] - y + 1) / 2;
@@ -124,7 +120,7 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
   }
 }
 
-void Face_tracking() {
+bool Face_tracking() {
 
   int count = 0;
   long distanza;
@@ -134,7 +130,7 @@ void Face_tracking() {
   do {
 
     data = serial_read();
-    if (data.length() > 0 && data == END_SPEAK) {
+    if (data.length() > 0 && data == END_SPEAK_1) {
       exit = true;
     }
 
@@ -156,7 +152,6 @@ void Face_tracking() {
 
     if (boxes != NULL) {
       Serial.printf("Face detected! Distanza = %li \n", distanza);
-      ledcWrite(ledChannel, 10);
       draw_face_boxes(image_matrix, boxes);
       dl_lib_free(boxes->score);
       dl_lib_free(boxes->box);
@@ -164,12 +159,17 @@ void Face_tracking() {
       dl_lib_free(boxes);
     } else {
       Serial.printf("No face detected! Distanza = %li \n", distanza);
-      ledcWrite(ledChannel, 0);
     }
 
     dl_matrix3du_free(image_matrix);
     delay(150);
 
   } while (count < MAX_ERROR && !exit);
+
+  if(!exit){
+    return false;
+  }
+
+  return true;
 
 }
