@@ -37,9 +37,10 @@ void Inizializza_webserver() {
 
   server.on("/style.css", handle_css);
   server.on("/", handle_home_page);
-  server.on("/begin", handle_first_question);
+  server.on("/start", handle_first_question);
 
-  server.on("/background", handle_bg);
+  server.on("/background.jpg", []() { getSpiffImg("/background.jpg", "image/jpg"); });
+  server.on("/logo_footer.png", []() { getSpiffImg("/logo_footer.png", "image/png"); } );
 
   /*server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/home_page.html", "text/html", false, prova);
@@ -68,7 +69,7 @@ void Inizializza_webserver() {
 
 void configure_portal() {
   // esp32ap
-  AutoConnectConfig  Config("", "passpass");    // SoftAp name is determined at runtime
+  AutoConnectConfig  Config("", "");    // SoftAp name is determined at runtime
 
   Config.autoReconnect = true;                  // Enable auto-reconnect
   Config.autoSave = AC_SAVECREDENTIAL_NEVER;    // No save credential
@@ -90,23 +91,11 @@ void configure_portal() {
   Portal.config(Config);                        // Configure AutoConnect
 }
 
-void handle_bg() {
-  Serial.println("BACKGROUND");
-  String bytes = "";
-  File file = SPIFFS.open("/background.jpg", "r");
-  if(file) {
-    Serial.println("BEFORE");
-    char str[1024];
-    file.readBytes(str, 1024);
-    
-    Serial.println(str);
-    Serial.println("AFTER");
-    Serial.print("Str is empty?");
-    Serial.println(str == "");
-    
-    server.send(200, "image/jpeg", str);
-  } else {
-    Serial.println("Failed to get background");
+void getSpiffImg(String path, String TyPe) { 
+ if(SPIFFS.exists(path)){ 
+    File file = SPIFFS.open(path, "r");
+    server.streamFile(file, TyPe);
+    file.close();
   }
 }
 
@@ -115,12 +104,12 @@ void handle_css() {
 }
 void handle_first_question() {
   Serial.println("First question");
-  handle_page("/first_question.html", false);
+  handle_page("/first_q.html", false);
 }
 
 void handle_home_page() {
   Serial.println("Home page");
-  handle_page("/home_page.html", false);
+  handle_page("/home_p.html", false);
 }
 
 void handle_page(String page_name, bool is_css) {

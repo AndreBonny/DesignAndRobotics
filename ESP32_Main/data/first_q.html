@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0", user-scalable=no>
+        <title>Welcome page</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <img class="background" src="/background.jpg"/>
+        <main>
+            <div class="cover cover-header">
+                <h2>1. Question</h3>
+            </div>
+            <div class="cover cover-main">
+                <div class="cover__text-blur">
+                    <div class="cover__text">
+                        <h4>Did the moon landing on july 20th 1968 actually happened?</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="cover cover-footer">
+                <a href="/" class="button"> False </a>   
+                <a href="" class="button"> True </a>   
+            </div>
+        </main>
+    </body>
+    <script type="text/javascript">
+        if(window.innerHeight <= 600) {
+            let ps = document.getElementsByTagName("p");
+            for(i=0; i<ps.length; i++) {
+                ps[i].style.fontSize = "10px";
+            }
+            let hs = document.getElementsByTagName("h4");
+            for(i=0; i<hs.length; i++) {
+                hs[i].style.fontSize = "15px";
+            }
+        }
+        if(window.innerHeight >= 1000) {
+            let ps = document.getElementsByTagName("p");
+            for(i=0; i<ps.length; i++) {
+                ps[i].style.fontSize = "30px";
+            }
+            let hs = document.getElementsByTagName("h4");
+            for(i=0; i<hs.length; i++) {
+                hs[i].style.fontSize = "45px";
+            }
+        }
+    </script>
+</html>

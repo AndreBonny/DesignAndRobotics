@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Welcome page</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body>
+		<img class="background" src="/background.jpg"/>
+		<main>
+			<div class="cover cover-header">
+				<img class="upper_logo" src="/logo_footer.png"/>
+			</div>
+			<div class="cover cover-main">
+				<div class="cover__text-blur">
+					<div class="cover__text">
+						<h4>Welcome!</h4>
+						<h4>The robot is studying also humans and is testing their knowledge about space.</h4>
+						<p>Give your answers as good as possible to increase the score!</p>
+					</div>
+				</div>
+			</div>
+			<div class="cover cover-footer">
+				<a href="/start" class="button"> Start </a>	
+			</div>
+		</main>
+	</body>
+	<script type="text/javascript">
+		if(window.innerHeight <= 600) {
+            let ps = document.getElementsByTagName("p");
+            for(i=0; i<ps.length; i++) {
+                ps[i].style.fontSize = "10px";
+            }
+            let hs = document.getElementsByTagName("h4");
+            for(i=0; i<hs.length; i++) {
+                hs[i].style.fontSize = "15px";
+            }
+        }
+        if(window.innerHeight >= 1000) {
+            let ps = document.getElementsByTagName("p");
+            for(i=0; i<ps.length; i++) {
+                ps[i].style.fontSize = "30px";
+            }
+            let hs = document.getElementsByTagName("h4");
+            for(i=0; i<hs.length; i++) {
+                hs[i].style.fontSize = "45px";
+            }
+        }
+	</script>
+</html>
