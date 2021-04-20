@@ -11,11 +11,25 @@ void Inizializza_DFPlayer() {
   }
   serial_write_debug(F("DFPlayer Mini online."));
 
-  myDFPlayer.volume(30);  //Set volume value. From 0 to 30
+  myDFPlayer.volume(10);  //Set volume value. From 0 to 30
 }
 
 void play(Track track) {
-  myDFPlayer.play(track);
+  myDFPlayer.playMp3Folder(track);
+}
+
+void stop_play()
+{
+  myDFPlayer.pause();
+}
+
+bool dfNotPlaying()
+{
+   if(digitalRead(BUSY_PIN) == LOW)
+    {
+      return false;
+    }
+    return true;
 }
 
 
