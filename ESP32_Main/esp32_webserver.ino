@@ -1,11 +1,40 @@
-const int total_questions = 10;
-const int num_questions = 5;
+const int total_questions = 13;
+const int num_questions = 8;
 int current_question = 0;
 
 int num_correct;
 
-String questions[] = {"question1", "question2", "question3", "question4", "question5", "question6", "question7", "question8", "question9", "question10"};
-String answers[] = {"True", "True", "False", "True", "False", "False", "False", "True", "True", "False"};
+String questions[] = {
+  "The first U.S. space shuttle has been launched in 1975?",                            // 1
+  "Was Sputnik the first artificial satellite?",                                        // 2
+  "Was Neil Armstrong the first to go on a spacewalk?",                                 // 3
+  "Do astronauts \"grow\" of few inches in space?",                                     // 4
+  "Was Apollo 1 the first of NASA's manned flights into space?",                        // 5
+  "Was the first person in space from the United States?",                              // 6
+  "NASA was founded in 1958?",                                                          // 7
+  "NASA stands for the National Aeronautics and Space Administration?",                 // 8
+  "Was Yuri Gagarin the first human to orbit Earth?",                                   // 9
+  "Was Neil Diamond the first human on the moon?",                                      // 10
+  "If you step on the Moon, those footprints will be there more or less indefinitely",  // 11
+  "In the space there are not any sounds that can be heard by humans.",                 // 12
+  "The nearest galaxy to Milky Way is Andromeda?",                                      // 13
+};
+
+String answers[] = {
+  "False",  // 1
+  "True",   // 2
+  "False",  // 3
+  "True",   // 4
+  "False",  // 5
+  "False",  // 6
+  "True",   // 7
+  "True",   // 8
+  "True",   // 9
+  "False",  // 10
+  "True",   // 11
+  "False",  // 12
+  "True",   // 13
+};
 
 String randomQuestions[num_questions];
 String randomAnswers[num_questions];
