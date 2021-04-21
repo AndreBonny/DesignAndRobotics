@@ -2,8 +2,10 @@ const int total_questions = 10;
 const int num_questions = 5;
 int current_question = 0;
 
+int num_correct;
+
 String questions[] = {"question1", "question2", "question3", "question4", "question5", "question6", "question7", "question8", "question9", "question10"};
-String answers[] = {"answer1", "answer2", "answer3", "answer4", "answer5", "answer6", "answer7", "answer8", "answer9", "answer10"};
+String answers[] = {"True", "True", "False", "True", "False", "False", "False", "True", "True", "False"};
 
 String randomQuestions[num_questions];
 String randomAnswers[num_questions];
@@ -66,11 +68,14 @@ void Inizializza_webserver() {
     return;
   }
 
+  num_correct = 0;
+
   server.on("/style.css", handle_css);
   server.on("/", handle_home_page);
 
   server.on("/start", handle_question);
-  server.on("/next", handle_next);
+  server.on("/false", handle_false);
+  server.on("/true", handle_true);
   server.on("/question", handle_question);
   server.on("/disconnect", handle_disconnect);
 
@@ -80,7 +85,7 @@ void Inizializza_webserver() {
 
   server.on("/logo_footer.png", []() {
     getSpiffImg("/logo_footer.png", "image/png");
-  } );
+  });
 
   server.onNotFound(handle_NotFound);
 
@@ -99,6 +104,7 @@ void configure_portal() {
   Config.homeUri = "/";                         // Sets home path of Sketch application
   Config.title = "My menu";                     // Customize the menu title
 
+  Portal.onConnect(onConnect);
   Portal.config(Config);                        // Configure AutoConnect
 }
 
@@ -126,34 +132,52 @@ void handle_home_page() {
       Serial.print("Answer #" + String(i) + " ");
       Serial.println(randomAnswers[i]);
     }
-
     Serial.println("Home page");
     handle_page("/home_p.html", false);
   } else {
-    server.send(404, "text/plain", "I am sorry, there is already someone playing.");
+    handle_page("/busy.html", false);
   }
 }
 
 void handle_question() {
-  current_question++;
-  server.send(200, "text/html", sendQuestionPage(current_question, randomQuestions[current_question - 1]));
+  if (current_question < num_questions) {
+    current_question++;
+    server.send(200, "text/html", sendQuestionPage(current_question, randomQuestions[current_question - 1]));
+  } else {
+    server.send(200, "text/html", sendFinalResults(num_correct, num_questions));
+  }
 }
 
-void handle_next() {
-  if (current_question < num_questions) {
-    server.send(200, "text/html", sendPResults(current_question, "Correct!"));
+void handle_false() {
+  check_answer("False");
+}
+
+void handle_true() {
+  check_answer("True");
+}
+
+void check_answer(String ans) {
+  if (randomAnswers[current_question - 1] == ans) {
+    num_correct++;
+    handle_next("Correct!");
   } else {
-    currentlyConnected = false;
-    handle_home_page();
+    handle_next("Wrong!");
   }
+}
+
+void handle_next(String res) {
+  server.send(200, "text/html", sendPResults(current_question, res));
 }
 
 void handle_disconnect() {
   if (currentlyConnected) {
+    handle_page("/disconnected.html", false);
+    delay(1000);
+    Portal.end();
     currentlyConnected = false;
-    server.send(200, "text/plain", "Disconnected");
     server.close();
     WiFi.disconnect();
+    WiFi.mode(WIFI_OFF);
     inited = 0;
     Cstate = BACK;
   }
@@ -177,155 +201,4 @@ void handle_page(String page_name, bool is_css) {
 
 void handle_NotFound() {
   server.send(404, "text/plain", "Not found");
-}
-
-String sendPResults(int quest_num, String result) {
-  String ptr = "";
-  ptr += "<!DOCTYPE html>";
-  ptr += "<html>";
-  ptr += "    <head>";
-  ptr += "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\", user-scalable=no>";
-  ptr += "        <title>Welcome page</title>";
-  ptr += "        <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">";
-  ptr += "    </head>";
-  ptr += "    <body>";
-  ptr += "        <img class=\"background\" src=\"/background.jpg\"/>";
-  ptr += "        <main>";
-  ptr += "            <div class=\"cover cover-header\">";
-  ptr += "                <h2>" + String(quest_num) + ". Question</h3>";
-  ptr += "            </div>";
-  ptr += "            <div class=\"cover cover-main\">";
-  ptr += "                <div class=\"cover__text-blur\">";
-  ptr += "                    <div class=\"cover__text\">";
-  ptr += "                        <h4>" + result + "</h4>";
-  ptr += "                    </div>";
-  ptr += "                </div>";
-  ptr += "            </div>";
-  ptr += "            <div class=\"cover cover-footer\">";
-  ptr += "                <a href=\"/question\" class=\"button\"> Next </a>";
-  ptr += "            </div>";
-  ptr += "        </main>";
-  ptr += "    </body>";
-  ptr += "    <script type=\"text/javascript\">";
-  ptr += "        if(window.innerHeight <= 600) {";
-  ptr += "            let ps = document.getElementsByTagName(\"p\");";
-  ptr += "            for(i=0; i<ps.length; i++) {";
-  ptr += "                ps[i].style.fontSize = \"10px\";";
-  ptr += "            }";
-  ptr += "            let hs = document.getElementsByTagName(\"h4\");";
-  ptr += "            for(i=0; i<hs.length; i++) {";
-  ptr += "                hs[i].style.fontSize = \"15px\";";
-  ptr += "            }";
-  ptr += "        }";
-  ptr += "        if(window.innerHeight >= 1000) {";
-  ptr += "            let ps = document.getElementsByTagName(\"p\");";
-  ptr += "            for(i=0; i<ps.length; i++) {";
-  ptr += "                ps[i].style.fontSize = \"30px\";";
-  ptr += "            }";
-  ptr += "            let hs = document.getElementsByTagName(\"h4\");";
-  ptr += "            for(i=0; i<hs.length; i++) {";
-  ptr += "                hs[i].style.fontSize = \"45px\";";
-  ptr += "            }";
-  ptr += "        }";
-  ptr += "    </script>";
-  ptr += "</html>";
-
-  return ptr;
-
-}
-
-String sendQuestionPage(int quest_num, String question) {
-  String ptr = "";
-  ptr += "<!DOCTYPE html>";
-  ptr += "<html>";
-  ptr += "    <head>";
-  ptr += "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\", user-scalable=no>";
-  ptr += "        <title>Welcome page</title>";
-  ptr += "        <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">";
-  ptr += "    </head>";
-  ptr += "    <body>";
-  ptr += "        <img class=\"background\" src=\"/background.jpg\"/>";
-  ptr += "        <main>";
-  ptr += "            <div class=\"cover cover-header\">";
-  ptr += "                <h2>" + String(quest_num) + ". Question</h3>";
-  ptr += "            </div>";
-  ptr += "            <div class=\"cover cover-main\">";
-  ptr += "                <div class=\"cover__text-blur\">";
-  ptr += "                    <div class=\"cover__text\">";
-  ptr += "                        <h4>" + question + "</h4>";
-  ptr += "                    </div>";
-  ptr += "                </div>";
-  ptr += "            </div>";
-  ptr += "            <div class=\"cover cover-footer\">";
-  ptr += "                <a href=\"/disconnect\" class=\"button\"> False </a>";
-  ptr += "                <a href=\"/next\" class=\"button\"> True </a>";
-  ptr += "            </div>";
-  ptr += "        </main>";
-  ptr += "    </body>";
-  ptr += "    <script type=\"text/javascript\">";
-  ptr += "        if(window.innerHeight <= 600) {";
-  ptr += "            let ps = document.getElementsByTagName(\"p\");";
-  ptr += "            for(i=0; i<ps.length; i++) {";
-  ptr += "                ps[i].style.fontSize = \"10px\";";
-  ptr += "            }";
-  ptr += "            let hs = document.getElementsByTagName(\"h4\");";
-  ptr += "            for(i=0; i<hs.length; i++) {";
-  ptr += "                hs[i].style.fontSize = \"15px\";";
-  ptr += "            }";
-  ptr += "        }";
-  ptr += "        if(window.innerHeight >= 1000) {";
-  ptr += "            let ps = document.getElementsByTagName(\"p\");";
-  ptr += "            for(i=0; i<ps.length; i++) {";
-  ptr += "                ps[i].style.fontSize = \"30px\";";
-  ptr += "            }";
-  ptr += "            let hs = document.getElementsByTagName(\"h4\");";
-  ptr += "            for(i=0; i<hs.length; i++) {";
-  ptr += "                hs[i].style.fontSize = \"45px\";";
-  ptr += "            }";
-  ptr += "        }";
-  ptr += "    </script>";
-  ptr += "</html>";
-
-  return ptr;
-}
-
-String SendHTML(uint8_t led1stat, uint8_t led2stat) {
-  String ptr = "<!DOCTYPE html> <html>\n";
-  ptr += "<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
-  ptr += "<title>LED Control</title>\n";
-  ptr += "<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}\n";
-  ptr += "body{margin-top: 50px;} h1 {color: #444444;margin: 50px auto 30px;} h3 {color: #444444;margin-bottom: 50px;}\n";
-  ptr += ".button {display: block;width: 80px;background-color: #3498db;border: none;color: white;padding: 13px 30px;text-decoration: none;font-size: 25px;margin: 0px auto 35px;cursor: pointer;border-radius: 4px;}\n";
-  ptr += ".button-on {background-color: #3498db;}\n";
-  ptr += ".button-on:active {background-color: #2980b9;}\n";
-  ptr += ".button-off {background-color: #34495e;}\n";
-  ptr += ".button-off:active {background-color: #2c3e50;}\n";
-  ptr += "p {font-size: 14px;color: #888;margin-bottom: 10px;}\n";
-  ptr += "</style>\n";
-  ptr += "</head>\n";
-  ptr += "<body>\n";
-  ptr += "<h1>ESP32 Web Server</h1>\n";
-  ptr += "<h3>Using Access Point(AP) Mode</h3>\n";
-
-  if (led1stat)
-  {
-    ptr += "<p>LED1 Status: ON</p><a class=\"button button-off\" href=\"/led1off\">OFF</a>\n";
-  }
-  else
-  {
-    ptr += "<p>LED1 Status: OFF</p><a class=\"button button-on\" href=\"/led1on\">ON</a>\n";
-  }
-
-  if (led2stat)
-  {
-    ptr += "<p>LED2 Status: ON</p><a class=\"button button-off\" href=\"/led2off\">OFF</a>\n";
-  }
-  else
-  {
-    ptr += "<p>LED2 Status: OFF</p><a class=\"button button-on\" href=\"/led2on\">ON</a>\n";
-  }
-
-  ptr += "</body>\n";
-  ptr += "</html>\n";
-  return ptr;
 }

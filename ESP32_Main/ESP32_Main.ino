@@ -88,7 +88,8 @@ void setup() {
     }
   } while (msg.length() <= 0 );
   
-  Cstate = READY;
+  //Cstate = READY;
+  Cstate = INGAME;
   delay(2000);
 }
 
