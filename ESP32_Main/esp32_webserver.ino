@@ -1,5 +1,5 @@
 const int total_questions = 13;
-const int num_questions = 8;
+const int num_questions = 7;
 int current_question = 0;
 
 int num_correct;
@@ -40,7 +40,6 @@ String randomQuestions[num_questions];
 String randomAnswers[num_questions];
 
 bool currentlyConnected;
-IPAddress connectedIP;
 
 int contains(int *indexes, int num, int leng) {
   for (int i = 0; i < leng; i++) {
@@ -55,7 +54,6 @@ int* get_random_indexes(int length, int upper_bound) {
   for (int i = 0; i < length; i++)
     indexes[i] = -1;
   if (length > upper_bound) {
-    printf("Invalid! You are requesting more numbers than the upper_bound");
     return indexes;
   }
 
@@ -77,14 +75,6 @@ void initialize_random_questions() {
     randomQuestions[i] = questions[indexes[i]];
     randomAnswers[i] = answers[indexes[i]];
   }
-}
-
-void onConnect(IPAddress& ipaddr) {
-  //Serial.print("WiFi connected with ");
-  //Serial.print(WiFi.SSID());
-  //Serial.print(", IP:");
-  //Serial.println(ipaddr.toString());
-  connectedIP = ipaddr;
 }
 
 void Inizializza_webserver() {
@@ -133,7 +123,7 @@ void configure_portal() {
   Config.homeUri = "/";                         // Sets home path of Sketch application
   Config.title = "My menu";                     // Customize the menu title
 
-  Portal.onConnect(onConnect);
+  //Portal.onConnect(onConnect);
   Portal.config(Config);                        // Configure AutoConnect
 }
 
@@ -155,16 +145,23 @@ void handle_home_page() {
     current_question = 0;
 
     initialize_random_questions();
-    for (int i = 0; i < num_questions; i++) {
+    
+    /*for (int i = 0; i < num_questions; i++) {
       //Serial.print("Question #" + String(i) + " ");
       //Serial.println(randomQuestions[i]);
       //Serial.print("Answer #" + String(i) + " ");
       //Serial.println(randomAnswers[i]);
-    }
+    }*/
+    
     //Serial.println("Home page");
     handle_page("/home_p.html", false);
-  } else {
+  } else if(currentlyConnected) {
+    //Serial.println("BUSY");
+    //Serial.println(currentlyConnected);
     handle_page("/busy.html", false);
+    //handle_page("/home_p.html", false);
+  } else {
+    //Serial.println("PORCODDIO");
   }
 }
 
@@ -205,11 +202,13 @@ void handle_disconnect() {
     handle_page("/disconnected.html", false);
     serial_write(END_GAME);
     delay(1000);
+    
     Portal.end();
     currentlyConnected = false;
     server.close();
     WiFi.disconnect();
     WiFi.mode(WIFI_OFF);
+    
     inited = 0;
     Cstate = BACK;
   }
@@ -227,7 +226,7 @@ void handle_page(String page_name, bool is_css) {
       server.send(200, "text/css", page);
     else
       server.send(200, "text/html", page);
-  } else{
+  } else
     //Serial.println("Failed to get page");
   }
 }

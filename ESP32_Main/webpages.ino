@@ -1,12 +1,12 @@
 String sendFinalResults(int num_correct, int num_questions) {
   int num_wrong = num_questions - num_correct;
 
-  int perc_corr = (int)(num_correct*100)/num_questions;
-  int perc_wrong = (int)(num_wrong*100)/num_questions;
+  int perc_corr = (int)(num_correct * 100) / num_questions;
+  int perc_wrong = (int)(num_wrong * 100) / num_questions;
 
   //Serial.println(perc_corr);
   //Serial.println(perc_wrong);
-  
+
   String ptr = "";
   ptr += "<!DOCTYPE html>";
   ptr += "<html>";
@@ -28,8 +28,10 @@ String sendFinalResults(int num_correct, int num_questions) {
   ptr += "                    <div class=\"score\">";
   ptr += "                        <h5>Wrong</h5>";
   ptr += "                        <div class=\"bar\">";
-  ptr += "                            <div class=\"wrong wrong-" + String(perc_wrong) + "\"><h3>" + String(num_wrong) + "</h4></div>";
-  ptr += "                            <div class=\"correct corr-" + String(perc_corr) + "\"><h3>" + String(num_correct) + "</h4></div>";
+  if (perc_wrong != 0)
+    ptr += "                            <div class=\"wrong wrong-" + String(perc_wrong) + "\"><h3>" + String(num_wrong) + "</h4></div>";
+  if (perc_corr != 0)
+    ptr += "                            <div class=\"correct corr-" + String(perc_corr) + "\"><h3>" + String(num_correct) + "</h4></div>";
   ptr += "                        </div>";
   ptr += "                        <h5>Correct</h5>";
   ptr += "                    </div>";
