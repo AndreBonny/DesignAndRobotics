@@ -28,26 +28,24 @@ void fase2() {
 
     play(track);
 
-    //questioning eyes-<-<---<-<--<---<--<--<-
+    draw_question_start();
 
     t = millis();
     while (noPlayCount < 2) //check end of track
     {
       if (dfNotPlaying())
         noPlayCount++;
-      if (millis() - t > 4000) //timer between each blink
-      {
-        t = millis();
-        //Quetioning blink
-        //draw_openclose();
-      }
       delay(50);
     }
+    draw_question_end();
+
 
     track = GAME_START_INSTRUCTION;
     noPlayCount = 0;
     //PLAY GAME_START_INSTRUCTION
     play(track);
+    draw_openclose();
+
 
     while (noPlayCount < 2) //check end of track
     {
@@ -142,7 +140,7 @@ void fase2() {
     {
       //recieved END_GAME before any answer was submitted
       Serial.println("recieved END_GAME before any answer was submitted");
-      
+
     }
     else
     {
@@ -170,40 +168,63 @@ void fase2() {
         noPlayCount = 0;
         //PLAY VERY_BAD
         play(track);
+        draw_angry_start();
         while (noPlayCount < 2) //check end of track
         {
           if (dfNotPlaying())
             noPlayCount++;
+          if (millis() - t > 4000) //timer between each blink
+          {
+            t = millis();
+            draw_angry_blink();
+          }
           delay(50);
         }
+        draw_angry_end();
 
       }
-      else if (tot_answers > 25) //bad  //NEEDS EYES ______________________________________________________
+      else if (tot_answers > 25) //bad
       {
 
         track = BAD;
         noPlayCount = 0;
         //PLAY BAD
         play(track);
+        draw_sad_start();
         while (noPlayCount < 2) //check end of track
         {
           if (dfNotPlaying())
             noPlayCount++;
+          if (millis() - t > 4000) //timer between each blink
+          {
+            t = millis();
+            draw_sad_blink();
+          }
           delay(50);
         }
+        draw_sad_end();
       }
-      else if (tot_answers > 50)//good  //NEEDS EYES______________________________________________
+      else if (tot_answers > 50)//good
       {
         track = GOOD;
         noPlayCount = 0;
         //PLAY GOOD
         play(track);
+        draw_happy_start();
+        draw_happy_open();
         while (noPlayCount < 2) //check end of track
         {
           if (dfNotPlaying())
             noPlayCount++;
+          if (millis() - t > 4000) //timer between each blink
+          {
+            t = millis();
+            draw_happy_blink();
+          }
           delay(50);
         }
+        draw_happy_close();
+        draw_happy_end();
       }
       else if (tot_answers > 75 || tot_answers < 95) //very good // NEED EYES_____________________________________________
       {
@@ -212,26 +233,43 @@ void fase2() {
         noPlayCount = 0;
         //PLAY VERY_GOOD
         play(track);
+        draw_happy_start();
+        draw_happy_open();
         while (noPlayCount < 2) //check end of track
         {
           if (dfNotPlaying())
             noPlayCount++;
+          if (millis() - t > 4000) //timer between each blink
+          {
+            t = millis();
+            draw_happy_blink();
+          }
           delay(50);
         }
+        draw_happy_close();
+        draw_happy_end();
       }
-      else //perfect  //NEEDS EYES ______________________________________________________________
+      else //perfect
       {
-
         track = PERFECT;
         noPlayCount = 0;
         //PLAY PERFECT
         play(track);
+        draw_happy_start();
+        draw_happy_open();
         while (noPlayCount < 2) //check end of track
         {
           if (dfNotPlaying())
             noPlayCount++;
+          if (millis() - t > 4000) //timer between each blink
+          {
+            t = millis();
+            draw_happy_blink();
+          }
           delay(50);
         }
+        draw_happy_close();
+        draw_happy_end();
       }
     }
 
