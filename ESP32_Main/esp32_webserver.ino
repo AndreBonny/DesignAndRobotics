@@ -39,7 +39,7 @@ String answers[] = {
 String randomQuestions[num_questions];
 String randomAnswers[num_questions];
 
-bool currentlyConnected;
+//bool currentlyConnected;
 
 int contains(int *indexes, int num, int leng) {
   for (int i = 0; i < leng; i++) {
@@ -78,8 +78,8 @@ void initialize_random_questions() {
 }
 
 void Inizializza_webserver() {
-  currentlyConnected = false;
-  WiFi.mode(WIFI_AP);
+  //currentlyConnected = false;
+  //WiFi.mode(WIFI_AP);
 
   // Initialize SPIFFS for file system
   if (!SPIFFS.begin(true)) {
@@ -115,15 +115,16 @@ void Inizializza_webserver() {
 void configure_portal() {
   AutoConnectConfig  Config("MuseumRobot", "");
 
-  Config.autoReconnect = true;                  // Enable auto-reconnect
-  Config.autoSave = AC_SAVECREDENTIAL_NEVER;    // No save credential
-  Config.boundaryOffset = 64;                   // Reserve 64 bytes for the user data in EEPROM.
-  Config.portalTimeout = 60000;                 // Sets timeout value for the captive portal
-  Config.retainPortal = true;                   // Retains the portal function after timed-out
-  Config.homeUri = "/";                         // Sets home path of Sketch application
-  Config.title = "My menu";                     // Customize the menu title
+  /*Config.autoReconnect = true;                  // Enable auto-reconnect
+    Config.autoSave = AC_SAVECREDENTIAL_NEVER;    // No save credential
+    Config.boundaryOffset = 64;                   // Reserve 64 bytes for the user data in EEPROM.
+    Config.portalTimeout = 60000;                 // Sets timeout value for the captive portal
+    Config.retainPortal = true;                   // Retains the portal function after timed-out
+    Config.homeUri = "/";                         // Sets home path of Sketch application
+    Config.title = "My menu";                     // Customize the menu title
 
-  //Portal.onConnect(onConnect);
+    Portal.onConnect(onConnect);*/
+  Config.immediateStart = true;
   Portal.config(Config);                        // Configure AutoConnect
 }
 
@@ -140,29 +141,19 @@ void handle_css() {
 }
 
 void handle_home_page() {
-  if (!currentlyConnected) {
-    currentlyConnected = true;
-    current_question = 0;
+  current_question = 0;
 
-    initialize_random_questions();
-    
-    /*for (int i = 0; i < num_questions; i++) {
-      //Serial.print("Question #" + String(i) + " ");
-      //Serial.println(randomQuestions[i]);
-      //Serial.print("Answer #" + String(i) + " ");
-      //Serial.println(randomAnswers[i]);
+  initialize_random_questions();
+
+  /*for (int i = 0; i < num_questions; i++) {
+    //Serial.print("Question #" + String(i) + " ");
+    //Serial.println(randomQuestions[i]);
+    //Serial.print("Answer #" + String(i) + " ");
+    //Serial.println(randomAnswers[i]);
     }*/
-    
-    //Serial.println("Home page");
-    handle_page("/home_p.html", false);
-  } else if(currentlyConnected) {
-    //Serial.println("BUSY");
-    //Serial.println(currentlyConnected);
-    handle_page("/busy.html", false);
-    //handle_page("/home_p.html", false);
-  } else {
-    //Serial.println("PORCODDIO");
-  }
+
+  //Serial.println("Home page");
+  handle_page("/home_p.html", false);
 }
 
 void handle_question() {
@@ -198,21 +189,17 @@ void handle_next(String res) {
 }
 
 void handle_disconnect() {
-  if (currentlyConnected) {
-    handle_page("/disconnected.html", false);
-    serial_write(END_GAME);
-    delay(1000);
-    
-    Portal.end();
-    currentlyConnected = false;
-    server.close();
-    WiFi.disconnect();
-    WiFi.mode(WIFI_OFF);
-    
-    inited = 0;
-    Cstate = BACK;
-  }
-  currentlyConnected = false;
+  handle_page("/disconnected.html", false);
+  serial_write(END_GAME);
+  delay(1000);
+
+  Portal.end();
+  server.close();
+  WiFi.disconnect();
+  WiFi.mode(WIFI_OFF);
+
+  inited = 0;
+  Cstate = BACK;
 }
 
 void handle_page(String page_name, bool is_css) {
@@ -227,8 +214,7 @@ void handle_page(String page_name, bool is_css) {
     else
       server.send(200, "text/html", page);
   } else
-    //Serial.println("Failed to get page");
-  }
+    Serial.println("Failed to get page");
 }
 
 void handle_NotFound() {
