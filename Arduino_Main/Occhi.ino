@@ -375,6 +375,202 @@ byte happy_eye_L_3[8] = {
   B00000000
 };
 
+
+byte correct_eye_1[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B10000000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte correct_eye_2[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B10000000,
+  B11000000,
+  B00000000,
+  B00000000
+};
+
+byte correct_eye_3[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B10000000,
+  B11000000,
+  B01100000,
+  B00000000
+};
+
+byte correct_eye_4[8] = {
+  B00000000,
+  B0000000,
+  B00000000,
+  B00000000,
+  B10000000,
+  B11000000,
+  B0110000,
+  B00100000
+};
+byte correct_eye_5[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B10000000,
+  B11010000,
+  B01110000,
+  B00100000
+};
+byte correct_eye_6[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B10001100,
+  B11011000,
+  B01110000,
+  B00100000
+};
+byte correct_eye_7[8] = {
+  B00000000,
+  B00000001,
+  B00000011,
+  B00000110,
+  B10001100,
+  B11011000,
+  B01110000,
+  B00100000
+};
+byte correct_eye_8[8] = {
+  B00000000,
+  B00000000,
+  B00000011,
+  B00000110,
+  B10001100,
+  B11011000,
+  B01110000,
+  B00000000
+};
+byte correct_eye_9[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000110,
+  B10011100,
+  B11011000,
+  B00000000,
+  B00000000
+};
+
+byte correct_eye_10[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B11011100,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte shrinking_eye_1[8] = {
+  B00000000,
+  B00000000,
+  B00011000,
+  B00111100,
+  B01111110,
+  B00111100,
+  B00011000,
+  B00000000
+};
+
+byte shrinking_eye_2[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00011000,
+  B00111100,
+  B00011000,
+  B00000000,
+  B00000000
+};
+
+byte shrinking_eye_3[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00011000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte wrong_eye_1[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00111100,
+  B00011000,
+  B00111100,
+  B00000000,
+  B00000000
+};
+
+byte wrong_eye_2[8] = {
+  B00000000,
+  B00000000,
+  B01100110,
+  B00111100,
+  B00011000,
+  B00111100,
+  B01100110,
+  B00000000
+};
+
+byte wrong_eye_3[8] = {
+  B00000000,
+  B11000011,
+  B01100110,
+  B00111100,
+  B00011000,
+  B00111100,
+  B01100110,
+  B11000011
+};
+
+byte wrong_eye_4_R[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00111000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte wrong_eye_4_L[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00011100,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+
+
 void write_eye(byte eye[8], int index, int del) {
   int row = 0, col = 7;
   while (row < 8 && col >= 0) {
@@ -698,4 +894,120 @@ void draw_scanning_L() {
   write_eye(open_eye_3_1, 1, 500);
   //write_eye(open_eye_4_1, 1, 500);
   //write_eye(empty_eye, 1, 500);
+}
+
+
+void draw_correct_eye_start()
+{
+  write_eye(shrinking_eye_1, 0, 0);
+  write_eye(shrinking_eye_1, 1, 0);
+  delay(65);
+  write_eye(shrinking_eye_2, 0, 0);
+  write_eye(shrinking_eye_2, 1, 0);
+  delay(65);
+  write_eye(shrinking_eye_3, 0, 0);
+  write_eye(shrinking_eye_3, 1, 0);
+  delay(65);
+  write_eye(empty_eye, 0, 500);
+  write_eye(empty_eye, 1, 500);
+  delay(65);
+  write_eye(correct_eye_1, 0, 500);
+  write_eye(correct_eye_1, 1, 500);
+  delay(40);
+  write_eye(correct_eye_2, 0, 500);
+  write_eye(correct_eye_2, 1, 500);
+  delay(30);
+  write_eye(correct_eye_3, 0, 500);
+  write_eye(correct_eye_3, 1, 500);
+  delay(30);
+  write_eye(correct_eye_4, 0, 500);
+  write_eye(correct_eye_4, 1, 500);
+  delay(30);
+  write_eye(correct_eye_5, 0, 500);
+  write_eye(correct_eye_5, 1, 500);
+  delay(30);
+  write_eye(correct_eye_6, 0, 500);
+  write_eye(correct_eye_6, 1, 500);
+  delay(30);
+  write_eye(correct_eye_7, 0, 500);
+  write_eye(correct_eye_7, 1, 500);
+
+}
+
+void draw_correct_eye_end()
+{
+  write_eye(correct_eye_8, 0, 500);
+  write_eye(correct_eye_8, 1, 500);
+  delay(30);
+  write_eye(correct_eye_9, 0, 500);
+  write_eye(correct_eye_9, 1, 500);
+  delay(50);
+  write_eye(correct_eye_10, 0, 500);
+  write_eye(correct_eye_10, 1, 500);
+  delay(65);
+   write_eye(open_eye_4_0, 0, 50);
+  write_eye(open_eye_4_1, 1, 50);
+  delay(50);
+  write_eye(open_eye_3_0, 0, 50);
+  write_eye(open_eye_3_1, 1, 50);
+  delay(50);
+  write_eye(open_eye_2_0, 0, 50);
+  write_eye(open_eye_2_1, 1, 50);
+  delay(50);
+  write_eye(open_eye_1_0, 0, 50);
+  write_eye(open_eye_1_1, 1, 50);
+}
+
+void draw_wrong_eye_start()
+{
+  write_eye(shrinking_eye_1, 0, 0);
+  write_eye(shrinking_eye_1, 1, 0);
+  delay(65);
+  write_eye(shrinking_eye_2, 0, 0);
+  write_eye(shrinking_eye_2, 1, 0);
+  delay(65);
+  write_eye(shrinking_eye_3, 0, 0);
+  write_eye(shrinking_eye_3, 1, 0);
+  delay(65);
+  write_eye(empty_eye, 0, 500);
+  write_eye(empty_eye, 1, 500);
+  delay(65);
+  write_eye(wrong_eye_1, 0, 500);
+  write_eye(wrong_eye_1, 1, 500);
+  delay(65);
+  write_eye(wrong_eye_2, 0, 500);
+  write_eye(wrong_eye_2, 1, 500);
+  delay(65);
+  write_eye(wrong_eye_3, 0, 500);
+  write_eye(wrong_eye_3, 1, 500);
+  delay(65);
+}
+void draw_wrong_eye_end()
+{
+  write_eye(wrong_eye_3, 0, 500);
+  write_eye(wrong_eye_3, 1, 500);
+  delay(65);
+  write_eye(wrong_eye_2, 0, 500);
+  write_eye(wrong_eye_2, 1, 500);
+  delay(65);
+  write_eye(wrong_eye_1, 0, 500);
+  write_eye(wrong_eye_1, 1, 500);
+  delay(65);
+  write_eye(empty_eye, 0, 500);
+  write_eye(empty_eye, 1, 500);
+  delay(65);
+  write_eye(wrong_eye_4_R, 0, 500);
+  write_eye(wrong_eye_4_L, 1, 500);
+  delay(65);
+  write_eye(open_eye_4_0, 0, 50);
+  write_eye(open_eye_4_1, 1, 50);
+  delay(50);
+  write_eye(open_eye_3_0, 0, 50);
+  write_eye(open_eye_3_1, 1, 50);
+  delay(50);
+  write_eye(open_eye_2_0, 0, 50);
+  write_eye(open_eye_2_1, 1, 50);
+  delay(50);
+  write_eye(open_eye_1_0, 0, 50);
+  write_eye(open_eye_1_1, 1, 50);
 }

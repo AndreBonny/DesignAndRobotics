@@ -5,7 +5,7 @@
     serial_write_debug("MSG = ");
     serial_write_debug(str);
   }
-
+  //----------------------------------------------
   if (str == MOV_1) {
     serial_write_debug("Ricevuto MOV");
     delay(20); //sicurezza per  Laser??
@@ -25,6 +25,7 @@
     draw_openclose();
   }
 
+  //----------------------------------------------
   if (str == ROCK_INT) {
     serial_write_debug("Ricevuto ROCK_INT");
     play(ROCK_SONG);
@@ -36,6 +37,7 @@
     serial_write_debug("Invio END_ROCK_INT");
   }
 
+  //----------------------------------------------
   if (str == SPEAK_1) {
     bool end_sp = false;
 
@@ -120,7 +122,7 @@
     serial_write_debug("Invio END_SPEAK");
   }
 
-
+  //----------------------------------------------
   if (str == RES_POS_1) {
     serial_write_debug("Riccevuto RES_POS");
     draw_openclose();
@@ -134,4 +136,7 @@
     serial_write(END_RES_POS_1);
     serial_write_debug("Invio END_RES_POS");
   }
+  
+  //default blinking
+  draw_opneclose();
 }
