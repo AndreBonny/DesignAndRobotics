@@ -71,7 +71,7 @@ void fase1() {
        Start Face Trackin and cont the cycles where a face is found
     */
     case TRACKING:
-      Serial.printf("Starting tracking");
+      //Serial.printf("Starting tracking");
       serial_write(SPEAK_1);
       ledcAnalogWrite(tilt_ch, 160);
       //stop message read inside face_tracking function

@@ -63,7 +63,7 @@ void fase2() {
        Start Face Tracking and cont the cycles where a face is found
     */
     case TRACKING:
-      Serial.printf("Starting tracking");
+      //Serial.printf("Starting tracking");
       serial_write(SPEAK_2);
       ledcAnalogWrite(tilt_ch, 160);
       //stop message read inside face_tracking function
@@ -131,7 +131,7 @@ void fase2() {
     case INGAME:
       if (!inited) {
         Inizializza_webserver();
-        Serial.println("Waiting for connection");
+        //Serial.println("Waiting for connection");
         inited = 1;
       }
       Portal.begin();
