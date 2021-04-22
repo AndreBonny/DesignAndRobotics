@@ -80,10 +80,10 @@ void initialize_random_questions() {
 }
 
 void onConnect(IPAddress& ipaddr) {
-  Serial.print("WiFi connected with ");
-  Serial.print(WiFi.SSID());
-  Serial.print(", IP:");
-  Serial.println(ipaddr.toString());
+  //Serial.print("WiFi connected with ");
+  //Serial.print(WiFi.SSID());
+  //Serial.print(", IP:");
+  //Serial.println(ipaddr.toString());
   connectedIP = ipaddr;
 }
 
@@ -93,7 +93,7 @@ void Inizializza_webserver() {
 
   // Initialize SPIFFS for file system
   if (!SPIFFS.begin(true)) {
-    Serial.println("An Error has occurred while mounting SPIFFS");
+    //Serial.println("An Error has occurred while mounting SPIFFS");
     return;
   }
 
@@ -119,7 +119,7 @@ void Inizializza_webserver() {
   server.onNotFound(handle_NotFound);
 
   configure_portal();
-  Serial.println("HTTP server started");
+  //Serial.println("HTTP server started");
 }
 
 void configure_portal() {
@@ -156,12 +156,12 @@ void handle_home_page() {
 
     initialize_random_questions();
     for (int i = 0; i < num_questions; i++) {
-      Serial.print("Question #" + String(i) + " ");
-      Serial.println(randomQuestions[i]);
-      Serial.print("Answer #" + String(i) + " ");
-      Serial.println(randomAnswers[i]);
+      //Serial.print("Question #" + String(i) + " ");
+      //Serial.println(randomQuestions[i]);
+      //Serial.print("Answer #" + String(i) + " ");
+      //Serial.println(randomAnswers[i]);
     }
-    Serial.println("Home page");
+    //Serial.println("Home page");
     handle_page("/home_p.html", false);
   } else {
     handle_page("/busy.html", false);
@@ -189,8 +189,10 @@ void check_answer(String ans) {
   if (randomAnswers[current_question - 1] == ans) {
     num_correct++;
     handle_next("Correct!");
+    serial_write(CORRECT_ANSWER);
   } else {
     handle_next("Wrong!");
+    serial_write(WRONG_ANSWER);
   }
 }
 
@@ -201,6 +203,7 @@ void handle_next(String res) {
 void handle_disconnect() {
   if (currentlyConnected) {
     handle_page("/disconnected.html", false);
+    serial_write(END_GAME);
     delay(1000);
     Portal.end();
     currentlyConnected = false;
@@ -224,8 +227,9 @@ void handle_page(String page_name, bool is_css) {
       server.send(200, "text/css", page);
     else
       server.send(200, "text/html", page);
-  } else
-    Serial.println("Failed to get page");
+  } else{
+    //Serial.println("Failed to get page");
+  }
 }
 
 void handle_NotFound() {

@@ -4,8 +4,8 @@ String sendFinalResults(int num_correct, int num_questions) {
   int perc_corr = (int)(num_correct*100)/num_questions;
   int perc_wrong = (int)(num_wrong*100)/num_questions;
 
-  Serial.println(perc_corr);
-  Serial.println(perc_wrong);
+  //Serial.println(perc_corr);
+  //Serial.println(perc_wrong);
   
   String ptr = "";
   ptr += "<!DOCTYPE html>";

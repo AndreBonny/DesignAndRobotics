@@ -121,7 +121,6 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
 }
 
 int Face_tracking() {
-  int ret;
   int count = 0;
   long distanza;
   bool exit = false;
@@ -166,14 +165,14 @@ int Face_tracking() {
     }
 
     if (boxes != NULL) {
-      Serial.printf("Face detected! Distanza = %li \n", distanza);
+      //Serial.printf("Face detected! Distanza = %li \n", distanza);
       draw_face_boxes(image_matrix, boxes);
       dl_lib_free(boxes->score);
       dl_lib_free(boxes->box);
       dl_lib_free(boxes->landmark);
       dl_lib_free(boxes);
     } else {
-      Serial.printf("No face detected! Distanza = %li \n", distanza);
+      //Serial.printf("No face detected! Distanza = %li \n", distanza);
     }
 
     dl_matrix3du_free(image_matrix);
