@@ -138,5 +138,5 @@
   }
   
   //default blinking
-  draw_opneclose();
+  draw_openclose();
 }
