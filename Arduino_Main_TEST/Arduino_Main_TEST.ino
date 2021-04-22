@@ -73,17 +73,26 @@ void loop() {
     delay(5000);
   */
   /*
-  draw_correct_eye_start();
-  delay(1000);
-  draw_correct_eye_end();
-  draw_openclose();
-  draw_wrong_eye_start();
-  delay(1000);
-  draw_wrong_eye_end();
-  draw_openclose();
+    draw_correct_eye_start();
+    delay(1000);
+    draw_correct_eye_end();
+    draw_openclose();
+    draw_wrong_eye_start();
+    delay(1000);
+    draw_wrong_eye_end();
+    draw_openclose();
   */
   //draw_angry();
-  draw_question();
-
+  draw_angry_start();
+  delay(2000);
+  draw_angry_blink();
+  delay(2000);
+  draw_angry_end();
+  delay(200);
+  draw_openclose();
+  draw_question_start();
+  delay(2000);
+  draw_question_end();
+  delay(2000);
 
 }

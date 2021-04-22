@@ -569,7 +569,62 @@ byte wrong_eye_4_L[8] = {
   B00000000
 };
 
-byte question_eye[8] = {
+byte question_eye_1[8] = {
+  B00000000,
+  B00000000,
+  B01100000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte question_eye_2[8] = {
+  B00011000,
+  B00100000,
+  B01100000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte question_eye_3[8] = {
+  B00011000,
+  B00100100,
+  B01100000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte question_eye_4[8] = {
+  B00011000,
+  B00100100,
+  B01100110,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte question_eye_5[8] = {
+  B00011000,
+  B00100100,
+  B01100110,
+  B00001100,
+  B00011000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte question_eye_6[8] = {
   B00011000,
   B00100100,
   B01100110,
@@ -580,7 +635,30 @@ byte question_eye[8] = {
   B00011000
 };
 
-byte angry_eye_R[8] = {
+
+byte angry_eye_R_1[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B11111000,
+  B11111110,
+  B11111110,
+  B00000000,
+  B00000000
+};
+
+byte angry_eye_R_2[8] = {
+  B00000000,
+  B00000000,
+  B01110000,
+  B11111000,
+  B11111110,
+  B11111110,
+  B01111100,
+  B00000000
+};
+
+byte angry_eye_R_3[8] = {
   B00000000,
   B00100000,
   B01110000,
@@ -591,7 +669,29 @@ byte angry_eye_R[8] = {
   B00111000
 };
 
-byte angry_eye_L[8] = {
+byte angry_eye_L_1[8] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00011111,
+  B01111111,
+  B01111111,
+  B00000000,
+  B00000000
+};
+
+byte angry_eye_L_2[8] = {
+  B00000000,
+  B00000000,
+  B00001110,
+  B00011111,
+  B01111111,
+  B01111111,
+  B00111110,
+  B00000000
+};
+
+byte angry_eye_L_3[8] = {
   B00000000,
   B00000100,
   B00001110,
@@ -978,7 +1078,7 @@ void draw_correct_eye_end()
   write_eye(correct_eye_10, 0, 500);
   write_eye(correct_eye_10, 1, 500);
   delay(65);
-   write_eye(open_eye_4_0, 0, 50);
+  write_eye(open_eye_4_0, 0, 50);
   write_eye(open_eye_4_1, 1, 50);
   delay(50);
   write_eye(open_eye_3_0, 0, 50);
@@ -1045,16 +1145,155 @@ void draw_wrong_eye_end()
   write_eye(open_eye_1_1, 1, 50);
 }
 
-void draw_question()
+void draw_question_start()
 {
-  write_eye(question_eye, 0, 50);
-  write_eye(question_eye, 0, 50);
+  write_eye(shrinking_eye_1, 0, 0);
+  write_eye(shrinking_eye_1, 1, 0);
+  delay(65);
+  write_eye(shrinking_eye_2, 0, 0);
+  write_eye(shrinking_eye_2, 1, 0);
+  delay(65);
+  write_eye(shrinking_eye_3, 0, 0);
+  write_eye(shrinking_eye_3, 1, 0);
+  delay(65);
+  write_eye(empty_eye, 0, 500);
+  write_eye(empty_eye, 1, 500);
+  delay(65);
+  write_eye(question_eye_1, 0, 50);
+  write_eye(question_eye_1, 1, 50);
+  delay(30);
+  write_eye(question_eye_2, 0, 50);
+  write_eye(question_eye_2, 1, 50);
+  delay(30);
+  write_eye(question_eye_3, 0, 50);
+  write_eye(question_eye_3, 1, 50);
+  delay(30);
+  write_eye(question_eye_4, 0, 50);
+  write_eye(question_eye_4, 1, 50);
+  delay(30);
+  write_eye(question_eye_5, 0, 50);
+  write_eye(question_eye_5, 1, 50);
+  delay(30);
+  write_eye(question_eye_6, 0, 50);
+  write_eye(question_eye_6, 1, 50);
+  delay(30);
 }
 
-void draw_angry()
+void draw_question_end()
 {
-  write_eye(angry_eye_R, 0, 50);
-  delay(3000);
-  write_eye(angry_eye_L, 0, 50);
-  delay(3000);
+  write_eye(question_eye_6, 0, 50);
+  write_eye(question_eye_6, 1, 50);
+  delay(30);
+  write_eye(question_eye_5, 0, 50);
+  write_eye(question_eye_5, 1, 50);
+  delay(30);
+  write_eye(question_eye_4, 0, 50);
+  write_eye(question_eye_4, 1, 50);
+  delay(30);
+  write_eye(question_eye_3, 0, 50);
+  write_eye(question_eye_3, 1, 50);
+  delay(30);
+  write_eye(question_eye_2, 0, 50);
+  write_eye(question_eye_2, 1, 50);
+  delay(30);
+  write_eye(question_eye_1, 0, 50);
+  write_eye(question_eye_1, 1, 50);
+  delay(30);
+  write_eye(empty_eye, 0, 500);
+  write_eye(empty_eye, 1, 500);
+  delay(65);
+  write_eye(shrinking_eye_3, 0, 0);
+  write_eye(shrinking_eye_3, 1, 0);
+  delay(65);
+  write_eye(shrinking_eye_2, 0, 0);
+  write_eye(shrinking_eye_2, 1, 0);
+  delay(65);
+  write_eye(shrinking_eye_1, 0, 0);
+  write_eye(shrinking_eye_1, 1, 0);
+  delay(65);
+  write_eye(open_eye_1_0, 0, 0);
+  write_eye(open_eye_1_1, 1, 0);
+
+}
+
+void draw_angry_start()
+{
+  write_eye(open_eye_1_0, 0, 0);
+  write_eye(open_eye_1_1, 1, 0);
+  delay(50);
+  write_eye(open_eye_2_0, 0, 50);
+  write_eye(open_eye_2_1, 1, 50);
+  delay(50);
+  write_eye(open_eye_3_0, 0, 50);
+  write_eye(open_eye_3_1, 1, 50);
+  delay(50);
+  write_eye(open_eye_4_0, 0, 50);
+  write_eye(open_eye_4_1, 1, 50);
+  delay(50);
+  write_eye(closed_eye_0, 0, 200);
+  write_eye(closed_eye_1, 1, 200);
+  delay(50);
+  write_eye(angry_eye_R_1, 0, 50);
+  write_eye(angry_eye_L_1, 1, 50);
+  delay(50);
+  write_eye(angry_eye_R_2, 0, 50);
+  write_eye(angry_eye_L_2, 1, 50);
+  delay(50);
+  write_eye(angry_eye_R_3, 0, 50);
+  write_eye(angry_eye_L_3, 1, 50);
+  delay(50);
+}
+
+void draw_angry_end()
+{
+  write_eye(angry_eye_R_3, 0, 50);
+  write_eye(angry_eye_L_3, 1, 50);
+  delay(50);
+  write_eye(angry_eye_R_2, 0, 50);
+  write_eye(angry_eye_L_2, 1, 50);
+  delay(50);
+  write_eye(angry_eye_R_1, 0, 50);
+  write_eye(angry_eye_L_1, 1, 50);
+  delay(50);
+  write_eye(closed_eye_0, 0, 200);
+  write_eye(closed_eye_1, 1, 200);
+  delay(50);
+  write_eye(open_eye_4_0, 0, 50);
+  write_eye(open_eye_4_1, 1, 50);
+  delay(50);
+  write_eye(open_eye_3_0, 0, 50);
+  write_eye(open_eye_3_1, 1, 50);
+  delay(50);
+  write_eye(open_eye_2_0, 0, 50);
+  write_eye(open_eye_2_1, 1, 50);
+  delay(50);
+  write_eye(open_eye_1_0, 0, 0);
+  write_eye(open_eye_1_1, 1, 0);
+  delay(50);
+
+}
+
+void draw_angry_blink()
+{
+  write_eye(angry_eye_R_3, 0, 50);
+  write_eye(angry_eye_L_3, 1, 50);
+  delay(50);
+  write_eye(angry_eye_R_2, 0, 50);
+  write_eye(angry_eye_L_2, 1, 50);
+  delay(50);
+  write_eye(angry_eye_R_1, 0, 50);
+  write_eye(angry_eye_L_1, 1, 50);
+  delay(50);
+  write_eye(closed_eye_0, 0, 200);
+  write_eye(closed_eye_1, 1, 200);
+  delay(50);
+  write_eye(angry_eye_R_1, 0, 50);
+  write_eye(angry_eye_L_1, 1, 50);
+  delay(50);
+  write_eye(angry_eye_R_2, 0, 50);
+  write_eye(angry_eye_L_2, 1, 50);
+  delay(50);
+  write_eye(angry_eye_R_3, 0, 50);
+  write_eye(angry_eye_L_3, 1, 50);
+  delay(50);
 }
