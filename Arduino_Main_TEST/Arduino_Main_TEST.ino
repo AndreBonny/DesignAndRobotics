@@ -39,10 +39,10 @@ void setup() {
   Serial.begin(9600);
   Serial3.begin(9600);
 
-  Inizializza_sensori();
-  Inizializza_Motori();
+  //Inizializza_sensori();
+  //Inizializza_Motori();
   Inizializza_Occhi();
-  Inizializza_DFPlayer();
+  //Inizializza_DFPlayer();
   pinMode(LASER_PIN_L, OUTPUT);
   digitalWrite(LASER_PIN_L, LOW);
   pinMode(LASER_PIN_R, OUTPUT);
@@ -58,17 +58,32 @@ void setup() {
 
 
 void loop() {
+  /*
+    draw_openclose();
+
+    play(GREETINGS);
+    delay(16000);
+    play(ADVERTISE);
+    delay(23000);
+    play(QRCODE);
+    delay(16000);
+    play(BYE_GREETINGS);
+    delay(15000);
+    play(ROCK_SONG);
+    delay(5000);
+  */
+  /*
+  draw_correct_eye_start();
+  delay(1000);
+  draw_correct_eye_end();
   draw_openclose();
-  
-  play(GREETINGS);
-  delay(16000);
-  play(ADVERTISE);
-  delay(23000);
-  play(QRCODE);
-  delay(16000);
-  play(BYE_GREETINGS);
-  delay(15000);
-  play(ROCK_SONG);
-  delay(5000);
+  draw_wrong_eye_start();
+  delay(1000);
+  draw_wrong_eye_end();
+  draw_openclose();
+  */
+  //draw_angry();
+  draw_question();
+
 
 }

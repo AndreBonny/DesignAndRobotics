@@ -1,7 +1,8 @@
 void fase2() {
 
   int noPlayCount;
-  Track track
+  Track track;
+  bool end_sp;
 
   String str = serial_read();
   if (str.length() > 0) {
@@ -114,7 +115,7 @@ void fase2() {
             noPlayCount++;
           delay(50);
         }
-        correct_answer++;
+        correct_answers++;
         draw_correct_eye_end();
       }
 
@@ -131,7 +132,7 @@ void fase2() {
             noPlayCount++;
           delay(50);
         }
-        wrong_answer++;
+        wrong_answers++;
         draw_wrong_eye_end();
       }
 
@@ -193,7 +194,6 @@ void fase2() {
       }
       else if (tot_answers > 50)//good  //NEEDS EYES______________________________________________
       {
-
         track = GOOD;
         noPlayCount = 0;
         //PLAY GOOD
@@ -205,7 +205,7 @@ void fase2() {
           delay(50);
         }
       }
-      else if (tot_answers > 75 || tot_answer < 95) //very good // NEED EYES_____________________________________________
+      else if (tot_answers > 75 || tot_answers < 95) //very good // NEED EYES_____________________________________________
       {
 
         track = VERY_GOOD;
@@ -248,7 +248,7 @@ void fase2() {
 
     noPlayCount = 0;
     track = FACTS_1;
-
+    end_sp = false;
     //prepare a new random fact
 
     play(track);
