@@ -1,4 +1,4 @@
-AF_DCMotor motoreR(1);
+AF_DCMotor motoreR(3);
 AF_DCMotor motoreL(4);
 
 void Inizializza_Motori() {
@@ -32,7 +32,7 @@ void avanti(int mot, int speed) {
   }
 };
 
-void indietro(char mot, int speed) {
+void indietro(int mot, int speed) {
   switch (mot) {
     case MOT_R:
       motoreR.setSpeed(speed);
@@ -45,35 +45,50 @@ void indietro(char mot, int speed) {
   }
 };
 
+void move(int mot, int speed) {
 
-void go() {
-  avanti(MOT_R, V);
-  avanti(MOT_L, V);
-  delay(T_straight);
+  speed = max(min(speed, 255), -255);
+
+  if (speed > 0) {
+    avanti(mot, speed);
+  }
+  else if (speed < 0) {
+    indietro(mot, -speed);
+  }
+  else {
+    fermo(mot);
+  }
+
+}
+
+void move_forward(int t, int speed) {
+  avanti(MOT_R, speed);
+  avanti(MOT_L, speed);
+  delay(t);
   fermo(MOT_R);
   fermo(MOT_L);
 }
 
-void back() {
-  indietro(MOT_R, V);
-  indietro(MOT_L, V);
-  delay(T_straight);
+void move_backward(int t, int speed) {
+  indietro(MOT_R, speed);
+  indietro(MOT_L, speed);
+  delay(t);
   fermo(MOT_R);
   fermo(MOT_L);
 }
 
-void turn_right() {
-  avanti(MOT_L, Omega);
-  indietro(MOT_R, Omega);
-  delay(T_turn);
+void turn_right(int t, int speed) {
+  avanti(MOT_L, speed);
+  indietro(MOT_R, speed);
+  delay(t);
   fermo(MOT_R);
   fermo(MOT_L);
 }
 
-void turn_left() {
-  indietro(MOT_L, Omega);
-  avanti(MOT_R, Omega);
-  delay(T_turn);
+void turn_left(int t, int speed) {
+  indietro(MOT_L, speed);
+  avanti(MOT_R, speed);
+  delay(t);
   fermo(MOT_R);
   fermo(MOT_L);
 }

@@ -1,14 +1,15 @@
 #include <AFMotor.h>
+#include <PID_v1.h>
 #include "LedControl.h"
 
 //define of pins
-#define PHASE_PIN 20
+#define PHASE_PIN 21
 #define LASER_PIN_L 50
 #define LASER_PIN_R 51
 #define BUSY_PIN 5
 
 //define for movement
-#define MOT_R 1
+#define MOT_R 3
 #define MOT_L 4
 #define V  200
 #define Omega  240
@@ -53,6 +54,13 @@ unsigned long t;
 //variable for phase
 int phase;
 
+
+double Setpoint, Input, Output;
+int Speed_R, Speed_L;
+
+double Kp = 2*V, Ki = 0 , Kd = 0;
+PID PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+
 void setup() {
   Serial1.begin(115200);
   Serial1.setTimeout(1);
@@ -71,10 +79,13 @@ void setup() {
   Inizializza_Motori();
   Inizializza_Occhi();
   Inizializza_DFPlayer();
+  //Inizializza Laser
   pinMode(LASER_PIN_L, OUTPUT);
   digitalWrite(LASER_PIN_L, LOW);
   pinMode(LASER_PIN_R, OUTPUT);
   digitalWrite(LASER_PIN_R, LOW);
+  //Inizializza Switch Phase
+  pinMode(PHASE_PIN,INPUT_PULLUP);
 
   //comunicate to ESP that initialization has finished
   serial_write(ARD_READY);
@@ -99,11 +110,13 @@ void setup() {
 
 void loop() {
 
+  Serial.print(phase);
+/*
   if (phase == 1) {
     phase1();
   }
   else {
     phase2();
-  }
+  }*/
 
 }
