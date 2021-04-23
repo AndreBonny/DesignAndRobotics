@@ -2,7 +2,7 @@
 #include "LedControl.h"
 
 //define of pins
-#define FASE_PIN 20
+#define PHASE_PIN 20
 #define LASER_PIN_L 50
 #define LASER_PIN_R 51
 #define BUSY_PIN 5
@@ -19,8 +19,8 @@
 //define for messages exchanged between arduino and ESP
 #define ARD_READY "1"
 #define ESP_READY "2"
-#define FASE_1 "3"
-#define FASE_2 "4"
+#define PHASE_1 "3"
+#define PHASE_2 "4"
 #define MOV_1 "5"
 #define END_MOV_1 "6"
 #define RES_POS_1 "7"
@@ -51,7 +51,7 @@ enum Track { A, GREETINGS, ADVERTISE, QRCODE,  BYE_GREETINGS, ROCK_SONG, SADNESS
 //variable for timers
 unsigned long t;
 //variable for phase
-int fase;
+int phase;
 
 void setup() {
   Serial1.begin(115200);
@@ -82,11 +82,11 @@ void setup() {
   serial_write_debug("ARDUINO READY");
 
   //read current phase
-  fase = digitalRead(FASE_PIN);
-  if (fase == 1)
-    serial_write(FASE_1);
-  if (fase == 0)
-    serial_write(FASE_2);
+  phase = digitalRead(PHASE_PIN);
+  if (phase == 1)
+    serial_write(PHASE_1);
+  if (phase == 0)
+    serial_write(PHASE_2);
 
   //random for phase 2
   randomSeed(analogRead(31));
@@ -99,11 +99,11 @@ void setup() {
 
 void loop() {
 
-  if (fase == 1) {
-    fase1();
+  if (phase == 1) {
+    phase1();
   }
   else {
-    fase2();
+    phase2();
   }
 
 }

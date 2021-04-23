@@ -1,4 +1,4 @@
-void fase2() {
+void phase2() {
 
   int noPlayCount;
   Track track;
@@ -9,7 +9,11 @@ void fase2() {
     serial_write_debug("MSG = ");
     serial_write_debug(str);
   }
-  //----------------------------------------------
+
+ /* Once the ESP sends the MOV_2 commnad the robot should start moving randomly in the
+  * designed space. Once a border has been reached the robot will stop and
+  * Arduino will send the END_MOV_2 message 
+  */
   if (str == MOV_2) {
     serial_write_debug("Ricevuto MOV");
     delay(20); //sicurezza per  Laser??
@@ -19,7 +23,10 @@ void fase2() {
     serial_write_debug("Invio END_MOV");
     draw_openclose();
   }
-  //----------------------------------------------
+
+ /* The ESP has found someone, the robot has to propose the game and comunicate how 
+  * to start it once the explenation has finished send START_GAME to the ESP
+  */
   if (str == SPEAK_2) {
 
     track = GAME_PROPOSAL;
@@ -29,7 +36,6 @@ void fase2() {
     play(track);
 
     draw_question_start();
-
     t = millis();
     while (noPlayCount < 2) //check end of track
     {
@@ -63,7 +69,10 @@ void fase2() {
     serial_write(START_GAME);
   }
 
-  //----------------------------------------------
+/* In a similar way as in phase 1, once all the interactions have ended
+ * prepare for a new cycle.
+ * Once it's finished send END_RES_POS_2
+ */
   if (str == RES_POS_2) {
     serial_write_debug("Riccevuto RES_POS");
     draw_openclose();
@@ -74,7 +83,14 @@ void fase2() {
     serial_write_debug("Invio END_RES_POS");
   }
 
-  //----------------------------------------------
+/* Someone has connected to the ESP to play the game.
+ * Arduino now has to react (with voice and eyes) to the 
+ * each wrong (ESP sends WRONG_ANSWER) and correct answer (ESP sends CORRECT_ANSWER).
+ * Once the game has finished the ESP sends END_GAME.
+ * The robot now has to evaluate the performance on the quiz.
+ * Once the interaction has finished Arduino sends END_SPEAK_2 to the ESP
+ */
+
   if (str == START_GAME_YES) {
 
     int correct_answers = 0;
@@ -84,6 +100,7 @@ void fase2() {
     track = INTRODUCTION_PHRASE;
     noPlayCount = 0;
     //PLAY INTRODUCTION_PHRASE
+    
     play(track);
     while (noPlayCount < 2) //check end of track
     {
@@ -97,7 +114,8 @@ void fase2() {
       delay(50);
     }
 
-    do {
+    do 
+    {
 
       str = serial_read();
       if (str == CORRECT_ANSWER)
@@ -162,7 +180,7 @@ void fase2() {
         delay(50);
       }
 
-      if (tot_answers <= 25) //very bad  //NEEDS ANGRY EYES ________________________________________________
+      if (tot_answers <= 25) //very bad
       {
         track = VERY_BAD;
         noPlayCount = 0;
@@ -226,7 +244,7 @@ void fase2() {
         draw_happy_close();
         draw_happy_end();
       }
-      else if (tot_answers > 75 || tot_answers < 95) //very good // NEED EYES_____________________________________________
+      else if (tot_answers > 75 || tot_answers < 95) //very good
       {
 
         track = VERY_GOOD;
@@ -277,7 +295,12 @@ void fase2() {
     serial_write(END_SPEAK_2);
   }
 
-  //----------------------------------------------
+
+/* The visitor will not play the game but it's still in the proximity of the robot.
+ * The robot will then play a random "space fact" tacken from a pool of tracks.
+ * As in phase 1, if the visitor gets away from the robot the ESP will send
+ * STOP_SPEAK to the Arduino.
+ */
 
   if (str == START_GAME_NO) {
     //Play informazioni sul museo
@@ -285,9 +308,9 @@ void fase2() {
     //Finisce con END_SPEAK_2
 
     noPlayCount = 0;
-    track = FACTS_1;
     end_sp = false;
-    //prepare a new random fact
+    //prepare a new random fact (between 0011 and  0015)
+    track = static_cast<Track>(random(11, 15));
 
     play(track);
     draw_happy_start();

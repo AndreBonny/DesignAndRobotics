@@ -72,17 +72,63 @@ void loop() {
     play(ROCK_SONG);
     delay(5000);
   */
-  /*
-    draw_correct_eye_start();
-    delay(1000);
-    draw_correct_eye_end();
-    draw_openclose();
-    draw_wrong_eye_start();
-    delay(1000);
-    draw_wrong_eye_end();
-    draw_openclose();
-  */
-  //draw_angry();
+
+  draw_scared_start();
+  delay(500);
+  draw_scared_end();
+  delay(500);
+  
+  draw_scared_start();
+  delay(500);
+  draw_scared_end();
+  delay(500);
+  
+  draw_surprised_start();
+  delay(500);
+  draw_surprised_end();
+  delay(500);
+
+  draw_surprised_start();
+  delay(500);
+  draw_surprised_end();
+  delay(500);
+  draw_surprised_start();
+  delay(500);
+  draw_surprised_end();
+  delay(500);
+
+  draw_happy_start();
+  draw_happy_open();
+  delay(500);
+  draw_happy_blink();
+  delay(500);
+  draw_happy_blink();
+  delay(500);
+  draw_happy_blink();
+  delay(500);
+  draw_happy_close();
+  draw_happy_end();
+  delay(500);
+
+
+  draw_sad_start();
+  delay(500);
+  draw_sad_blink();
+  delay(500);
+  draw_sad_blink();
+  delay(500);
+
+  draw_sad_end();
+
+  draw_correct_eye_start();
+  delay(1000);
+  draw_correct_eye_end();
+  draw_openclose();
+  draw_wrong_eye_start();
+  delay(1000);
+  draw_wrong_eye_end();
+  draw_openclose();
+
   draw_angry_start();
   delay(2000);
   draw_angry_blink();

@@ -1,0 +1,87 @@
+GREETINGS 0001
+
+Hi! I am Steve (Rover, Spot?), a small robot who aspires to be the greatest explorer in history!
+My father helped mankind a lot in space exploration and I want to be like him one day.
+
+ADVERTISE 0002
+
+At the moment, my task is to become the best at scanning the moon rocks. Unfortunately, in this country you can only find one in the National Museum of Science in Milan. 
+I will be working there in the near future. So if you like to see me again, you are welcome to drop by
+
+QRCODE 0003
+
+I want to tell you a little secret: if you scan the QR-CODE, you will be able to go directly to the museum website to book your visit or just have a look! Isn't that great?
+
+BYE-GREETINGS 0004
+
+it was really a great pleasure to meet you, human. Thanks for the company and have a great day!
+
+SADNESS 0005
+
+Oh, no ! Where have you gone? I wasn't finished speaking yet.
+  
+GAME_PROPOSAL 0006
+
+Would you like to play a game with me (SAW VIBES)? It's a quiz about space!  
+  
+GAME_START_INSTRUCTION 0007
+
+To play scan the QR CODE on my head, it should bring you automatically to the game page! If it doesn't work, connect to the wifi ntwork called MuseumRobot (o il nome finale).
+
+INTRODUCTION_PHRASE 0008
+
+Yes! i knew you wanted to play too! Are you ready?
+
+CORRECT_PHRASE 0009
+
+Correct! Good job!
+
+WRONG_PHRASE 0010
+
+Oh no! that was the wrong answer.
+
+FACTS_1 0011
+
+Did you know that the giant 3 tons telescope behind me was used by Giovanni Virginio Schiaparelli to observe Mars even before the first living being went into space?
+
+FACTS_2 0012
+
+Did you know that the americans were not the only ones dreaming to send the first man on the moon? The soviets also tried, but when they lost the space race, they tried to hide proof of their trial destroying by all traces.
+Luckily the Krechet space suit survied and it's exhibited here!
+
+FACTS_3 0013
+
+Did you know that only a couple of months ago, on the eithinth of february the rover Persevirence landed on mars? Morover it's equipped with an elicopter that completed its second fly a couple of days ago!
+
+FACTS_4 0014
+
+Did you know that the moon shows always the same face to the earth? Thats because the rotation velocity of the moon around the Earth is the same of the rotation around it's axis. It's shape changes because
+the dark part is the shade cast by the Earth!
+
+FACTS_5 0015
+
+Did youknow that Nasa is planning to back on the moon in 20 24? The plan is to build an orbiting space station and a moon base, isn't that exiting ?!
+
+LETS_SEE 0016
+
+mmm, let's see your results!
+
+VERY_BAD 0017
+
+Come on! How did you get wrong most of them ?!?
+
+BAD 0018
+
+That was not good. At least there's still a lot of room for improvemnts.
+
+GOOD 0019
+
+You still have a lot to learn, still that was good overall.
+
+VERY_GOOD 0020
+
+Good job! You know a lot about space.
+
+PERFECT  0021
+
+Brillant! you know more about space than even me!
