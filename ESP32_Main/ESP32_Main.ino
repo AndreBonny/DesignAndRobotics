@@ -46,8 +46,9 @@ int pan_pin = 15;
 int tilt_ch = 2;
 int pan_ch = 4;
 
-int tilt_center = 130;
+int tilt_center = 100;
 int pan_center = 100;
+int tilt_tracking = 80;
 
 int tilt_position;
 int pan_position;
@@ -57,10 +58,13 @@ AutoConnect Portal(server);
 
 
 bool trovato = false;
+bool connected = false;
+unsigned long game_timer;
 
 int Fase;
 int fine;
 String msg = "";
+
 
 void setup() {
   Serial.begin(115200);

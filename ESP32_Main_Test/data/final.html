@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0", user-scalable=no>
+        <title>Results page</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <img class="background" src="/background.jpg"/>
+        <main>
+            <div class="cover-disconnect">
+            </div>
+            <div class="cover cover-header">
+                <h2>Your score</h2>
+            </div>
+            <div class="cover cover-main">
+                <div class="cover__text-blur">
+                    <div class="score">
+                        <h5>Wrong</h5>
+                        <div class="bar">
+                            <div class="wrong wrong-30"><h3>3</h4></div>
+                            <div class="correct corr-70"><h3>7</h4></div>
+                        </div>
+                        <h5>Correct</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="cover cover-footer">
+                <a href="/disconnect" class="button">Exit</a>
+            </div>
+        </main>
+    </body>
+    <script type="text/javascript">
+        if(window.innerHeight <= 600) {
+            let ps = document.getElementsByTagName("p");
+            for(i=0; i<ps.length; i++) {
+                ps[i].style.fontSize = "10px";
+            }
+            let h4s = document.getElementsByTagName("h4");
+            for(i=0; i<h4s.length; i++) {
+                h4s[i].style.fontSize = "15px";
+            }
+            let h5s = document.getElementsByTagName("h5");
+            for(i=0; i<h5s.length; i++) {
+                h5s[i].style.fontSize = "13px";
+            }
+            let h3s = document.getElementsByTagName("h3");
+            for(i=0; i<h3s.length; i++) {
+                h3s[i].style.fontSize = "13px";
+            }
+            let scores = document.getElementsByClassName("score");
+            for(i=0; i<scores.length; i++) {
+                scores[i].style.height = "80%";
+            }
+
+        }
+        if(window.innerHeight >= 1000) {
+            let ps = document.getElementsByTagName("p");
+            for(i=0; i<ps.length; i++) {
+                ps[i].style.fontSize = "30px";
+            }
+            let h4s = document.getElementsByTagName("h4");
+            for(i=0; i<h4s.length; i++) {
+                h4s[i].style.fontSize = "45px";
+            }
+            let h3s = document.getElementsByTagName("h3");
+            for(i=0; i<h3s.length; i++) {
+                h3s[i].style.fontSize = "40px";
+            }
+            let h5s = document.getElementsByTagName("h5");
+            for(i=0; i<h5s.length; i++) {
+                h5s[i].style.fontSize = "40px";
+            }
+        }
+    </script>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Busy page</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body>
+		<img class="background" src="/background.jpg"/>
+		<main>
+			<div class="cover-disconnect">
+                <a href="" class="disconnect"> Disconnect </a>
+            </div>
+			<div class="cover-disconnect">
+            </div>
+			<div class="cover cover-header">
+				<img class="upper_logo" src="/logo_footer.png"/>
+			</div>
+			<div class="cover cover-main">
+				<div class="cover__text-blur">
+					<div class="cover__text">
+						<h4>I am sorry, there is already someone playing.</h4>
+					</div>
+				</div>
+			</div>
+		</main>
+	</body>
+	<script type="text/javascript">
+		if(window.innerHeight <= 600) {
+            let ps = document.getElementsByTagName("p");
+            for(i=0; i<ps.length; i++) {
+                ps[i].style.fontSize = "10px";
+            }
+            let hs = document.getElementsByTagName("h4");
+            for(i=0; i<hs.length; i++) {
+                hs[i].style.fontSize = "15px";
+            }
+        }
+        if(window.innerHeight >= 1000) {
+            let ps = document.getElementsByTagName("p");
+            for(i=0; i<ps.length; i++) {
+                ps[i].style.fontSize = "30px";
+            }
+            let hs = document.getElementsByTagName("h4");
+            for(i=0; i<hs.length; i++) {
+                hs[i].style.fontSize = "45px";
+            }
+        }
+	</script>
+</html>

@@ -1,4 +1,7 @@
 void ledcAnalogWrite(uint8_t channel, uint32_t value) {
+  if (channel == tilt_ch && value <= 50)
+    value = 50;
+
   uint32_t valueMax = 180;
   // calculate duty, 8191 from 2 ^ 13 - 1
   uint32_t duty = (8191 / valueMax) * min(value, valueMax);
@@ -40,14 +43,16 @@ void center_head() {
 
 void scan() {
 
-  tilt_position = 100;
+  tilt_position = 130;
   ledcAnalogWrite(tilt_ch, tilt_position);
 
 
   int    pan_start = 60;
   int    pan_end = 140;
-  int    t_stop = 25;
-  int    passo = 2;
+  int    t_stop = 15;
+  int    passo = 1;
+
+  ledcAnalogWrite(pan_ch, pan_start);
 
   for (int i = pan_start; i <= pan_end; i += passo) {
     ledcAnalogWrite(pan_ch, i);
@@ -71,7 +76,8 @@ bool Search() {
   tilt_position = tilt_center;
   ledcAnalogWrite(tilt_ch, tilt_position);
   ledcAnalogWrite(pan_ch, pan_start);
-  delay(10);
+
+  delay(100);
   for (int angle = pan_start; angle <= pan_end; angle += passo) {
     ledcAnalogWrite(pan_ch, angle);
     if (checkPerson(angle, t_stop))
@@ -91,8 +97,8 @@ void adjust_tilt() {
 
 void rock() {
 
-  int tilt_start = 90;
-  int tilt_end = 110;
+  int tilt_start = 110;
+  int tilt_end = 130;
   int t_stop = 40;
   int passo = 2;
 

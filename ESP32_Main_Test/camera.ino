@@ -15,7 +15,6 @@
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
-#define LED_BUILTIN 4
 bool initCamera() {
   //  Serial.printf("Initializing the camera...\n");
   camera_config_t config;
@@ -91,9 +90,6 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
   img_center_x = (int)(image_matrix->w / 2);
   img_center_y = (int)(image_matrix->h / 2);
 
-  int confidence = 10;
-  int movement = 5;
-
   for (int i = 0; i < boxes->len; i++) {
     //do {
     x = ((int)boxes->box[i].box_p[0]);
@@ -124,18 +120,32 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
   }
 }
 
-void Face_tracking() {
-
+int Face_tracking() {
   int count = 0;
   long distanza;
   bool exit = false;
   String data;
+  String msg;
+
+  if (Fase == 1) {
+    msg = END_SPEAK_1;
+  }
+  else {
+    msg = END_SPEAK_2;
+  }
+
 
   do {
 
     data = serial_read();
-    if (data.length() > 0 && data == END_SPEAK) {
+    if (data.length() > 0 && data == msg) {
       exit = true;
+      return 1;
+    }
+
+    if (data.length() > 0 && data == START_GAME) {
+      exit = true;
+      return 2;
     }
 
     camera_fb_t * frame;
@@ -147,7 +157,7 @@ void Face_tracking() {
 
     distanza = Distanza();
 
-    if ( (distanza > 0 && distanza < SOGLIA_DIST) || boxes != NULL) {
+    if ( (distanza < SOGLIA_DIST && distanza > 0) || boxes != NULL) {
       count = 0;
     }
     else {
@@ -155,21 +165,20 @@ void Face_tracking() {
     }
 
     if (boxes != NULL) {
-      ledcWrite(ledChannel, 10);
-      Serial.printf("Face detected! Distanza = %li \n",distanza);
+      Serial.printf("Face detected! Distanza = %li \n", distanza);
       draw_face_boxes(image_matrix, boxes);
       dl_lib_free(boxes->score);
       dl_lib_free(boxes->box);
       dl_lib_free(boxes->landmark);
       dl_lib_free(boxes);
     } else {
-      Serial.printf("No face detected! Distanza = %li \n",distanza);
-      ledcWrite(ledChannel, 0);
+      Serial.printf("No face detected! Distanza = %li \n", distanza);
     }
 
     dl_matrix3du_free(image_matrix);
-    delay(100);
+    delay(150);
 
   } while (count < MAX_ERROR && !exit);
 
+  return 0;
 }

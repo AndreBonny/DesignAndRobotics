@@ -3,15 +3,15 @@
 #include "LedControl.h"
 
 //define of pins
-#define PHASE_PIN 21
+#define PHASE_PIN 22
 #define LASER_PIN_L 50
 #define LASER_PIN_R 51
-#define BUSY_PIN 5
+#define BUSY_PIN 21
 
 //define for movement
 #define MOT_R 3
 #define MOT_L 4
-#define V  200
+#define V  130
 #define Omega  240
 #define T_turn 1500
 #define T_straight 2000

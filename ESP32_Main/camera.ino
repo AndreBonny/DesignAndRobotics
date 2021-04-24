@@ -101,11 +101,11 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
     int face_center_x = x + h_w;
     int face_center_y = y + h_h;
 
-    int x_distance = img_center_x - face_center_x;    // if > 0, movement toward right. If < 0, movement toward left.
-    int y_distance = img_center_y - face_center_y;    // if > 0, movement toward down. If < 0, movement toward up.
+    int x_distance = img_center_x - face_center_x;    // if < 0, movement toward right. If > 0, movement toward left.
+    int y_distance = img_center_y - face_center_y;    // if < 0, movement toward down. If > 0, movement toward up.
 
     pan_position += pixel_to_degree(x_distance);
-    tilt_position += pixel_to_degree(y_distance);
+    tilt_position -= pixel_to_degree(y_distance);
 
     ledcAnalogWrite(pan_ch, pan_position);
     delay(100);
@@ -113,8 +113,8 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
     delay(100);
 
 
-    //Serial.printf("(face_center_x, face_center_y), (img_center_x, img_center_y)\n");
-    //Serial.printf("(%d, %d), (%d, %d)\n", face_center_x, face_center_y, img_center_x, img_center_y);
+    Serial.printf("(face_center_x, face_center_y), (img_center_x, img_center_y)\n");
+    Serial.printf("(%d, %d), (%d, %d)\n", face_center_x, face_center_y, img_center_x, img_center_y);
 
 
   }
@@ -165,14 +165,14 @@ int Face_tracking() {
     }
 
     if (boxes != NULL) {
-      //Serial.printf("Face detected! Distanza = %li \n", distanza);
+      Serial.printf("Face detected! Distanza = %li \n", distanza);
       draw_face_boxes(image_matrix, boxes);
       dl_lib_free(boxes->score);
       dl_lib_free(boxes->box);
       dl_lib_free(boxes->landmark);
       dl_lib_free(boxes);
     } else {
-      //Serial.printf("No face detected! Distanza = %li \n", distanza);
+      Serial.printf("No face detected! Distanza = %li \n", distanza);
     }
 
     dl_matrix3du_free(image_matrix);

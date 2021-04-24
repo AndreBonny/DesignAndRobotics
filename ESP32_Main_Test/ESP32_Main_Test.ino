@@ -1,33 +1,44 @@
 #include <SR04.h>
+//#include <WiFi.h>
+#include <WebServer.h>
+#include <AutoConnect.h>
+
+#include "SPIFFS.h"
 #include "esp_camera.h"
 #include "fd_forward.h"
 
-enum State {READY, SCANNING, LOOKING, SEARCHING, SPEAKING, TRACKING, BACK, WAIT};
+enum State {READY, SCANNING, LOOKING, SEARCHING , TRACKING, BACK, WAIT, INGAME, SAD, MOVEMENT, EXPLAINING };
 State Cstate;
 
-#define MOV "1"
-#define LASER_OFF "2"
-#define RES_POS "3"
-#define SPEAK "4"
-#define END_MOV "5"
-#define ARD_READY "6"
-#define END_RES_POS "7"
-#define END_SPEAK "8"
-#define ESP_READY "9"
-#define FASE_1 "10"
-#define FASE_2 "11"
+#define ARD_READY "1"
+#define ESP_READY "2"
+#define FASE_1 "3"
+#define FASE_2 "4"
+#define MOV_1 "5"
+#define END_MOV_1 "6"
+#define RES_POS_1 "7"
+#define END_RES_POS_1 "8"
+#define SPEAK_1 "9"
+#define END_SPEAK_1 "10"
+#define STOP_SPEAK_1 "11"
 #define ROCK_INT "12"
 #define END_ROCK_INT "13"
+#define MOV_2 "14"
+#define END_MOV_2 "15"
+#define SPEAK_2 "16"
+#define END_SPEAK_2 "17"
+#define STOP_SPEAK_2 "18"
+#define RES_POS_2 "19"
+#define END_RES_POS_2 "20"
+#define START_GAME "21"
+#define START_GAME_YES "22"
+#define START_GAME_NO "23"
+#define END_GAME "24"
+#define CORRECT_ANSWER "25"
+#define WRONG_ANSWER "26"
 
-#define LED_BUILTIN 4
-#define MAX_ERROR 5
-#define SOGLIA_DIST 150
-
-
-// Per Flash
-int freq = 5000;
-int ledChannel = 3;
-int ledResolution = 12;
+#define MAX_ERROR 10
+#define SOGLIA_DIST 130
 
 // Pin e Channel servo
 int tilt_pin = 14;
@@ -35,67 +46,62 @@ int pan_pin = 15;
 int tilt_ch = 2;
 int pan_ch = 4;
 
-int tilt_center = 130;
-int pan_center = 87;
+int tilt_center = 100;
+int pan_center = 100;
 
 int tilt_position;
 int pan_position;
 
+WebServer server(80);
+AutoConnect Portal(server);
+
+
 bool trovato = false;
 
 int Fase;
+int fine;
+String msg = "";
 
 void setup() {
   Serial.begin(115200);
   Serial.setTimeout(1);
-  //Flash
-  ledcSetup(ledChannel, freq, ledResolution);
-  ledcAttachPin(LED_BUILTIN, ledChannel);
 
   Inizializza_servo();
   Inizializza_camera();
+
   delay(100);
-  /*
-    if (serial_read() == FASE_1) {
-    Fase = 1;
-    }
-    else if (serial_read() == FASE_2) {
-    Fase = 2;
-    }
-    else {
-    //BHO
-    }*/
+  serial_write(ESP_READY);
+  delay(10);
 
-
-  Cstate = READY;
-  delay(500);
+  //Cstate = READY;
+  //Cstate = INGAME;
+  delay(2000);
 }
 
 
 
 void loop()
 {
-  for (int i = 0; i < 4 && !trovato; i++) {
-    trovato = Search();
+    
 
+  Serial.println("Test Search");
+  for (int i = 0; i < 2; i++) {
+    scan();
   }
-  if (trovato)
-  {
-    Serial.println("TROVATO");
-    ledcAnalogWrite(tilt_ch, 150);
-    Face_tracking();
-    Serial.println("FINE TRACKING");
-    trovato = false;
-  }
-  if (!trovato) {
-    Serial.println("NON TROVATO");
-    center_head();
+  
+  delay(1000);
+  center_head();
+  delay(2000);
 
-  }
-
-  delay(5000);
-
-
-
+  /*
+    if (Fase == 1) {
+    fase1();
+    }
+    else if (Fase == 2) {
+    fase2();
+    }
+    else {
+    //BHO
+    }*/
 
 }

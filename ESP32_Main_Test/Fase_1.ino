@@ -19,8 +19,7 @@ void fase1() {
        Move head while waiting for the END_MOV
     */
     case SCANNING:
-      data = serial_read();
-      Serial.println("scanning");
+      //data = serial_read();
       if (data.length() > 0 && data == END_MOV_1) {
         //body has finished to move
         ledcAnalogWrite(pan_ch, pan_center);
@@ -38,7 +37,6 @@ void fase1() {
     */
     case LOOKING:
       //Messaggio arduino parlare
-      Serial.println("Looking");
       serial_write(ROCK_INT);
       do {
         data = serial_read();
@@ -53,17 +51,17 @@ void fase1() {
        then change state according to the result
     */
     case SEARCHING:
-      delay(2000);
+      delay(1000);
       for (int i = 0; i < 4 && !trovato; i++) {
         trovato = Search();
       }
       if (trovato) {
-        Serial.printf("TROVATO");
+        // Serial.printf("TROVATO");
         Cstate = TRACKING;
         trovato = false;
       }
       else {
-        Serial.printf("NON TROVATO");
+        //Serial.printf("NON TROVATO");
         Cstate = BACK;
       }
 
@@ -73,9 +71,9 @@ void fase1() {
        Start Face Trackin and cont the cycles where a face is found
     */
     case TRACKING:
-      Serial.printf("Starting tracking");
+      //Serial.printf("Starting tracking");
       serial_write(SPEAK_1);
-      ledcAnalogWrite(tilt_ch, tilt_tracking);
+      ledcAnalogWrite(tilt_ch, 160);
       //stop message read inside face_tracking function
       fine = Face_tracking();
       if (fine == 1) {
@@ -95,7 +93,6 @@ void fase1() {
        Send RESEt and change state
     */
     case BACK:
-      Serial.println("back");
       center_head();
       serial_write(RES_POS_1);
       Cstate = WAIT;
@@ -105,7 +102,6 @@ void fase1() {
 
     */
     case SAD:
-      Serial.println("SAD");
       ledcAnalogWrite(tilt_ch, 110);
       while (serial_read() != END_SPEAK_1) {
         //Wait
@@ -119,7 +115,6 @@ void fase1() {
       wait 1 sec and then go to START
     */
     case WAIT:
-      Serial.println("wait");
       data = serial_read();
       if (data.length() > 0 && data == END_RES_POS_1) {
         //restart for a new cycle

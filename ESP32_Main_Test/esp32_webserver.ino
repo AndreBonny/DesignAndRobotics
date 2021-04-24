@@ -1,119 +1,222 @@
-#include <WiFi.h>
-#include <WebServer.h>
+const int total_questions = 13;
+const int num_questions = 7;
+int current_question = 0;
 
-/* Put your SSID & Password */
-const char* ssid = "ESP32";  // Enter SSID here
-const char* password = "12345678";  //Enter Password here
+int num_correct;
 
-/* Put IP Address details */
-IPAddress local_ip(192,168,1,1);
-IPAddress gateway(192,168,1,1);
-IPAddress subnet(255,255,255,0);
+String questions[] = {
+  "The first U.S. space shuttle has been launched in 1975?",                            // 1
+  "Was Sputnik the first artificial satellite?",                                        // 2
+  "Was Neil Armstrong the first to go on a spacewalk?",                                 // 3
+  "Do astronauts \"grow\" of few inches in space?",                                     // 4
+  "Was Apollo 1 the first of NASA's manned flights into space?",                        // 5
+  "Was the first person in space from the United States?",                              // 6
+  "NASA was founded in 1958?",                                                          // 7
+  "NASA stands for the National Aeronautics and Space Administration?",                 // 8
+  "Was Yuri Gagarin the first human to orbit Earth?",                                   // 9
+  "Was Neil Diamond the first human on the moon?",                                      // 10
+  "If you step on the Moon, those footprints will be there more or less indefinitely",  // 11
+  "In the space there are not any sounds that can be heard by humans.",                 // 12
+  "The nearest galaxy to Milky Way is Andromeda?",                                      // 13
+};
 
-WebServer server(80);
+String answers[] = {
+  "False",  // 1
+  "True",   // 2
+  "False",  // 3
+  "True",   // 4
+  "False",  // 5
+  "False",  // 6
+  "True",   // 7
+  "True",   // 8
+  "True",   // 9
+  "False",  // 10
+  "True",   // 11
+  "False",  // 12
+  "True",   // 13
+};
 
-uint8_t LED1pin = 4;
-bool LED1status = LOW;
+String randomQuestions[num_questions];
+String randomAnswers[num_questions];
 
-uint8_t LED2pin = 5;
-bool LED2status = LOW;
+//bool currentlyConnected;
 
-void setup() {
-  Serial.begin(115200);
-  pinMode(LED1pin, OUTPUT);
-  pinMode(LED2pin, OUTPUT);
+int contains(int *indexes, int num, int leng) {
+  for (int i = 0; i < leng; i++) {
+    if (indexes[i] == num)
+      return 1;
+  }
+  return 0;
+}
 
-  WiFi.softAP(ssid, password);
-  WiFi.softAPConfig(local_ip, gateway, subnet);
-  delay(100);
-  
-  server.on("/", handle_OnConnect);
-  server.on("/led1on", handle_led1on);
-  server.on("/led1off", handle_led1off);
-  server.on("/led2on", handle_led2on);
-  server.on("/led2off", handle_led2off);
+int* get_random_indexes(int length, int upper_bound) {
+  int* indexes = (int*) malloc(length * sizeof(int));
+  for (int i = 0; i < length; i++)
+    indexes[i] = -1;
+  if (length > upper_bound) {
+    return indexes;
+  }
+
+  int last_index = 0;
+  while (contains(indexes, -1, length)) {
+    //int num = (rand() % (upper_bound - 0)) + 0;
+    int num = random(upper_bound);
+    if (!contains(indexes, num, length)) {
+      indexes[last_index] = num;
+      last_index++;
+    }
+  }
+  return indexes;
+}
+
+void initialize_random_questions() {
+  int* indexes = get_random_indexes(num_questions, total_questions);
+  for (int i = 0; i < num_questions; i++) {
+    randomQuestions[i] = questions[indexes[i]];
+    randomAnswers[i] = answers[indexes[i]];
+  }
+}
+
+void Inizializza_webserver() {
+  //currentlyConnected = false;
+  //WiFi.mode(WIFI_AP);
+
+  // Initialize SPIFFS for file system
+  if (!SPIFFS.begin(true)) {
+    //Serial.println("An Error has occurred while mounting SPIFFS");
+    return;
+  }
+
+  num_correct = 0;
+
+  server.on("/style.css", handle_css);
+  server.on("/", handle_home_page);
+
+  server.on("/start", handle_question);
+  server.on("/false", handle_false);
+  server.on("/true", handle_true);
+  server.on("/question", handle_question);
+  server.on("/disconnect", handle_disconnect);
+
+  server.on("/background.jpg", []() {
+    getSpiffImg("/background.jpg", "image/jpg");
+  });
+
+  server.on("/logo_footer.png", []() {
+    getSpiffImg("/logo_footer.png", "image/png");
+  });
+
   server.onNotFound(handle_NotFound);
-  
-  server.begin();
-  Serial.println("HTTP server started");
-}
-void loop() {
-  server.handleClient();
-  if(LED1status)
-  {digitalWrite(LED1pin, HIGH);}
-  else
-  {digitalWrite(LED1pin, LOW);}
-  
-  if(LED2status)
-  {digitalWrite(LED2pin, HIGH);}
-  else
-  {digitalWrite(LED2pin, LOW);}
+
+  configure_portal();
+  //Serial.println("HTTP server started");
 }
 
-void handle_OnConnect() {
-  LED1status = LOW;
-  LED2status = LOW;
-  Serial.println("GPIO4 Status: OFF | GPIO5 Status: OFF");
-  server.send(200, "text/html", SendHTML(LED1status,LED2status)); 
+void configure_portal() {
+  AutoConnectConfig  Config("MuseumRobot", "");
+
+  /*Config.autoReconnect = true;                  // Enable auto-reconnect
+    Config.autoSave = AC_SAVECREDENTIAL_NEVER;    // No save credential
+    Config.boundaryOffset = 64;                   // Reserve 64 bytes for the user data in EEPROM.
+    Config.portalTimeout = 60000;                 // Sets timeout value for the captive portal
+    Config.retainPortal = true;                   // Retains the portal function after timed-out
+    Config.homeUri = "/";                         // Sets home path of Sketch application
+    Config.title = "My menu";                     // Customize the menu title
+
+    Portal.onConnect(onConnect);*/
+  Config.immediateStart = true;
+  Portal.config(Config);                        // Configure AutoConnect
 }
 
-void handle_led1on() {
-  LED1status = HIGH;
-  Serial.println("GPIO4 Status: ON");
-  server.send(200, "text/html", SendHTML(true,LED2status)); 
+void getSpiffImg(String path, String TyPe) {
+  if (SPIFFS.exists(path)) {
+    File file = SPIFFS.open(path, "r");
+    server.streamFile(file, TyPe);
+    file.close();
+  }
 }
 
-void handle_led1off() {
-  LED1status = LOW;
-  Serial.println("GPIO4 Status: OFF");
-  server.send(200, "text/html", SendHTML(false,LED2status)); 
+void handle_css() {
+  handle_page("/style.css", true);
 }
 
-void handle_led2on() {
-  LED2status = HIGH;
-  Serial.println("GPIO5 Status: ON");
-  server.send(200, "text/html", SendHTML(LED1status,true)); 
+void handle_home_page() {
+  current_question = 0;
+
+  initialize_random_questions();
+
+  /*for (int i = 0; i < num_questions; i++) {
+    //Serial.print("Question #" + String(i) + " ");
+    //Serial.println(randomQuestions[i]);
+    //Serial.print("Answer #" + String(i) + " ");
+    //Serial.println(randomAnswers[i]);
+    }*/
+
+  //Serial.println("Home page");
+  handle_page("/home_p.html", false);
 }
 
-void handle_led2off() {
-  LED2status = LOW;
-  Serial.println("GPIO5 Status: OFF");
-  server.send(200, "text/html", SendHTML(LED1status,false)); 
+void handle_question() {
+  if (current_question < num_questions) {
+    current_question++;
+    server.send(200, "text/html", sendQuestionPage(current_question, randomQuestions[current_question - 1]));
+  } else {
+    server.send(200, "text/html", sendFinalResults(num_correct, num_questions));
+  }
 }
 
-void handle_NotFound(){
+void handle_false() {
+  check_answer("False");
+}
+
+void handle_true() {
+  check_answer("True");
+}
+
+void check_answer(String ans) {
+  if (randomAnswers[current_question - 1] == ans) {
+    num_correct++;
+    handle_next("Correct!");
+    serial_write(CORRECT_ANSWER);
+  } else {
+    handle_next("Wrong!");
+    serial_write(WRONG_ANSWER);
+  }
+}
+
+void handle_next(String res) {
+  server.send(200, "text/html", sendPResults(current_question, res));
+}
+
+void handle_disconnect() {
+  handle_page("/disconnected.html", false);
+  serial_write(END_GAME);
+  delay(1000);
+
+  Portal.end();
+  server.close();
+  WiFi.disconnect();
+  WiFi.mode(WIFI_OFF);
+
+  inited = 0;
+  Cstate = BACK;
+}
+
+void handle_page(String page_name, bool is_css) {
+  File file = SPIFFS.open(page_name, "r");
+  String page = "";
+  if (file) {
+    while (file.available()) {
+      page += (char)file.read();
+    }
+    if (is_css)
+      server.send(200, "text/css", page);
+    else
+      server.send(200, "text/html", page);
+  } else
+    Serial.println("Failed to get page");
+}
+
+void handle_NotFound() {
   server.send(404, "text/plain", "Not found");
-}
-
-String SendHTML(uint8_t led1stat,uint8_t led2stat){
-  String ptr = "<!DOCTYPE html> <html>\n";
-  ptr +="<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
-  ptr +="<title>LED Control</title>\n";
-  ptr +="<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}\n";
-  ptr +="body{margin-top: 50px;} h1 {color: #444444;margin: 50px auto 30px;} h3 {color: #444444;margin-bottom: 50px;}\n";
-  ptr +=".button {display: block;width: 80px;background-color: #3498db;border: none;color: white;padding: 13px 30px;text-decoration: none;font-size: 25px;margin: 0px auto 35px;cursor: pointer;border-radius: 4px;}\n";
-  ptr +=".button-on {background-color: #3498db;}\n";
-  ptr +=".button-on:active {background-color: #2980b9;}\n";
-  ptr +=".button-off {background-color: #34495e;}\n";
-  ptr +=".button-off:active {background-color: #2c3e50;}\n";
-  ptr +="p {font-size: 14px;color: #888;margin-bottom: 10px;}\n";
-  ptr +="</style>\n";
-  ptr +="</head>\n";
-  ptr +="<body>\n";
-  ptr +="<h1>ESP32 Web Server</h1>\n";
-  ptr +="<h3>Using Access Point(AP) Mode</h3>\n";
-  
-   if(led1stat)
-  {ptr +="<p>LED1 Status: ON</p><a class=\"button button-off\" href=\"/led1off\">OFF</a>\n";}
-  else
-  {ptr +="<p>LED1 Status: OFF</p><a class=\"button button-on\" href=\"/led1on\">ON</a>\n";}
-
-  if(led2stat)
-  {ptr +="<p>LED2 Status: ON</p><a class=\"button button-off\" href=\"/led2off\">OFF</a>\n";}
-  else
-  {ptr +="<p>LED2 Status: OFF</p><a class=\"button button-on\" href=\"/led2on\">ON</a>\n";}
-
-  ptr +="</body>\n";
-  ptr +="</html>\n";
-  return ptr;
 }

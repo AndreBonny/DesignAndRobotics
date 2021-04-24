@@ -17,12 +17,12 @@ bool checkPerson(int angle, int t_stop) {
   while (millis() - timer < t_stop) {
     if (n == 1) {
       distance = Distanza();
-      //Serial.printf("l: %li cm Angle = %d \n", distance, angle);
+      Serial.printf("l: %li cm Angle = %d \n", distance, angle);
       n = 2;
     }
     if (distance <= SOGLIA_DIST && distance > 0) {
       distance = Distanza();
-      //Serial.printf("l2: %li cm Angle = %d \n", distance, angle);
+      Serial.printf("l2: %li cm Angle = %d \n", distance, angle);
       if (distance <= SOGLIA_DIST && distance > 0) {
         ledcAnalogWrite(tilt_ch, tilt_center);
         return true;

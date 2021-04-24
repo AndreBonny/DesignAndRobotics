@@ -40,21 +40,24 @@ void center_head() {
 
 void scan() {
 
-  tilt_position = 100;
+  tilt_position = 130;
   ledcAnalogWrite(tilt_ch, tilt_position);
+
 
   int    pan_start = 60;
   int    pan_end = 140;
-  int    t_stop = 25;
-  int    passo = 2;
+  int    t_stop = 15;
+  int    passo = 1;
 
   for (int i = pan_start; i <= pan_end; i += passo) {
     ledcAnalogWrite(pan_ch, i);
+    Serial.println(i);
     delay(t_stop);
   }
   delay(300);
   for (int i = pan_end; i >= pan_start; i -= passo) {
     ledcAnalogWrite(pan_ch, i);
+    Serial.println(i);
     delay(t_stop);
   }
   delay(300);
@@ -67,42 +70,42 @@ bool Search() {
   int pan_end = 130;
   int t_stop = 40;
   int passo = 2;
-  long distance = 0;
   tilt_position = tilt_center;
   ledcAnalogWrite(tilt_ch, tilt_position);
-
-  for (int i = pan_start; i <= pan_end; i += passo) {
-    ledcAnalogWrite(pan_ch, i);
-
-    unsigned long timer = millis();
-    int n = 1;
-    while (millis() - timer < t_stop) {
-      if (n == 1) {
-        distance = Distanza();
-        Serial.printf("l: %li cm Angle = %d \n", distance, i);
-        n = 2;
-      }
-      if (distance <= SOGLIA_DIST && distance > 0) {
-        ledcAnalogWrite(tilt_ch, tilt_center);
-        return true;
-      }
-    }
+  ledcAnalogWrite(pan_ch, pan_start);
+  delay(10);
+  for (int angle = pan_start; angle <= pan_end; angle += passo) {
+    ledcAnalogWrite(pan_ch, angle);
+    if (checkPerson(angle, t_stop))
+      return true;
   }
-  for (int i = pan_end; i >= pan_start; i -= passo) {
-    ledcAnalogWrite(pan_ch, i);
-    unsigned long timer = millis();
-    int n = 1;
-    while (millis() - timer < t_stop) {
-      if (n == 1) {
-        distance = Distanza();
-        Serial.printf("l: %li cm Angle = %d \n", distance, i);
-        n = 2;
-      }
-      if (distance <= SOGLIA_DIST && distance > 0) {
-        ledcAnalogWrite(tilt_ch, tilt_center);
-        return true;
-      }
-    }
+  for (int angle = pan_end; angle >= pan_start; angle -= passo) {
+    ledcAnalogWrite(pan_ch, angle);
+    if (checkPerson(angle, t_stop))
+      return true;
   }
   return false;
+}
+
+void adjust_tilt() {
+  ledcAnalogWrite(tilt_ch, 150);
+}
+
+void rock() {
+
+  int tilt_start = 90;
+  int tilt_end = 110;
+  int t_stop = 40;
+  int passo = 2;
+
+  ledcAnalogWrite(pan_ch, pan_position);
+
+  for (int i = tilt_start; i <= tilt_end; i += passo) {
+    ledcAnalogWrite(tilt_ch, i);
+    delay(t_stop);
+  }
+  for (int i = tilt_end; i >= tilt_start; i -= passo) {
+    ledcAnalogWrite(tilt_ch, i);
+    delay(t_stop);
+  }
 }

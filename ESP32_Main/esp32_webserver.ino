@@ -109,7 +109,10 @@ void Inizializza_webserver() {
   server.onNotFound(handle_NotFound);
 
   configure_portal();
-  //Serial.println("HTTP server started");
+  Portal.begin();
+  //server.begin();
+  
+  Serial.println("HTTP server started");
 }
 
 void configure_portal() {
@@ -124,7 +127,8 @@ void configure_portal() {
     Config.title = "My menu";                     // Customize the menu title
 
     Portal.onConnect(onConnect);*/
-  Config.immediateStart = true;
+  Config.portalTimeout = 10000;
+  //Config.immediateStart = true;
   Portal.config(Config);                        // Configure AutoConnect
 }
 
@@ -142,7 +146,8 @@ void handle_css() {
 
 void handle_home_page() {
   current_question = 0;
-
+  connected = true;
+  serial_write(START_GAME_YES);
   initialize_random_questions();
 
   /*for (int i = 0; i < num_questions; i++) {
@@ -190,7 +195,11 @@ void handle_next(String res) {
 
 void handle_disconnect() {
   handle_page("/disconnected.html", false);
-  serial_write(END_GAME);
+
+  if (connected)
+    serial_write(END_GAME);
+
+  connected = false;
   delay(1000);
 
   Portal.end();

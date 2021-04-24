@@ -4,14 +4,14 @@
 
 //define of pins
 #define PHASE_PIN 22
-#define LASER_PIN_L 50
-#define LASER_PIN_R 51
-#define BUSY_PIN 5
+#define LASER_PIN_L 52
+#define LASER_PIN_R 53
+#define BUSY_PIN 21
 
 //define for movement
 #define MOT_R 3
 #define MOT_L 4
-#define V  200
+#define V  130
 #define Omega  240
 #define T_turn 1500
 #define T_straight 2000
@@ -46,8 +46,9 @@
 #define WRONG_ANSWER "26"
 
 //enum of the tracks on SD card
-enum Track { A, GREETINGS, ADVERTISE, QRCODE,  BYE_GREETINGS, ROCK_SONG, SADNESS, GAME_PROPOSAL, GAME_START_INSTRUCTION, INTRODUCTION_PHRASE, CORRECT_PHRASE, WRONG_PHRASE, FACTS_1, FACTS_2, FACTS_3, FACTS_4, FACTS_5, 
-            LETS_SEE, VERY_BAD, BAD, GOOD, VERY_GOOD, PERFECT};
+enum Track { A, GREETINGS, ADVERTISE, QRCODE,  BYE_GREETINGS, ROCK_SONG, SADNESS, GAME_PROPOSAL, GAME_START_INSTRUCTION, INTRODUCTION_PHRASE, CORRECT_PHRASE, WRONG_PHRASE, FACTS_1, FACTS_2, FACTS_3, FACTS_4, FACTS_5,
+             LETS_SEE, VERY_BAD, BAD, GOOD, VERY_GOOD, PERFECT
+           };
 
 //variable for timers
 unsigned long t;
@@ -55,11 +56,14 @@ unsigned long t;
 int phase;
 
 
+
 double Setpoint, Input, Output;
 int Speed_R, Speed_L;
 
-double Kp = 2*V, Ki = 0 , Kd = 0;
+double Kp = 2 * V, Ki = 0 , Kd = 0;
 PID PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+int i = 2;
+unsigned long timer;
 
 void setup() {
   Serial1.begin(115200);
@@ -69,23 +73,23 @@ void setup() {
 
   serial_write_debug("START");
   /*
-  //wait for message from esp
-  while (serial_read() != ESP_READY) {
-  }
-  serial_write_debug("ESP READY");*/
+    //wait for message from esp
+    while (serial_read() != ESP_READY) {
+    }
+    serial_write_debug("ESP READY");*/
 
   //initialization of arduino
   Inizializza_sensori();
   Inizializza_Motori();
-  //Inizializza_Occhi();
-  //Inizializza_DFPlayer();
+  Inizializza_Occhi();
+  // Inizializza_DFPlayer();
   //Inizializza Laser
- // pinMode(LASER_PIN_L, OUTPUT);
- // digitalWrite(LASER_PIN_L, LOW);
-  //pinMode(LASER_PIN_R, OUTPUT);
-  //digitalWrite(LASER_PIN_R, LOW);
+  pinMode(LASER_PIN_L, OUTPUT);
+  digitalWrite(LASER_PIN_L, LOW);
+  pinMode(LASER_PIN_R, OUTPUT);
+  digitalWrite(LASER_PIN_R, LOW);
   //Inizializza Switch Phase
-  pinMode(PHASE_PIN,INPUT_PULLUP);
+  pinMode(PHASE_PIN, INPUT_PULLUP);
 
   //comunicate to ESP that initialization has finished
   serial_write(ARD_READY);
@@ -100,26 +104,148 @@ void setup() {
     serial_write(PHASE_2);
 
   //random for phase 2
- // randomSeed(analogRead(31));
-  
+  // randomSeed(analogRead(31));
+
   //ready to start
   //draw_openclose();
   delay(500);
+
+  play(1);
+  timer = millis();
 }
 
-
 void loop() {
- /* move_forward(T_straight,V);
-  delay(2000);
-  move_backward(T_straight,V);
-  Stop();
-  delay(2000);*/
-/*
-  if (phase == 1) {
-    phase1();
-  }
-  else {
-    phase2();
-  }*/
+  //follow();
+  /*
+    bool end_sp = false;
+
+    // Keep playing the track until the thing finishes or we recieve a STOP_SPEAK
+    serial_write_debug("Ricevuto SPEAK");
+    draw_openclose();
+    int noPlayCount = 0;
+    Track track = GREETINGS;
+
+    play(track);
+    draw_happy_start();
+    draw_happy_open();
+    delay(1500);
+    t = millis();
+    do
+    {
+      if (serial_read() == STOP_SPEAK_1)
+      {
+        //we read a stop signal from esp
+        stop_play();
+        play(SADNESS);
+        draw_sad_start();
+        noPlayCount = 0;
+        while (noPlayCount < 2) //check end of track
+        {
+          if (dfNotPlaying())
+            noPlayCount++;
+          if (millis() - t > 2500)
+          {
+            t = millis();
+            draw_sad_blink();
+          }
+          delay(500);
+        }
+        end_sp = true;
+        draw_sad_end();
+      }
+      else
+      {
+        if (noPlayCount < 2) //margin is needed for false positive when a track starts
+        {
+          if (dfNotPlaying())
+            noPlayCount++;
+          if (millis() - t > 2500)
+          {
+            t = millis();
+            if (track < 3)
+              draw_happy_blink();
+            else
+            {
+              draw_openclose();
+            }
+          }
+          delay(500);
+        }
+        else //track ended
+        {
+          //down here it's track++;
+          track = static_cast<Track>(static_cast<int>(track) + 1);
+          if (track < 5)
+          {
+            noPlayCount = 0;
+            play(track);
+            if (track == 3)
+            {
+              draw_happy_close();
+              draw_happy_end();
+            }
+          }
+          else
+          {
+            end_sp = true;
+          }
+        }
+      }
+    } while (!end_sp);*/
+
+  /*
+    if (millis() - timer > 3000) {
+    timer = millis();
+    play(i);
+    i++;//Play next mp3 every 3 second.
+    }*/
+
+
+
+  /* draw_happy_open();
+    delay(500);
+    draw_happy_blink();
+    delay(500);
+    draw_happy_blink();
+    delay(500);
+    draw_happy_blink();
+    delay(500);
+    draw_happy_close();
+    draw_happy_end();
+    delay(500);
+
+
+    draw_sad_start();
+    delay(500);
+    draw_sad_blink();
+    delay(500);
+    draw_sad_blink();
+    delay(500);
+
+    draw_sad_end();
+
+    draw_correct_eye_start();
+    delay(1000);
+    draw_correct_eye_end();
+    draw_openclose();
+    draw_wrong_eye_start();
+    delay(1000);
+    draw_wrong_eye_end();
+    draw_openclose();
+    draw_angry_start();
+    delay(2000);
+    draw_angry_blink();*/
+  /* move_forward(T_straight,V);
+    delay(2000);
+    move_backward(T_straight,V);
+    Stop();
+    delay(2000);*/
+  /*
+    if (phase == 1) {
+      phase1();
+    }
+    else {
+      phase2();
+    }*/
 
 }

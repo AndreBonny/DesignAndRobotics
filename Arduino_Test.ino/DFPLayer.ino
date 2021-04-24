@@ -11,7 +11,7 @@ void Inizializza_DFPlayer() {
   }
   serial_write_debug(F("DFPlayer Mini online."));
 
-  myDFPlayer.volume(10);  //Set volume value. From 0 to 30
+  myDFPlayer.volume(30);  //Set volume value. From 0 to 30
 }
 
 void play(Track track) {

@@ -18,7 +18,7 @@ void fase2() {
        Move head while waiting for the END_MOV
     */
     case MOVEMENT:
-      data = serial_read();
+      //data = serial_read();
       if (data.length() > 0 && data == END_MOV_2) {
         //body has finished to move
         ledcAnalogWrite(pan_ch, pan_center);
@@ -48,12 +48,12 @@ void fase2() {
       }
 
       if (trovato) {
-        Serial.printf("TROVATO");
+        // Serial.printf("TROVATO");
         Cstate = TRACKING;
         trovato = false;
       }
       else {
-        Serial.printf("NON TROVATO");
+        //Serial.printf("NON TROVATO");
         Cstate = BACK;
       }
 
@@ -63,9 +63,9 @@ void fase2() {
        Start Face Tracking and cont the cycles where a face is found
     */
     case TRACKING:
-      Serial.printf("Starting tracking");
+      //Serial.printf("Starting tracking");
       serial_write(SPEAK_2);
-      ledcAnalogWrite(tilt_ch, tilt_tracking);
+      ledcAnalogWrite(tilt_ch, 160);
       //stop message read inside face_tracking function
       fine = Face_tracking();
       if (fine == 0) {
@@ -82,8 +82,7 @@ void fase2() {
       break;
 
     case EXPLAINING:
-      Serial.println("EXPLAINING");
-      ledcAnalogWrite(tilt_ch, tilt_tracking);
+      ledcAnalogWrite(tilt_ch, 160);
       //stop message read inside face_tracking function
       fine = Face_tracking();
       if (fine == 0) {
@@ -103,7 +102,6 @@ void fase2() {
        Send RESEt and change state
     */
     case BACK:
-      Serial.println("BACK");
       center_head();
       serial_write(RES_POS_2);
       Cstate = WAIT;
@@ -114,7 +112,6 @@ void fase2() {
       wait 1 sec and then go to START
     */
     case WAIT:
-      Serial.println("Wait");
       data = serial_read();
       if (data.length() > 0 && data == END_RES_POS_2) {
         //restart for a new cycle
@@ -124,7 +121,6 @@ void fase2() {
       break;
 
     case SAD:
-      Serial.println("Sad");
       ledcAnalogWrite(tilt_ch, 110);
       while (serial_read() != END_SPEAK_2) {
         //Wait
@@ -135,25 +131,11 @@ void fase2() {
     case INGAME:
       if (!inited) {
         Inizializza_webserver();
-        game_timer = millis();
-        Serial.println("Waiting for connection");
-        Serial.println("");
+        //Serial.println("Waiting for connection");
         inited = 1;
       }
-      unsigned long timeout;
-      timeout = 30 * 1000;
-      if (millis() - game_timer < timeout || connected) {
-        Serial.println("ok");
-        Portal.handleClient();
-      }
-      else if (!connected && millis() - game_timer >= timeout) {
-        serial_write(START_GAME_NO);
-        handle_disconnect();
-      }
-      else{
-        Serial.println("Errore");
-      }
-      
+      Portal.begin();
+      Portal.handleClient();
       break;
 
     default:

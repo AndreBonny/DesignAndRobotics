@@ -1,6 +1,6 @@
-#define DATA_PIN 31
-#define CS_PIN 33
-#define CLK_PIN 32
+#define DATA_PIN 43
+#define CS_PIN 42
+#define CLK_PIN 40
 #define INTENSITY 1
 
 LedControl lc = LedControl(DATA_PIN, CLK_PIN, CS_PIN, 2);

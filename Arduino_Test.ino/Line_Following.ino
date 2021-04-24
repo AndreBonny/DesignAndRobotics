@@ -154,14 +154,14 @@ void following_backward() {
 
   if (!(digitalRead(LS_PIN)) && digitalRead(RS_PIN)) // Turn right
   {
-    indietro(MOT_R, V);
-    avanti(MOT_L, V);
+    indietro(MOT_R, int(V*1.2));
+    avanti(MOT_L, int(V*1.1));
   }
 
   if (digitalRead(LS_PIN) && !(digitalRead(RS_PIN))) // turn left
   {
-    avanti(MOT_R, V);
-    indietro(MOT_L, V);
+    avanti(MOT_R, int(V*1.1));
+    indietro(MOT_L, int(V*1.2));
   }
 
   if ((digitalRead(LS_PIN)) && (digitalRead(RS_PIN))) // stop
@@ -179,7 +179,7 @@ void follow() {
   Serial3.println("Arrivato");
   delay(3000);
   Serial3.println("Riparto");
-  move_forward(200,V);
+  move_forward(400,V);
   Serial3.println("Mosso");
 }
 
@@ -221,4 +221,3 @@ double readSens() {
 
   return x;
 }
-
