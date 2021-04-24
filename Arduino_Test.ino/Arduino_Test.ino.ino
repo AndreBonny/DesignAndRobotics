@@ -109,11 +109,11 @@ void setup() {
 
 
 void loop() {
-  move_forward(T_straight,V);
+ /* move_forward(T_straight,V);
   delay(2000);
   move_backward(T_straight,V);
   Stop();
-  delay(2000);
+  delay(2000);*/
 /*
   if (phase == 1) {
     phase1();
