@@ -26,7 +26,7 @@ Would you like to play a game with me (SAW VIBES)? It's a quiz about space!
   
 GAME_START_INSTRUCTION 0007
 
-To play scan the QR CODE on my head, it should bring you automatically to the game page! If it doesn't work, connect to the wifi ntwork called MuseumRobot (o il nome finale).
+To play scan the QR CODE on my head or check the WiFi settings and connect to Steve! 
 
 INTRODUCTION_PHRASE 0008
 
@@ -60,7 +60,7 @@ the dark part is the shade cast by the Earth!
 
 FACTS_5 0015
 
-Did youknow that Nasa is planning to back on the moon in 20 24? The plan is to build an orbiting space station and a moon base, isn't that exiting ?!
+Did you know that Nasa is planning to back on the moon in 20 24? The plan is to build an orbiting space station and a moon base, isn't that exiting ?!
 
 LETS_SEE 0016
 
