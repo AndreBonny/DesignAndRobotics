@@ -52,13 +52,6 @@ void following_PID() {
     Speed_R = max(min(Speed_R, 255), -255);
     Speed_L = max(min(Speed_L, 255), -255);
 
-    Serial3.print("Input =");
-    Serial3.print(Input);
-    Serial3.print("  Speed_R = ");
-    Serial3.print(Speed_R);
-    Serial3.print("  Speed_L = ");
-    Serial3.println(Speed_L);
-
 
     move(MOT_L, Speed_L);
     move(MOT_R, Speed_R);
@@ -173,14 +166,10 @@ void following_backward() {
 
 void follow() {
 
-  Serial3.println("Seguo Linea");
   while (!following_forward2()) {
   }
-  Serial3.println("Arrivato");
   delay(3000);
-  Serial3.println("Riparto");
   move_forward(200,V);
-  Serial3.println("Mosso");
 }
 
 
@@ -221,4 +210,3 @@ double readSens() {
 
   return x;
 }
-
