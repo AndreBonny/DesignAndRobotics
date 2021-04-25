@@ -1,11 +1,6 @@
-#define DATA_PIN 30
-#define CS_PIN 32
-#define CLK_PIN 34
-#define INTENSITY 1
-
 LedControl lc = LedControl(DATA_PIN, CLK_PIN, CS_PIN, 2);
 
-void Inizializza_Occhi() {
+void eyes_setup() {
   //we have already set the number of devices when we created the LedControl
   int devices = lc.getDeviceCount();
   //we have to init all devices in a loop

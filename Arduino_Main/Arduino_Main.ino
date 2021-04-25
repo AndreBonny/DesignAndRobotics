@@ -1,12 +1,19 @@
 #include <AFMotor.h>
 #include <PID_v1.h>
 #include "LedControl.h"
+#include "DFRobotDFPlayerMini.h"
 
 //define of pins
 #define PHASE_PIN 22
 #define LASER_PIN_L 52
 #define LASER_PIN_R 53
 #define BUSY_PIN 21
+#define DATA_PIN 30
+#define CS_PIN 32
+#define CLK_PIN 34
+
+//define for intensity of the eyes
+#define INTENSITY 1
 
 //define for movement
 #define MOT_R 3
@@ -54,6 +61,7 @@ unsigned long t;
 //variable for phase
 int phase;
 
+DFRobotDFPlayerMini dfplayer;
 
 double Setpoint, Input, Output;
 int Speed_R, Speed_L;
@@ -77,8 +85,8 @@ void setup() {
   //initialization of arduino
   Inizializza_sensori();
   Inizializza_Motori();
-  Inizializza_Occhi();
-  Inizializza_DFPlayer();
+  eyes_setup();
+  dfplayer_setup();
   //Inizializza Laser
   pinMode(LASER_PIN_L, OUTPUT);
   digitalWrite(LASER_PIN_L, LOW);
@@ -111,12 +119,11 @@ void setup() {
 void loop() {
 
   Serial.print(phase);
-/*
   if (phase == 1) {
     phase1();
   }
   else {
     phase2();
-  }*/
+  }
 
 }
