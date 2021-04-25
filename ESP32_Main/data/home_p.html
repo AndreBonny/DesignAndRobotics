@@ -6,12 +6,12 @@
 		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
-		<img class="background" src="/background.jpg"/>
+		<img class="background" src="background.jpg"/>
 		<main>
 			<div class="cover-disconnect">
             </div>
 			<div class="cover cover-header">
-				<img class="upper_logo" src="/logo_footer.png"/>
+				<img class="upper_logo" src="logo_footer.png"/>
 			</div>
 			<div class="cover cover-main">
 				<div class="cover__text-blur">
@@ -48,5 +48,10 @@
                 hs[i].style.fontSize = "45px";
             }
         }
+        butt = document.getElementsByClassName("button")[0];
+        butt.style.visibility = "hidden";
+        setTimeout(function() {
+        	document.getElementsByClassName("button")[0].style.visibility = "visible";
+        }, 5000);
 	</script>
 </html>

@@ -1,3 +1,8 @@
+//WebServer server(80);
+//AutoConnect Portal(server);
+WebServer* server;
+AutoConnect* Portal;
+
 const int total_questions = 13;
 const int num_questions = 7;
 int current_question = 0;
@@ -77,42 +82,44 @@ void initialize_random_questions() {
   }
 }
 
-void Inizializza_webserver() {
-  //currentlyConnected = false;
-  //WiFi.mode(WIFI_AP);
+int Inizializza_webserver() {
 
-  // Initialize SPIFFS for file system
-  if (!SPIFFS.begin(true)) {
-    //Serial.println("An Error has occurred while mounting SPIFFS");
-    return;
-  }
+  server = new WebServer(80);
+  Portal = new AutoConnect(*server);
+  
+  WiFi.mode(WIFI_AP);
+  
+  Serial.println("Initializing webserver");
 
   num_correct = 0;
 
-  server.on("/style.css", handle_css);
-  server.on("/", handle_home_page);
+  server->on("/style.css", handle_css);
+  server->on("/", handle_home_page);
 
-  server.on("/start", handle_question);
-  server.on("/false", handle_false);
-  server.on("/true", handle_true);
-  server.on("/question", handle_question);
-  server.on("/disconnect", handle_disconnect);
+  server->on("/start", handle_question);
+  server->on("/false", handle_false);
+  server->on("/true", handle_true);
+  server->on("/question", handle_question);
+  server->on("/disconnect", handle_disconnect);
 
-  server.on("/background.jpg", []() {
+  server->on("/background.jpg", []() {
     getSpiffImg("/background.jpg", "image/jpg");
   });
 
-  server.on("/logo_footer.png", []() {
+  server->on("/logo_footer.png", []() {
     getSpiffImg("/logo_footer.png", "image/png");
   });
 
-  server.onNotFound(handle_NotFound);
+  server->onNotFound(handle_NotFound);
 
   configure_portal();
-  Portal.begin();
-  //server.begin();
   
-  Serial.println("HTTP server started");
+  return Portal->begin();
+  
+  //server->begin();
+  
+  //Serial.println("HTTP server started");
+  //return 1;
 }
 
 void configure_portal() {
@@ -126,16 +133,19 @@ void configure_portal() {
     Config.homeUri = "/";                         // Sets home path of Sketch application
     Config.title = "My menu";                     // Customize the menu title
 
-    Portal.onConnect(onConnect);*/
+    Portal->onConnect(onConnect);*/
   Config.portalTimeout = 10000;
-  //Config.immediateStart = true;
-  Portal.config(Config);                        // Configure AutoConnect
+  Config.immediateStart = true;
+  Config.autoRise = true;
+  Config.autoReset = true;
+  Config.bootUri = AC_ONBOOTURI_ROOT;
+  Portal->config(Config);                        // Configure AutoConnect
 }
 
 void getSpiffImg(String path, String TyPe) {
   if (SPIFFS.exists(path)) {
     File file = SPIFFS.open(path, "r");
-    server.streamFile(file, TyPe);
+    server->streamFile(file, TyPe);
     file.close();
   }
 }
@@ -164,9 +174,9 @@ void handle_home_page() {
 void handle_question() {
   if (current_question < num_questions) {
     current_question++;
-    server.send(200, "text/html", sendQuestionPage(current_question, randomQuestions[current_question - 1]));
+    server->send(200, "text/html", sendQuestionPage(current_question, randomQuestions[current_question - 1]));
   } else {
-    server.send(200, "text/html", sendFinalResults(num_correct, num_questions));
+    server->send(200, "text/html", sendFinalResults(num_correct, num_questions));
   }
 }
 
@@ -190,25 +200,22 @@ void check_answer(String ans) {
 }
 
 void handle_next(String res) {
-  server.send(200, "text/html", sendPResults(current_question, res));
+  server->send(200, "text/html", sendPResults(current_question, res));
 }
 
 void handle_disconnect() {
   handle_page("/disconnected.html", false);
 
-  if (connected)
-    serial_write(END_GAME);
+  //if (connected)
+  
+  //serial_write(END_GAME);
 
-  connected = false;
   delay(1000);
 
-  Portal.end();
-  server.close();
-  WiFi.disconnect();
-  WiFi.mode(WIFI_OFF);
+  close_portal();
 
-  inited = 0;
-  Cstate = BACK;
+//  inited = 0;
+//  Cstate = BACK;
 }
 
 void handle_page(String page_name, bool is_css) {
@@ -219,13 +226,24 @@ void handle_page(String page_name, bool is_css) {
       page += (char)file.read();
     }
     if (is_css)
-      server.send(200, "text/css", page);
+      server->send(200, "text/css", page);
     else
-      server.send(200, "text/html", page);
+      server->send(200, "text/html", page);
   } else
     Serial.println("Failed to get page");
 }
 
 void handle_NotFound() {
-  server.send(404, "text/plain", "Not found");
+  server->send(404, "text/plain", "Not found");
+}
+
+void close_portal() {
+  Portal->end();
+  server->close();
+
+  //delete Portal;
+  //delete server;
+  
+  WiFi.disconnect();
+  WiFi.mode(WIFI_OFF);
 }

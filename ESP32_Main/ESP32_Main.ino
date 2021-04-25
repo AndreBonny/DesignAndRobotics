@@ -53,9 +53,6 @@ int tilt_tracking = 80;
 int tilt_position;
 int pan_position;
 
-WebServer server(80);
-AutoConnect Portal(server);
-
 
 bool trovato = false;
 bool connected = false;
@@ -70,8 +67,13 @@ void setup() {
   Serial.begin(115200);
   Serial.setTimeout(1);
 
-  Inizializza_servo();
+  initialize_servo();
   Inizializza_camera();
+
+  // Initialize SPIFFS for file system
+  if (!SPIFFS.begin(true))
+    return;
+
 
   delay(100);
   serial_write(ESP_READY);
@@ -79,6 +81,7 @@ void setup() {
 
   while (serial_read() != ARD_READY) {
   }
+  
   delay(10);
 
   do {
@@ -91,7 +94,7 @@ void setup() {
       Fase = 2;
     }
   } while (msg.length() <= 0 );
-  
+
   Cstate = READY;
   //Cstate = INGAME;
   delay(2000);

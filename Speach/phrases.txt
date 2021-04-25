@@ -51,7 +51,7 @@ Luckily the Krechet space suit survied and it's exhibited here!
 
 FACTS_3 0013
 
-Did you know that only a couple of months ago, on the eithinth of february the rover Persevirence landed on mars? Morover it's equipped with an elicopter that completed its second fly a couple of days ago!
+Did you know that only a couple of months ago, on the end of february the latest martian rover landed on mars? Morover it's equipped with an elicopter that completed its second fly a couple of days ago!
 
 FACTS_4 0014
 
@@ -72,11 +72,11 @@ Come on! How did you get wrong most of them ?!?
 
 BAD 0018
 
-That was not good. At least there's still a lot of room for improvemnts.
+That was not good. But do not be afraid, you are in the right place to increase your knowledge!
 
 GOOD 0019
 
-You still have a lot to learn, still that was good overall.
+Even if you have a lot to learn, that was a good overall.
 
 VERY_GOOD 0020
 
@@ -84,4 +84,4 @@ Good job! You know a lot about space.
 
 PERFECT  0021
 
-Brillant! you know more about space than even me!
+Brilliant! you know more about space than even me!

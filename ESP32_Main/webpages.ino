@@ -116,7 +116,7 @@ String sendPResults(int quest_num, String result) {
   ptr += "                </div>";
   ptr += "            </div>";
   ptr += "            <div class=\"cover cover-footer\">";
-  ptr += "                <a href=\"/question\" class=\"button\"> Next </a>";
+  ptr += "                <a href=\"/question\" class=\"button btn-next\"> Next </a>";
   ptr += "            </div>";
   ptr += "        </main>";
   ptr += "    </body>";
@@ -141,6 +141,10 @@ String sendPResults(int quest_num, String result) {
   ptr += "                hs[i].style.fontSize = \"45px\";";
   ptr += "            }";
   ptr += "        }";
+  ptr += "        document.getElementsByClassName(\"btn-next\")[0].style.visibility = \"hidden\";";
+  ptr += "        setTimeout(function() {";
+  ptr += "          document.getElementsByClassName(\"btn-next\")[0].style.visibility = \"visible\";";
+  ptr += "        }, 3000);";
   ptr += "    </script>";
   ptr += "</html>";
 
