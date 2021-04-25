@@ -141,7 +141,7 @@ String sendPResults(int quest_num, String result) {
   ptr += "        document.getElementsByClassName(\"btn-next\")[0].style.visibility = \"hidden\";";
   ptr += "        setTimeout(function() {";
   ptr += "          document.getElementsByClassName(\"btn-next\")[0].style.visibility = \"visible\";";
-  ptr += "        }, 3000);";
+  ptr += "        }, 2000);";
   ptr += "    </script>";
   ptr += "</html>";
 

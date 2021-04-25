@@ -110,8 +110,8 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
     delay(100);
 
 
-    Serial.printf("(face_center_x, face_center_y), (img_center_x, img_center_y)\n");
-    Serial.printf("(%d, %d), (%d, %d)\n", face_center_x, face_center_y, img_center_x, img_center_y);
+    // Serial.printf("(face_center_x, face_center_y), (img_center_x, img_center_y)\n");
+    // Serial.printf("(%d, %d), (%d, %d)\n", face_center_x, face_center_y, img_center_x, img_center_y);
   }
 }
 

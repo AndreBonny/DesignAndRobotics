@@ -85,7 +85,7 @@ int initialize_webserver() {
   
   WiFi.mode(WIFI_AP);
   
-  Serial.println("Initializing webserver");
+  // Serial.println("Initializing webserver");
 
   num_correct = 0;
 
@@ -113,9 +113,9 @@ int initialize_webserver() {
 }
 
 void configure_portal() {
-  AutoConnectConfig  Config("MuseumRobot", "");
+  AutoConnectConfig  Config("Steeve", "");
 
-  Config.portalTimeout = 10000;
+  Config.portalTimeout = 20000;
   Config.immediateStart = true;
   Config.autoRise = true;
   Config.autoReset = true;

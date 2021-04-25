@@ -46,8 +46,8 @@ int tilt_ch = 2;
 int pan_ch = 4;
 
 int tilt_center = 100;
-int pan_center = 100;
-int tilt_tracking = 80;
+int pan_center = 105;
+int tilt_tracking = 90;
 
 int tilt_position;
 int pan_position;

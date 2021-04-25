@@ -5,7 +5,10 @@ void handle_css() {
 void handle_home_page() {
   current_question = 0;
   connected = true;
+  
   serial_write(START_GAME_YES);
+  center_head();
+  
   initialize_random_questions();
 
   handle_page("/home_p.html", false);
@@ -16,6 +19,8 @@ void handle_question() {
     current_question++;
     server->send(200, "text/html", sendQuestionPage(current_question, randomQuestions[current_question - 1]));
   } else {
+    delay(50);
+    serial_write(END_GAME);
     server->send(200, "text/html", sendFinalResults(num_correct, num_questions));
   }
 }
@@ -47,7 +52,8 @@ void handle_disconnect() {
   handle_page("/disconnected.html", false);
 
   delay(1000);
-
+  delay(50);
+  serial_write(END_GAME);
   close_portal();
 }
 
@@ -62,8 +68,9 @@ void handle_page(String page_name, bool is_css) {
       server->send(200, "text/css", page);
     else
       server->send(200, "text/html", page);
-  } else
-    Serial.println("Failed to get page");
+  } else {
+    // Serial.println("Failed to get page");
+  }
 }
 
 void handle_not_found() {

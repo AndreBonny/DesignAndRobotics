@@ -91,7 +91,7 @@ void phase2() {
        Send RESEt and change state
     */
     case BACK:
-      //Serial.println("BACK");
+      //// Serial.println("BACK");
       center_head();
       serial_write(RES_POS_2);
       c_state = WAIT;
@@ -118,17 +118,23 @@ void phase2() {
       break;
 
     case INGAME:
+      // lower head to show the QR code
+      ledcAnalogWrite(tilt_ch, tilt_center+30);
+      
       if(!initialize_webserver() && !connected) {
         close_portal();
         serial_write(START_GAME_NO);
+        
+        center_head();
+        
         c_state = EXPLAINING;
       } else {
         connected = false;
-        serial_write(END_GAME);
+        while(serial_read() != END_SPEAK_2) {}
         c_state = BACK;
       }
-      
       break;
+    
 
     default:
       break;

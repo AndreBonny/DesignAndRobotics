@@ -17,7 +17,6 @@ void phase1() {
     */
     case SCANNING:
       data = serial_read();
-      Serial.println("scanning");
       if (data.length() > 0 && data == END_MOV_1) {
         //body has finished to move
         ledcAnalogWrite(pan_ch, pan_center);
@@ -34,7 +33,6 @@ void phase1() {
     */
     case LOOKING:
       //Messaggio arduino parlare
-      Serial.println("Looking");
       serial_write(ROCK_INT);
       do {
         data = serial_read();
@@ -54,12 +52,10 @@ void phase1() {
         founded = search_person();
       }
       if (founded) {
-        Serial.printf("founded");
         c_state = TRACKING;
         founded = false;
       }
       else {
-        Serial.printf("NON founded");
         c_state = BACK;
       }
 
@@ -69,7 +65,6 @@ void phase1() {
        Start Face Trackin and cont the cycles where a face is found
     */
     case TRACKING:
-      Serial.printf("Starting tracking");
       serial_write(SPEAK_1);
       ledcAnalogWrite(tilt_ch, tilt_tracking);
       //stop message read inside face_tracking function
@@ -92,7 +87,6 @@ void phase1() {
        Send RESEt and change state
     */
     case BACK:
-      Serial.println("back");
       center_head();
       serial_write(RES_POS_1);
       c_state = WAIT;
@@ -102,7 +96,6 @@ void phase1() {
 
     */
     case SAD:
-      Serial.println("SAD");
       ledcAnalogWrite(tilt_ch, 110);
       while (serial_read() != END_SPEAK_1) {
         //Wait
@@ -114,7 +107,6 @@ void phase1() {
       wait 1 sec and then go to START
     */
     case WAIT:
-      Serial.println("wait");
       data = serial_read();
       if (data.length() > 0 && data == END_RES_POS_1) {
         //restart for a new cycle
