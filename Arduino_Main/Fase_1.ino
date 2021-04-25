@@ -61,7 +61,7 @@
     // Keep playing the track until the thing finishes or we recieve a STOP_SPEAK
     serial_write_debug("Ricevuto SPEAK");
     draw_openclose();
-    int noPlayCount = 0;
+    int no_play_count = 0;
     Track track = GREETINGS;
 
     play(track);
@@ -77,11 +77,11 @@
         stop_play();
         play(SADNESS);
         draw_sad_start();
-        noPlayCount = 0;
-        while (noPlayCount < 2) //check end of track
+        no_play_count = 0;
+        while (no_play_count < 2) //check end of track
         {
-          if (dfNotPlaying())
-            noPlayCount++;
+          if (df_not_playing())
+            no_play_count++;
           if (millis() - t > 4000)
           {
             t = millis();
@@ -94,10 +94,10 @@
       }
       else
       {
-        if (noPlayCount < 2) //margin is needed for false positive when a track starts
+        if (no_play_count < 2) //margin is needed for false positive when a track starts
         {
-          if (dfNotPlaying())
-            noPlayCount++;
+          if (df_not_playing())
+            no_play_count++;
           if (millis() - t > 4000)
           {
             t = millis();
@@ -116,7 +116,7 @@
           track = static_cast<Track>(static_cast<int>(track) + 1);
           if (track < 5)
           {
-            noPlayCount = 0;
+            no_play_count = 0;
             play(track);
             if (track == 3)
             {

@@ -1,29 +1,25 @@
-#include "DFRobotDFPlayerMini.h"
-
-DFRobotDFPlayerMini myDFPlayer;
-
-void Inizializza_DFPlayer() {
+void dfplayer_setup() {
   Serial2.begin(9600);
   serial_write_debug(F("Initializing DFPlayer ..."));
 
-  while (!myDFPlayer.begin(Serial2)) {
+  while (!dfplayer.begin(Serial2)) {
     serial_write_debug(F("Unable to begin DFPlayer"));
   }
   serial_write_debug(F("DFPlayer Mini online."));
 
-  myDFPlayer.volume(10);  //Set volume value. From 0 to 30
+  dfplayer.volume(10);  //Set volume value. From 0 to 30
 }
 
 void play(Track track) {
-  myDFPlayer.playMp3Folder(track);
+  dfplayer.playMp3Folder(track);
 }
 
 void stop_play()
 {
-  myDFPlayer.pause();
+  dfplayer.pause();
 }
 
-bool dfNotPlaying()
+bool df_not_playing()
 {
    if(digitalRead(BUSY_PIN) == LOW)
     {
@@ -33,7 +29,7 @@ bool dfNotPlaying()
 }
 
 
-void printDetail(uint8_t type, int value) {
+void print_detail(uint8_t type, int value) {
   switch (type) {
     case TimeOut:
       Serial.println(F("Time Out!"));
