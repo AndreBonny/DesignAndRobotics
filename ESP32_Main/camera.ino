@@ -16,7 +16,6 @@
 #define PCLK_GPIO_NUM     22
 
 bool init_camera_settings() {
-  //  Serial.printf("Initializing the camera...\n");
   camera_config_t config;
 
   config.ledc_channel = LEDC_CHANNEL_0;
@@ -46,7 +45,9 @@ bool init_camera_settings() {
   esp_err_t result = esp_camera_init(&config);
   return result == ESP_OK;
 }
+
 mtmn_config_t mtmn_config;
+
 static inline mtmn_config_t app_mtmn_config()
 {
   mtmn_config_t mtmn_config = {0};
@@ -68,18 +69,14 @@ static inline mtmn_config_t app_mtmn_config()
 
 void initialize_camera() {
   if (!init_camera_settings()) {
-    //Serial.printf("Failed to initialize camera!\n");
     return;
-  } else {
-    //Serial.printf("Correctly initialized the camera!\n");
   }
-  //mtmn_config = mtmn_init_config();
+
   mtmn_config = app_mtmn_config();
 }
 
 
 int pixel_to_degree(int distance) {
-  //printf("Distance: %d\n", (int)(distance / 8));
   return (int)(distance / 8);
 }
 
@@ -115,8 +112,6 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
 
     Serial.printf("(face_center_x, face_center_y), (img_center_x, img_center_y)\n");
     Serial.printf("(%d, %d), (%d, %d)\n", face_center_x, face_center_y, img_center_x, img_center_y);
-
-
   }
 }
 
@@ -134,9 +129,7 @@ int face_tracking() {
     msg = END_SPEAK_2;
   }
 
-
   do {
-
     data = serial_read();
     if (data.length() > 0 && data == msg) {
       exit = true;
@@ -150,6 +143,7 @@ int face_tracking() {
 
     camera_fb_t * frame;
     frame = esp_camera_fb_get();
+
     dl_matrix3du_t *image_matrix = dl_matrix3du_alloc(1, frame->width, frame->height, 3);
     fmt2rgb888(frame->buf, frame->len, frame->format, image_matrix->item);
     esp_camera_fb_return(frame);
@@ -165,14 +159,11 @@ int face_tracking() {
     }
 
     if (boxes != NULL) {
-      Serial.printf("Face detected! Distanza = %li \n", distance);
       draw_face_boxes(image_matrix, boxes);
       dl_lib_free(boxes->score);
       dl_lib_free(boxes->box);
       dl_lib_free(boxes->landmark);
       dl_lib_free(boxes);
-    } else {
-      Serial.printf("No face detected! Distanza = %li \n", distance);
     }
 
     dl_matrix3du_free(image_matrix);

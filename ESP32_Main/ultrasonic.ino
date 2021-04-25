@@ -1,7 +1,7 @@
-#define TRIG_PIN 13
-#define ECHO_PIN 12
+int trig_pin = 13;
+int echo_pin = 12;
 
-SR04 HCSR04 = SR04(ECHO_PIN, TRIG_PIN);
+SR04 HCSR04 = SR04(echo_pin, trig_pin);
 
 long get_distance() {
   long  d = HCSR04.Distance();

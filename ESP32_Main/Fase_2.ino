@@ -25,17 +25,7 @@ void phase2() {
 
         //delay(500);
       }
-      else
-      {
-        /*ledcAnalogWrite(pan_ch,70);
-          delay(200);
-          ledcAnalogWrite(pan_ch,pan_center);
-          delay(200);
-          ledcAnalogWrite(pan_ch,130);
-          delay(200);*/
-      }
       break;
-
 
     /* Ultrasound search state
        Search if there is something with the US sensor
@@ -48,12 +38,10 @@ void phase2() {
       }
 
       if (founded) {
-        //Serial.printf("founded");
         c_state = TRACKING;
         founded = false;
       }
       else {
-        //Serial.printf("NON founded");
         c_state = BACK;
       }
 
@@ -63,11 +51,12 @@ void phase2() {
        Start Face Tracking and cont the cycles where a face is found
     */
     case TRACKING:
-      //Serial.printf("Starting tracking");
       serial_write(SPEAK_2);
       ledcAnalogWrite(tilt_ch, tilt_tracking);
+      
       //stop message read inside face_tracking function
       end_t = face_tracking();
+      
       if (end_t == 0) {
         serial_write(STOP_SPEAK_2);
         c_state = SAD;
@@ -78,14 +67,14 @@ void phase2() {
       else {
         c_state = BACK;
       }
-
       break;
 
     case EXPLAINING:
-      //Serial.println("EXPLAINING");
       ledcAnalogWrite(tilt_ch, tilt_tracking);
       //stop message read inside face_tracking function
+      
       end_t = face_tracking();
+      
       if (end_t == 0) {
         serial_write(STOP_SPEAK_2);
         c_state = SAD;
@@ -96,7 +85,6 @@ void phase2() {
       else {
         c_state = BACK;
       }
-
       break;
 
     /* End of one complete cycle
@@ -109,12 +97,10 @@ void phase2() {
       c_state = WAIT;
       break;
 
-
     /* Waiting state, we wait for the end of the RESET,
       wait 1 sec and then go to START
     */
     case WAIT:
-      //Serial.println("Wait");
       data = serial_read();
       if (data.length() > 0 && data == END_RES_POS_2) {
         //restart for a new cycle
@@ -124,16 +110,15 @@ void phase2() {
       break;
 
     case SAD:
-      //Serial.println("Sad");
       ledcAnalogWrite(tilt_ch, 110);
-      while (serial_read() != END_SPEAK_2) {
-        //Wait
-      }
+      
+      while (serial_read() != END_SPEAK_2) {}
+      
       c_state = BACK;
       break;
 
     case INGAME:
-      if(!Inizializza_webserver() && !connected) {
+      if(!initialize_webserver() && !connected) {
         close_portal();
         serial_write(START_GAME_NO);
         c_state = EXPLAINING;

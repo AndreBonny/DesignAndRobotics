@@ -30,7 +30,6 @@ void phase1() {
       }
       break;
 
-
     /* Interaction with rock
     */
     case LOOKING:
@@ -75,7 +74,7 @@ void phase1() {
       ledcAnalogWrite(tilt_ch, tilt_tracking);
       //stop message read inside face_tracking function
       end_t = face_tracking();
-      
+
       if (end_t == 1) {
         c_state = BACK;
         delay(200);
@@ -110,8 +109,6 @@ void phase1() {
       }
       c_state = BACK;
       break;
-
-
 
     /* Waiting state, we wait for the end of the RESET,
       wait 1 sec and then go to START
