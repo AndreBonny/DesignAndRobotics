@@ -244,7 +244,7 @@ void phase2() {
         draw_happy_close();
         draw_happy_end();
       }
-      else if (tot_answers > 75 || tot_answers < 95) //very good
+      else if (tot_answers > 75 && tot_answers < 95) //very good
       {
 
         track = VERY_GOOD;
