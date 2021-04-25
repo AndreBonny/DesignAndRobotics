@@ -61,6 +61,14 @@ void move(int mot, int speed) {
 
 }
 
+void moveRandom(){
+  while(!checkLine){
+    move(MOT_L,V);
+    move(MOT_R,V);
+  }
+  Stop();
+}
+
 void move_forward(int t, int speed) {
   avanti(MOT_R, speed);
   avanti(MOT_L, speed);

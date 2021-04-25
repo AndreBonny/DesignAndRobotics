@@ -82,7 +82,13 @@ bool following_forward() {
     indietro(MOT_L, V);
   }
 
-  if ((digitalRead(LS_PIN)) && (digitalRead(RS_PIN))) // stop
+  /*if ((digitalRead(LS_PIN)) && (digitalRead(RS_PIN))) // stop
+  {
+    fermo(MOT_R);
+    fermo(MOT_L);
+    return true;
+  }*/
+    if (digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(LLS_PIN) && digitalRead(RRS_PIN)) // stop
   {
     fermo(MOT_R);
     fermo(MOT_L);
@@ -90,6 +96,7 @@ bool following_forward() {
   }
   return false;
 }
+
 
 bool following_forward2() {
 
@@ -166,7 +173,7 @@ void following_backward() {
 
 void follow() {
 
-  while (!following_forward2()) {
+  while (!following_forward()) {
   }
   delay(3000);
   move_forward(200,V);

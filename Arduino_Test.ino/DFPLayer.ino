@@ -9,13 +9,24 @@ void Inizializza_DFPlayer() {
   while (!myDFPlayer.begin(Serial2)) {
     serial_write_debug(F("Unable to begin DFPlayer"));
   }
+  myDFPlayer.volume(30);  //Set volume value. From 0 to 30
+ // myDFPlayer.outputSetting(true, 30);
+  //myDFPlayer.sleep();
   serial_write_debug(F("DFPlayer Mini online."));
 
-  myDFPlayer.volume(30);  //Set volume value. From 0 to 30
 }
 
 void play(Track track) {
   myDFPlayer.playMp3Folder(track);
+}
+
+void status() {
+  Serial.println(myDFPlayer.readState()); //read mp3 state
+  Serial.println(myDFPlayer.readVolume()); //read current volume
+  Serial.println(myDFPlayer.readEQ()); //read EQ setting
+  Serial.println(myDFPlayer.readFileCounts()); //read all file counts in SD card
+  Serial.println(myDFPlayer.readCurrentFileNumber()); //read current play file number
+  printDetail(myDFPlayer.readType(), myDFPlayer.read());
 }
 
 void stop_play()
@@ -23,13 +34,17 @@ void stop_play()
   myDFPlayer.pause();
 }
 
+void sleep() {
+ myDFPlayer.sleep();
+}
+
 bool dfNotPlaying()
 {
-   if(digitalRead(BUSY_PIN) == LOW)
-    {
-      return false;
-    }
-    return true;
+  if (digitalRead(BUSY_PIN) == LOW)
+  {
+    return false;
+  }
+  return true;
 }
 
 

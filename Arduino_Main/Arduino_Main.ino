@@ -21,7 +21,7 @@
 //define for movement
 #define MOT_R 3
 #define MOT_L 4
-#define V  130
+#define V  150
 #define Omega  240
 #define T_turn 1500
 #define T_straight 2000
@@ -56,9 +56,9 @@
 #define WRONG_ANSWER "26"
 
 //enum of the tracks on SD card
-enum Track { A, GREETINGS, ADVERTISE, QRCODE,  BYE_GREETINGS, ROCK_SONG, SADNESS, GAME_PROPOSAL, GAME_START_INSTRUCTION, INTRODUCTION_PHRASE, 
+enum Track { A, GREETINGS, ADVERTISE, QRCODE,  BYE_GREETINGS, SADNESS, GAME_PROPOSAL, GAME_START_INSTRUCTION, INTRODUCTION_PHRASE, 
             CORRECT_PHRASE, WRONG_PHRASE, FACTS_1, FACTS_2, FACTS_3, FACTS_4, FACTS_5, 
-            LETS_SEE, VERY_BAD, BAD, GOOD, VERY_GOOD, PERFECT};
+            LETS_SEE, VERY_BAD, BAD, GOOD, VERY_GOOD, PERFECT, ROCK_SONG};
 
 //variable for timers
 unsigned long t;
@@ -66,6 +66,9 @@ unsigned long t;
 int phase;
 
 DFRobotDFPlayerMini dfplayer;
+
+//used for the eyes
+LedControl lc = LedControl(DATA_PIN, CLK_PIN, CS_PIN, 2);
 
 double Setpoint, Input, Output;
 int Speed_R, Speed_L;
@@ -122,7 +125,6 @@ void setup() {
 
 void loop() {
 
-  Serial.print(phase);
   if (phase == 1) {
     phase1();
   }

@@ -85,3 +85,7 @@ Good job! You know a lot about space.
 PERFECT  0021
 
 Brilliant! you know more about space than even me!
+
+ROCK_SONG 0022
+
+Nice! I have founded a moon rock

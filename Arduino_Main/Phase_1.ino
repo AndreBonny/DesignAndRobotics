@@ -1,5 +1,7 @@
- void phase1(){
 
+
+void phase1() {
+  int no_play_count = 0;
   String str = serial_read();
   if (str.length() > 0) {
     serial_write_debug("MSG = ");
@@ -7,10 +9,10 @@
   }
 
   /* The ESP has sent the MOV_1 command.
-   * Arduino will command the motors to move the robot
-   * following the black line.
-   * When the movement has ended, send END_MOV_1 to the ESP
-   */
+     Arduino will command the motors to move the robot
+     following the black line.
+     When the movement has ended, send END_MOV_1 to the ESP
+  */
   if (str == MOV_1) {
     serial_write_debug("Ricevuto MOV");
     delay(20); //sicurezza per  Laser??
@@ -19,8 +21,11 @@
     draw_scanning_R();
     draw_scanning_L();
     t = millis();
-    while (millis() - t < T_straight) {
+    /*while (millis() - t < T_straight) {
       following_forward();
+      }*/
+    while (!following_forward()) {
+      //Follow the line
     }
     Stop();
     delay(200);
@@ -29,19 +34,25 @@
     draw_openclose();
   }
 
- 
- /* The robot has reached a "point of interest" namenely a rock.
-  * The ESP has recievd END_MOV_1 and responded with ROCK_INT
-  * which signals the start of the interaction.
-  * The interaction now consists in "scanning" the rock with 
-  * the laser ponters and reproducing a track. 
-  * Once the interaction has finished, send END_ROCK_INT to the ESP
+
+  /* The robot has reached a "point of interest" namenely a rock.
+     The ESP has recievd END_MOV_1 and responded with ROCK_INT
+     which signals the start of the interaction.
+     The interaction now consists in "scanning" the rock with
+     the laser ponters and reproducing a track.
+     Once the interaction has finished, send END_ROCK_INT to the ESP
   */
   if (str == ROCK_INT) {
     serial_write_debug("Ricevuto ROCK_INT");
     play(ROCK_SONG);
     draw_surprised_start();
-    delay(5000);
+    no_play_count = 0;
+    while (no_play_count < 2) //check end of track
+    {
+      if (df_not_playing())
+        no_play_count++;
+      delay(500);
+    }
     digitalWrite(LASER_PIN_L, LOW); //Laser OFF
     digitalWrite(LASER_PIN_R, LOW); //Laser OFF
     draw_surprised_end();
@@ -50,20 +61,19 @@
   }
 
   /* The ESP has found a person, the robot now needs to speak
-   * and promote the exibition. If the person leaves the ESP will
-   * send STOP_SPEAK. In that case the robot will have to show
-   * sadness. Regardless of any message recieved, at the end of the
-   * interaction Arduino will have to send END_SPEAK_1
-   */
+     and promote the exibition. If the person leaves the ESP will
+     send STOP_SPEAK. In that case the robot will have to show
+     sadness. Regardless of any message recieved, at the end of the
+     interaction Arduino will have to send END_SPEAK_1
+  */
   if (str == SPEAK_1) {
     bool end_sp = false;
 
     // Keep playing the track until the thing finishes or we recieve a STOP_SPEAK
     serial_write_debug("Ricevuto SPEAK");
     draw_openclose();
-    int no_play_count = 0;
     Track track = GREETINGS;
-
+    no_play_count = 0;
     play(track);
     draw_happy_start();
     draw_happy_open();
@@ -122,7 +132,7 @@
             {
               draw_happy_close();
               draw_happy_end();
-            }      
+            }
           }
           else
           {
@@ -131,29 +141,31 @@
         }
       }
     } while (!end_sp);
-    
+
     serial_write(END_SPEAK_1);
     serial_write_debug("Invio END_SPEAK");
   }
 
   /* The ESP has finished tracking the person, now it's required that the robot
-   * resets (it should be a small movemnt to move past the stopping point).
-   * Once the movement has ended notify the ESP with the END_RES_POS message.
-   */
+     resets (it should be a small movemnt to move past the stopping point).
+     Once the movement has ended notify the ESP with the END_RES_POS message.
+  */
   if (str == RES_POS_1) {
     serial_write_debug("Riccevuto RES_POS");
     draw_openclose();
-    t = millis();
-    while (millis() - t < T_straight) {
+    /*t = millis();
+      while (millis() - t < T_straight) {
       following_backward();
-    }
+      }*/
+
+    move_forward(400, V);
     Stop();
     delay(200);
     draw_openclose();
     serial_write(END_RES_POS_1);
     serial_write_debug("Invio END_RES_POS");
   }
-  
+
   //default blinking
   draw_openclose();
 }
