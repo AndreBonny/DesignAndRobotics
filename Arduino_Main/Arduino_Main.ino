@@ -1,5 +1,4 @@
 #include <AFMotor.h>
-#include <PID_v1.h>
 #include "LedControl.h"
 #include "DFRobotDFPlayerMini.h"
 
@@ -25,6 +24,7 @@
 #define Omega  240
 #define T_turn 1500
 #define T_straight 2000
+#define T_back 1400
 
 
 //define for messages exchanged between arduino and ESP
@@ -70,12 +70,6 @@ DFRobotDFPlayerMini dfplayer;
 //used for the eyes
 LedControl lc = LedControl(DATA_PIN, CLK_PIN, CS_PIN, 2);
 
-double Setpoint, Input, Output;
-int Speed_R, Speed_L;
-
-double Kp = 2*V, Ki = 0 , Kd = 0;
-PID PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
-
 void setup() {
   Serial1.begin(115200);
   Serial1.setTimeout(1);
@@ -90,8 +84,8 @@ void setup() {
   serial_write_debug("ESP READY");
 
   //initialization of arduino
-  Inizializza_sensori();
-  Inizializza_Motori();
+  sensor_setup();
+  motor_setup();
   eyes_setup();
   dfplayer_setup();
   //Inizializza Laser

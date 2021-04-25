@@ -1,7 +1,7 @@
 AF_DCMotor motoreR(3);
 AF_DCMotor motoreL(4);
 
-void Inizializza_Motori() {
+void motor_setup() {
   motoreR.run(RELEASE);
   motoreL.run(RELEASE);
 }
@@ -45,20 +45,12 @@ void indietro(int mot, int speed) {
   }
 };
 
-void move(int mot, int speed) {
-
-  speed = max(min(speed, 255), -255);
-
-  if (speed > 0) {
-    avanti(mot, speed);
+void moveRandom(){
+  while(!checkLine){
+    avanti(MOT_L,V);
+    avanti(MOT_R,V);
   }
-  else if (speed < 0) {
-    indietro(mot, -speed);
-  }
-  else {
-    fermo(mot);
-  }
-
+   Stop();
 }
 
 void move_forward(int t, int speed) {

@@ -13,54 +13,12 @@ double LS;
 double LLS;
 
 
-void Inizializza_sensori() {
+void sensor_setup() {
   pinMode(RRS_PIN, INPUT);
   pinMode(RS_PIN, INPUT);
   pinMode(LS_PIN, INPUT);
   pinMode(LLS_PIN, INPUT);
-  PID.SetMode(AUTOMATIC);
-  PID.SetSampleTime(1);
-  PID.SetOutputLimits(-500, 500);
 }
-
-void following_PID() {
-
-  Input = double(readSens());
-  Setpoint = 0;
-
-  if (Input != 10) {
-
-    PID.Compute();
-    //errore negativo -> Output negativo -> giro a destra
-
-    if (Output > 0) {
-      Speed_L = V - int(Output);
-      Speed_R = V  ;
-    }
-    else if (Output < 0) {
-      Speed_R = V + int(Output);
-      Speed_L = V ;
-    }
-    else {
-      Speed_R = V;
-      Speed_L = V;
-    }
-
-    /*Speed_L = V - int(Output);
-      Speed_R = V + int(Output);*/
-
-    Speed_R = max(min(Speed_R, 255), -255);
-    Speed_L = max(min(Speed_L, 255), -255);
-
-
-    move(MOT_L, Speed_L);
-    move(MOT_R, Speed_R);
-  }
-  else {
-    Stop();
-  }
-}
-
 
 bool following_forward() {
 
@@ -82,16 +40,9 @@ bool following_forward() {
     indietro(MOT_L, V);
   }
 
-  /*if ((digitalRead(LS_PIN)) && (digitalRead(RS_PIN))) // stop
+  if (digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(LLS_PIN) && digitalRead(RRS_PIN)) // stop
   {
-    fermo(MOT_R);
-    fermo(MOT_L);
-    return true;
-  }*/
-    if (digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(LLS_PIN) && digitalRead(RRS_PIN)) // stop
-  {
-    fermo(MOT_R);
-    fermo(MOT_L);
+    Stop();
     return true;
   }
   return false;
@@ -100,7 +51,7 @@ bool following_forward() {
 
 bool following_forward2() {
 
-  Input = readSens();
+  int Input = readSens();
 
   if (Input == 0) // Move Forward
   {
@@ -116,8 +67,8 @@ bool following_forward2() {
 
   if (Input == 2 || Input == 3) // Turn right
   {
-    indietro(MOT_R, V+50);
-    avanti(MOT_L, V+50);
+    indietro(MOT_R, int(V * 1.2));
+    avanti(MOT_L, int(V * 1.2));
   }
 
   if (Input == -1) // turn left
@@ -129,14 +80,13 @@ bool following_forward2() {
 
   if (Input == -2 || Input == -3) // Turn right
   {
-    avanti(MOT_R, V+50);
-    indietro(MOT_L, V+50);
+    avanti(MOT_R, int(V * 1.2));
+    indietro(MOT_L, int(V * 1.2));
   }
 
   if (Input == 10) // stop
   {
-    fermo(MOT_R);
-    fermo(MOT_L);
+    Stop();
     return true;
   }
 
@@ -166,8 +116,7 @@ void following_backward() {
 
   if ((digitalRead(LS_PIN)) && (digitalRead(RS_PIN))) // stop
   {
-    fermo(MOT_R);
-    fermo(MOT_L);
+    Stop();
   }
 }
 
@@ -176,11 +125,11 @@ void follow() {
   while (!following_forward()) {
   }
   delay(3000);
-  move_forward(200,V);
+  move_forward(200, V);
 }
 
 
-double readSens() {
+int readSens() {
 
   LLS = 0;
   LS = 0;
@@ -216,4 +165,11 @@ double readSens() {
   Serial.println(x);
 
   return x;
+}
+
+bool checkLine() {
+  if (digitalRead(LLS_PIN) || digitalRead(LS_PIN) || digitalRead(RS_PIN) || digitalRead(RRS_PIN))
+    return true;
+  else
+    return false;
 }

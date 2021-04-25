@@ -16,11 +16,11 @@ void phase2() {
   */
   if (str == MOV_2) {
     serial_write_debug("Ricevuto MOV");
-    //delay(20); //sicurezza per  Laser??
     //Movimento Random
-    while (!following_forward()) {
-      //Follow the line
-    }
+    moveRandom();
+    /* while (!following_forward()) {
+       //Follow the line
+      }*/
     Stop();
     delay(200);
     serial_write(END_MOV_2);
@@ -70,7 +70,7 @@ void phase2() {
     }
 
     //send START_GAME to ESP to move to next phases
-    
+
   }
 
   /* In a similar way as in phase 1, once all the interactions have ended
@@ -80,8 +80,8 @@ void phase2() {
   if (str == RES_POS_2) {
     serial_write_debug("Riccevuto RES_POS");
     draw_openclose();
-    //FARE MOVIMENTO INDIETRO??
-    move_forward(400, V);
+    move_backward(T_back,V);
+    //move_forward(400, V);
     Stop();
     delay(200);
     draw_openclose();

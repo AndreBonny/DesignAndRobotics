@@ -21,9 +21,7 @@ void phase1() {
     draw_scanning_R();
     draw_scanning_L();
     t = millis();
-    /*while (millis() - t < T_straight) {
-      following_forward();
-      }*/
+    move_forward(400, V);// forward movement to pass the stop line
     while (!following_forward()) {
       //Follow the line
     }
@@ -153,12 +151,7 @@ void phase1() {
   if (str == RES_POS_1) {
     serial_write_debug("Riccevuto RES_POS");
     draw_openclose();
-    /*t = millis();
-      while (millis() - t < T_straight) {
-      following_backward();
-      }*/
-
-    move_forward(400, V);
+    //move_forward(400, V);
     Stop();
     delay(200);
     draw_openclose();
