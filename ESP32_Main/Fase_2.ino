@@ -1,16 +1,14 @@
 
-int inited = 0;
-
-void fase2() {
+void phase2() {
   //Phase 2
-  switch (Cstate)
+  switch (c_state)
   {
     /* Start state
        send #1 and change state
     */
     case READY:
       serial_write(MOV_2);
-      Cstate = MOVEMENT;
+      c_state = MOVEMENT;
       delay(500);
       break;
 
@@ -23,7 +21,7 @@ void fase2() {
         //body has finished to move
         ledcAnalogWrite(pan_ch, pan_center);
         
-        Cstate = SEARCHING;
+        c_state = SEARCHING;
 
         //delay(500);
       }
@@ -45,18 +43,18 @@ void fase2() {
     */
     case SEARCHING:
       delay(1000);
-      for (int i = 0; i < 4 && !trovato; i++) {
-        trovato = Search();
+      for (int i = 0; i < 4 && !founded; i++) {
+        founded = search_person();
       }
 
-      if (trovato) {
-        //Serial.printf("TROVATO");
-        Cstate = TRACKING;
-        trovato = false;
+      if (founded) {
+        //Serial.printf("founded");
+        c_state = TRACKING;
+        founded = false;
       }
       else {
-        //Serial.printf("NON TROVATO");
-        Cstate = BACK;
+        //Serial.printf("NON founded");
+        c_state = BACK;
       }
 
       break;
@@ -69,16 +67,16 @@ void fase2() {
       serial_write(SPEAK_2);
       ledcAnalogWrite(tilt_ch, tilt_tracking);
       //stop message read inside face_tracking function
-      fine = Face_tracking();
-      if (fine == 0) {
+      end_t = face_tracking();
+      if (end_t == 0) {
         serial_write(STOP_SPEAK_2);
-        Cstate = SAD;
+        c_state = SAD;
       }
-      else if (fine == 2) {
-        Cstate = INGAME;
+      else if (end_t == 2) {
+        c_state = INGAME;
       }
       else {
-        Cstate = BACK;
+        c_state = BACK;
       }
 
       break;
@@ -87,16 +85,16 @@ void fase2() {
       //Serial.println("EXPLAINING");
       ledcAnalogWrite(tilt_ch, tilt_tracking);
       //stop message read inside face_tracking function
-      fine = Face_tracking();
-      if (fine == 0) {
+      end_t = face_tracking();
+      if (end_t == 0) {
         serial_write(STOP_SPEAK_2);
-        Cstate = SAD;
+        c_state = SAD;
       }
-      else if ( fine == 1) {
-        Cstate = BACK;
+      else if ( end_t == 1) {
+        c_state = BACK;
       }
       else {
-        Cstate = BACK;
+        c_state = BACK;
       }
 
       break;
@@ -108,7 +106,7 @@ void fase2() {
       //Serial.println("BACK");
       center_head();
       serial_write(RES_POS_2);
-      Cstate = WAIT;
+      c_state = WAIT;
       break;
 
 
@@ -121,7 +119,7 @@ void fase2() {
       if (data.length() > 0 && data == END_RES_POS_2) {
         //restart for a new cycle
         delay(5000);
-        Cstate = READY;
+        c_state = READY;
       }
       break;
 
@@ -131,39 +129,19 @@ void fase2() {
       while (serial_read() != END_SPEAK_2) {
         //Wait
       }
-      Cstate = BACK;
+      c_state = BACK;
       break;
 
     case INGAME:
       if(!Inizializza_webserver() && !connected) {
         close_portal();
         serial_write(START_GAME_NO);
-        Cstate = EXPLAINING;
+        c_state = EXPLAINING;
       } else {
         connected = false;
         serial_write(END_GAME);
-        Cstate = BACK;
+        c_state = BACK;
       }
-      /*if (!inited) {
-        Inizializza_webserver();
-        game_timer = millis();
-        //Serial.println("Waiting for connection");
-        //Serial.println("");
-        inited = 1;
-      }
-      unsigned long timeout;
-      timeout = 30 * 1000;
-      if (millis() - game_timer < timeout || connected) {
-        //Serial.println("ok");
-        Portal.handleClient();
-      }
-      else if (!connected && millis() - game_timer >= timeout) {
-        serial_write(START_GAME_NO);
-        handle_disconnect();
-      }
-      else{
-        //Serial.println("Errore");
-      }*/
       
       break;
 

@@ -1,5 +1,4 @@
 #include <SR04.h>
-//#include <WiFi.h>
 #include <WebServer.h>
 #include <AutoConnect.h>
 
@@ -8,12 +7,12 @@
 #include "fd_forward.h"
 
 enum State {READY, SCANNING, LOOKING, SEARCHING , TRACKING, BACK, WAIT, INGAME, SAD, MOVEMENT, EXPLAINING };
-State Cstate;
+State c_state;
 
 #define ARD_READY "1"
 #define ESP_READY "2"
-#define FASE_1 "3"
-#define FASE_2 "4"
+#define phase_1 "3"
+#define phase_2 "4"
 #define MOV_1 "5"
 #define END_MOV_1 "6"
 #define RES_POS_1 "7"
@@ -54,21 +53,20 @@ int tilt_position;
 int pan_position;
 
 
-bool trovato = false;
+bool founded = false;
 bool connected = false;
-unsigned long game_timer;
 
-int Fase;
-int fine;
+int phase;
+int end_t;
 String msg = "";
-
+String data;
 
 void setup() {
   Serial.begin(115200);
   Serial.setTimeout(1);
 
   initialize_servo();
-  Inizializza_camera();
+  initialize_camera();
 
   // Initialize SPIFFS for file system
   if (!SPIFFS.begin(true))
@@ -87,16 +85,16 @@ void setup() {
   do {
     msg = serial_read();
 
-    if (msg == FASE_1) {
-      Fase = 1;
+    if (msg == phase_1) {
+      phase = 1;
     }
-    else if (msg == FASE_2) {
-      Fase = 2;
+    else if (msg == phase_2) {
+      phase = 2;
     }
   } while (msg.length() <= 0 );
 
-  Cstate = READY;
-  //Cstate = INGAME;
+  c_state = READY;
+  //c_state = INGAME;
   delay(2000);
 }
 
@@ -104,11 +102,11 @@ void setup() {
 
 void loop()
 {
-  if (Fase == 1) {
-    fase1();
+  if (phase == 1) {
+    phase1();
   }
-  else if (Fase == 2) {
-    fase2();
+  else if (phase == 2) {
+    phase2();
   }
   else {
     //BHO

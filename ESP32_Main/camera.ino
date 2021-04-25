@@ -15,7 +15,7 @@
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
-bool initCamera() {
+bool init_camera_settings() {
   //  Serial.printf("Initializing the camera...\n");
   camera_config_t config;
 
@@ -66,8 +66,8 @@ static inline mtmn_config_t app_mtmn_config()
   return mtmn_config;
 }
 
-void Inizializza_camera() {
-  if (!initCamera()) {
+void initialize_camera() {
+  if (!init_camera_settings()) {
     //Serial.printf("Failed to initialize camera!\n");
     return;
   } else {
@@ -120,14 +120,14 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
   }
 }
 
-int Face_tracking() {
+int face_tracking() {
   int count = 0;
-  long distanza;
+  long distance;
   bool exit = false;
   String data;
   String msg;
 
-  if (Fase == 1) {
+  if (phase == 1) {
     msg = END_SPEAK_1;
   }
   else {
@@ -155,9 +155,9 @@ int Face_tracking() {
     esp_camera_fb_return(frame);
     box_array_t *boxes = face_detect(image_matrix, &mtmn_config);
 
-    distanza = Distanza();
+    distance = get_distance();
 
-    if ( (distanza < SOGLIA_DIST && distanza > 0) || boxes != NULL) {
+    if ((distance < SOGLIA_DIST && distance > 0) || boxes != NULL) {
       count = 0;
     }
     else {
@@ -165,14 +165,14 @@ int Face_tracking() {
     }
 
     if (boxes != NULL) {
-      Serial.printf("Face detected! Distanza = %li \n", distanza);
+      Serial.printf("Face detected! Distanza = %li \n", distance);
       draw_face_boxes(image_matrix, boxes);
       dl_lib_free(boxes->score);
       dl_lib_free(boxes->box);
       dl_lib_free(boxes->landmark);
       dl_lib_free(boxes);
     } else {
-      Serial.printf("No face detected! Distanza = %li \n", distanza);
+      Serial.printf("No face detected! Distanza = %li \n", distance);
     }
 
     dl_matrix3du_free(image_matrix);

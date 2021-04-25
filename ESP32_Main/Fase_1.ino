@@ -1,17 +1,14 @@
-String data;
 
-
-
-void fase1() {
+void phase1() {
   //Phase 1
-  switch (Cstate)
+  switch (c_state)
   {
     /* Start state
        send #1 and change state
     */
     case READY:
       serial_write(MOV_1);
-      Cstate = SCANNING;
+      c_state = SCANNING;
       delay(500);
       break;
 
@@ -24,7 +21,7 @@ void fase1() {
       if (data.length() > 0 && data == END_MOV_1) {
         //body has finished to move
         ledcAnalogWrite(pan_ch, pan_center);
-        Cstate = LOOKING;
+        c_state = LOOKING;
         //delay(500);
       }
       else
@@ -42,10 +39,10 @@ void fase1() {
       serial_write(ROCK_INT);
       do {
         data = serial_read();
-        rock();
+        rock_interaction();
       } while (data.length() <= 0 || data != END_ROCK_INT);
       center_head();
-      Cstate = SEARCHING;
+      c_state = SEARCHING;
       break;
 
     /* Ultrasound search state
@@ -54,17 +51,17 @@ void fase1() {
     */
     case SEARCHING:
       delay(2000);
-      for (int i = 0; i < 4 && !trovato; i++) {
-        trovato = Search();
+      for (int i = 0; i < 4 && !founded; i++) {
+        founded = search_person();
       }
-      if (trovato) {
-        Serial.printf("TROVATO");
-        Cstate = TRACKING;
-        trovato = false;
+      if (founded) {
+        Serial.printf("founded");
+        c_state = TRACKING;
+        founded = false;
       }
       else {
-        Serial.printf("NON TROVATO");
-        Cstate = BACK;
+        Serial.printf("NON founded");
+        c_state = BACK;
       }
 
       break;
@@ -77,17 +74,18 @@ void fase1() {
       serial_write(SPEAK_1);
       ledcAnalogWrite(tilt_ch, tilt_tracking);
       //stop message read inside face_tracking function
-      fine = Face_tracking();
-      if (fine == 1) {
-        Cstate = BACK;
+      end_t = face_tracking();
+      
+      if (end_t == 1) {
+        c_state = BACK;
         delay(200);
       }
-      else if (fine == 0) {
+      else if (end_t == 0) {
         serial_write(STOP_SPEAK_1);
-        Cstate = SAD;
+        c_state = SAD;
       }
       else {
-        Cstate = BACK;
+        c_state = BACK;
       }
       break;
 
@@ -98,7 +96,7 @@ void fase1() {
       Serial.println("back");
       center_head();
       serial_write(RES_POS_1);
-      Cstate = WAIT;
+      c_state = WAIT;
       break;
 
     /* Sad because person go away while it's talking
@@ -110,7 +108,7 @@ void fase1() {
       while (serial_read() != END_SPEAK_1) {
         //Wait
       }
-      Cstate = BACK;
+      c_state = BACK;
       break;
 
 
@@ -124,7 +122,7 @@ void fase1() {
       if (data.length() > 0 && data == END_RES_POS_1) {
         //restart for a new cycle
         delay(10000);
-        Cstate = READY;
+        c_state = READY;
       }
       break;
 

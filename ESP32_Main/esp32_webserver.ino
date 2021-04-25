@@ -215,7 +215,7 @@ void handle_disconnect() {
   close_portal();
 
 //  inited = 0;
-//  Cstate = BACK;
+//  c_state = BACK;
 }
 
 void handle_page(String page_name, bool is_css) {

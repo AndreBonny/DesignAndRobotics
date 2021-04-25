@@ -8,7 +8,7 @@ void ledcAnalogWrite(uint8_t channel, uint32_t value) {
   ledcWrite(channel, duty);
 }
 
-void Inizializza_servo() {
+void initialize_servo() {
 
   ledcSetup(tilt_ch, 50, 16);
   ledcAttachPin(tilt_pin, tilt_ch);
@@ -67,7 +67,7 @@ void scan() {
 
 }
 
-bool Search() {
+bool search_person() {
 
   int pan_start = 70;
   int pan_end = 130;
@@ -80,12 +80,12 @@ bool Search() {
   delay(100);
   for (int angle = pan_start; angle <= pan_end; angle += passo) {
     ledcAnalogWrite(pan_ch, angle);
-    if (checkPerson(angle, t_stop))
+    if (check_person(angle, t_stop))
       return true;
   }
   for (int angle = pan_end; angle >= pan_start; angle -= passo) {
     ledcAnalogWrite(pan_ch, angle);
-    if (checkPerson(angle, t_stop))
+    if (check_person(angle, t_stop))
       return true;
   }
   return false;
@@ -95,7 +95,7 @@ void adjust_tilt() {
   ledcAnalogWrite(tilt_ch, 150);
 }
 
-void rock() {
+void rock_interaction() {
 
   int tilt_start = 110;
   int tilt_end = 130;
