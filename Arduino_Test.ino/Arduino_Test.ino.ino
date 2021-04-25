@@ -11,7 +11,7 @@
 //define for movement
 #define MOT_R 3
 #define MOT_L 4
-#define V  130
+#define V  150
 #define Omega  240
 #define T_turn 1500
 #define T_straight 2000
@@ -60,7 +60,7 @@ int phase;
 double Setpoint, Input, Output;
 int Speed_R, Speed_L;
 
-double Kp = 2 * V, Ki = 0 , Kd = 0;
+double Kp = V, Ki = 0 , Kd = 0;
 PID PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 int i = 2;
 unsigned long timer;
@@ -82,7 +82,7 @@ void setup() {
   Inizializza_sensori();
   Inizializza_Motori();
   Inizializza_Occhi();
-  // Inizializza_DFPlayer();
+  Inizializza_DFPlayer();
   //Inizializza Laser
   pinMode(LASER_PIN_L, OUTPUT);
   digitalWrite(LASER_PIN_L, LOW);
@@ -108,14 +108,43 @@ void setup() {
 
   //ready to start
   //draw_openclose();
-  delay(500);
-
-  play(1);
+  delay(1000);
+  Serial.println("Start");
+  //play(1);
   timer = millis();
 }
 
 void loop() {
+  /*phase = digitalRead(PHASE_PIN);
+  Serial.println(phase);*/
   //follow();
+  /*Serial.println("PLAY");
+    play(ADVERTISE);
+    delay(10000);
+    Serial.println("STOP AND SLEEP");
+    sleep();
+
+    delay(3000);*/
+  /*
+    Serial.println("Play greetings");
+    play(GREETINGS);
+
+    delay(5000);
+    Serial.println("stop greetings");
+    stop_play();
+    sleep();
+    //Serial.println("Sleep");
+    delay(5000);
+    Serial.println("Play Qrcode");
+    play(QRCODE);
+    delay(5000);
+    stop_play();
+    sleep();
+    //Serial.println("Sleep");
+    delay(5000);*/
+
+
+
   /*
     bool end_sp = false;
 
@@ -202,7 +231,7 @@ void loop() {
 
 
 
-  /* draw_happy_open();
+  draw_happy_open();
     delay(500);
     draw_happy_blink();
     delay(500);
@@ -234,7 +263,7 @@ void loop() {
     draw_openclose();
     draw_angry_start();
     delay(2000);
-    draw_angry_blink();*/
+    draw_angry_blink();
   /* move_forward(T_straight,V);
     delay(2000);
     move_backward(T_straight,V);

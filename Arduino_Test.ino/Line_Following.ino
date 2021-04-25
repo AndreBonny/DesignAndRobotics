@@ -23,7 +23,7 @@ void Inizializza_sensori() {
   PID.SetOutputLimits(-500, 500);
 }
 
-void following_PID() {
+bool following_PID() {
 
   Input = double(readSens());
   Setpoint = 0;
@@ -65,7 +65,9 @@ void following_PID() {
   }
   else {
     Stop();
+    return true;
   }
+  return false;
 }
 
 
@@ -80,6 +82,7 @@ bool following_forward() {
   if (!(digitalRead(LS_PIN)) && digitalRead(RS_PIN)) // Turn right
   {
     indietro(MOT_R, V);
+    //fermo(MOT_R);
     avanti(MOT_L, V);
   }
 
@@ -87,9 +90,17 @@ bool following_forward() {
   {
     avanti(MOT_R, V);
     indietro(MOT_L, V);
+    //fermo(MOT_L);
   }
 
-  if ((digitalRead(LS_PIN)) && (digitalRead(RS_PIN))) // stop
+  /*if (digitalRead(LS_PIN)) && (digitalRead(RS_PIN)) // stop
+    {
+    fermo(MOT_R);
+    fermo(MOT_L);
+    return true;
+    }*/
+
+  if (digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(LLS_PIN) && digitalRead(RRS_PIN)) // stop
   {
     fermo(MOT_R);
     fermo(MOT_L);
@@ -116,8 +127,8 @@ bool following_forward2() {
 
   if (Input == 2 || Input == 3) // Turn right
   {
-    indietro(MOT_R, V+50);
-    avanti(MOT_L, V+50);
+    indietro(MOT_R, V + 50);
+    avanti(MOT_L, V + 50);
   }
 
   if (Input == -1) // turn left
@@ -129,8 +140,8 @@ bool following_forward2() {
 
   if (Input == -2 || Input == -3) // Turn right
   {
-    avanti(MOT_R, V+50);
-    indietro(MOT_L, V+50);
+    avanti(MOT_R, V + 50);
+    indietro(MOT_L, V + 50);
   }
 
   if (Input == 10) // stop
@@ -154,14 +165,14 @@ void following_backward() {
 
   if (!(digitalRead(LS_PIN)) && digitalRead(RS_PIN)) // Turn right
   {
-    indietro(MOT_R, int(V*1.2));
-    avanti(MOT_L, int(V*1.1));
+    indietro(MOT_R, int(V * 1.2));
+    avanti(MOT_L, int(V * 1.1));
   }
 
   if (digitalRead(LS_PIN) && !(digitalRead(RS_PIN))) // turn left
   {
-    avanti(MOT_R, int(V*1.1));
-    indietro(MOT_L, int(V*1.2));
+    avanti(MOT_R, int(V * 1.1));
+    indietro(MOT_L, int(V * 1.2));
   }
 
   if ((digitalRead(LS_PIN)) && (digitalRead(RS_PIN))) // stop
@@ -174,12 +185,12 @@ void following_backward() {
 void follow() {
 
   Serial3.println("Seguo Linea");
-  while (!following_forward2()) {
+  while (!following_forward()) {
   }
   Serial3.println("Arrivato");
   delay(3000);
   Serial3.println("Riparto");
-  move_forward(400,V);
+  move_forward(400, V);
   Serial3.println("Mosso");
 }
 
@@ -220,4 +231,11 @@ double readSens() {
   Serial.println(x);
 
   return x;
+}
+
+bool checkLine() {
+  if (digitalRead(LLS_PIN) || digitalRead(LS_PIN) || digitalRead(RS_PIN) || digitalRead(RRS_PIN))
+    return true;
+  else
+    return false;
 }

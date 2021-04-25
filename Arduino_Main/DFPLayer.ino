@@ -1,13 +1,13 @@
 void dfplayer_setup() {
   Serial2.begin(9600);
-  serial_write_debug(F("Initializing DFPlayer ..."));
+  serial_write_debug("Initializing DFPlayer ...");
 
   while (!dfplayer.begin(Serial2)) {
     serial_write_debug(F("Unable to begin DFPlayer"));
   }
   serial_write_debug(F("DFPlayer Mini online."));
 
-  dfplayer.volume(10);  //Set volume value. From 0 to 30
+  dfplayer.volume(20);  //Set volume value. From 0 to 30
 }
 
 void play(Track track) {
