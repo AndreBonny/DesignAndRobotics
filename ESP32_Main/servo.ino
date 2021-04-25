@@ -25,27 +25,14 @@ void initialize_servo() {
   pan_position = pan_center;
 }
 
-
-void move_servos() {
-  int randX = random(pan_center - 20, pan_center + 20);
-  int randY = random(tilt_center - 20, tilt_center + 20);
-  //Serial.printf("Pan = %d , Tilt = %d ", randX, randY);
-  ledcAnalogWrite(pan_ch, randX);
-  delay(100);
-  ledcAnalogWrite(tilt_ch, randY);
-  delay(100);
-}
-
 void center_head() {
   ledcAnalogWrite(tilt_ch, tilt_center);
   ledcAnalogWrite(pan_ch, pan_center);
 }
 
 void scan() {
-
   tilt_position = 130;
   ledcAnalogWrite(tilt_ch, tilt_position);
-
 
   int    pan_start = 60;
   int    pan_end = 140;
@@ -64,7 +51,6 @@ void scan() {
     delay(t_stop);
   }
   delay(300);
-
 }
 
 bool search_person() {
@@ -89,10 +75,6 @@ bool search_person() {
       return true;
   }
   return false;
-}
-
-void adjust_tilt() {
-  ledcAnalogWrite(tilt_ch, 150);
 }
 
 void rock_interaction() {

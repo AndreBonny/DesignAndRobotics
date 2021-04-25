@@ -1,5 +1,3 @@
-//WebServer server(80);
-//AutoConnect Portal(server);
 WebServer* server;
 AutoConnect* Portal;
 
@@ -44,8 +42,6 @@ String answers[] = {
 String randomQuestions[num_questions];
 String randomAnswers[num_questions];
 
-//bool currentlyConnected;
-
 int contains(int *indexes, int num, int leng) {
   for (int i = 0; i < leng; i++) {
     if (indexes[i] == num)
@@ -82,7 +78,7 @@ void initialize_random_questions() {
   }
 }
 
-int Inizializza_webserver() {
+int initialize_webserver() {
 
   server = new WebServer(80);
   Portal = new AutoConnect(*server);
@@ -95,7 +91,6 @@ int Inizializza_webserver() {
 
   server->on("/style.css", handle_css);
   server->on("/", handle_home_page);
-
   server->on("/start", handle_question);
   server->on("/false", handle_false);
   server->on("/true", handle_true);
@@ -110,30 +105,16 @@ int Inizializza_webserver() {
     getSpiffImg("/logo_footer.png", "image/png");
   });
 
-  server->onNotFound(handle_NotFound);
+  server->onNotFound(handle_not_found);
 
   configure_portal();
   
   return Portal->begin();
-  
-  //server->begin();
-  
-  //Serial.println("HTTP server started");
-  //return 1;
 }
 
 void configure_portal() {
   AutoConnectConfig  Config("MuseumRobot", "");
 
-  /*Config.autoReconnect = true;                  // Enable auto-reconnect
-    Config.autoSave = AC_SAVECREDENTIAL_NEVER;    // No save credential
-    Config.boundaryOffset = 64;                   // Reserve 64 bytes for the user data in EEPROM.
-    Config.portalTimeout = 60000;                 // Sets timeout value for the captive portal
-    Config.retainPortal = true;                   // Retains the portal function after timed-out
-    Config.homeUri = "/";                         // Sets home path of Sketch application
-    Config.title = "My menu";                     // Customize the menu title
-
-    Portal->onConnect(onConnect);*/
   Config.portalTimeout = 10000;
   Config.immediateStart = true;
   Config.autoRise = true;
@@ -148,93 +129,6 @@ void getSpiffImg(String path, String TyPe) {
     server->streamFile(file, TyPe);
     file.close();
   }
-}
-
-void handle_css() {
-  handle_page("/style.css", true);
-}
-
-void handle_home_page() {
-  current_question = 0;
-  connected = true;
-  serial_write(START_GAME_YES);
-  initialize_random_questions();
-
-  /*for (int i = 0; i < num_questions; i++) {
-    //Serial.print("Question #" + String(i) + " ");
-    //Serial.println(randomQuestions[i]);
-    //Serial.print("Answer #" + String(i) + " ");
-    //Serial.println(randomAnswers[i]);
-    }*/
-
-  //Serial.println("Home page");
-  handle_page("/home_p.html", false);
-}
-
-void handle_question() {
-  if (current_question < num_questions) {
-    current_question++;
-    server->send(200, "text/html", sendQuestionPage(current_question, randomQuestions[current_question - 1]));
-  } else {
-    server->send(200, "text/html", sendFinalResults(num_correct, num_questions));
-  }
-}
-
-void handle_false() {
-  check_answer("False");
-}
-
-void handle_true() {
-  check_answer("True");
-}
-
-void check_answer(String ans) {
-  if (randomAnswers[current_question - 1] == ans) {
-    num_correct++;
-    handle_next("Correct!");
-    serial_write(CORRECT_ANSWER);
-  } else {
-    handle_next("Wrong!");
-    serial_write(WRONG_ANSWER);
-  }
-}
-
-void handle_next(String res) {
-  server->send(200, "text/html", sendPResults(current_question, res));
-}
-
-void handle_disconnect() {
-  handle_page("/disconnected.html", false);
-
-  //if (connected)
-  
-  //serial_write(END_GAME);
-
-  delay(1000);
-
-  close_portal();
-
-//  inited = 0;
-//  c_state = BACK;
-}
-
-void handle_page(String page_name, bool is_css) {
-  File file = SPIFFS.open(page_name, "r");
-  String page = "";
-  if (file) {
-    while (file.available()) {
-      page += (char)file.read();
-    }
-    if (is_css)
-      server->send(200, "text/css", page);
-    else
-      server->send(200, "text/html", page);
-  } else
-    Serial.println("Failed to get page");
-}
-
-void handle_NotFound() {
-  server->send(404, "text/plain", "Not found");
 }
 
 void close_portal() {

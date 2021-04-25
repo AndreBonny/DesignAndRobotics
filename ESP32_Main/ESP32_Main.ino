@@ -72,14 +72,13 @@ void setup() {
   if (!SPIFFS.begin(true))
     return;
 
-
   delay(100);
   serial_write(ESP_READY);
   delay(10);
 
   while (serial_read() != ARD_READY) {
   }
-  
+
   delay(10);
 
   do {
@@ -94,7 +93,7 @@ void setup() {
   } while (msg.length() <= 0 );
 
   c_state = READY;
-  //c_state = INGAME;
+
   delay(2000);
 }
 
@@ -109,7 +108,6 @@ void loop()
     phase2();
   }
   else {
-    //BHO
-  }
 
+  }
 }
