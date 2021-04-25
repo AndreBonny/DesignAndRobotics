@@ -7,10 +7,13 @@
 #define PHASE_PIN 22
 #define LASER_PIN_L 52
 #define LASER_PIN_R 53
+//dfplayer
 #define BUSY_PIN 21
-#define DATA_PIN 30
-#define CS_PIN 32
-#define CLK_PIN 34
+
+//led matrix
+#define DATA_PIN 38
+#define CS_PIN 40
+#define CLK_PIN 42
 
 //define for intensity of the eyes
 #define INTENSITY 1
@@ -53,7 +56,8 @@
 #define WRONG_ANSWER "26"
 
 //enum of the tracks on SD card
-enum Track { A, GREETINGS, ADVERTISE, QRCODE,  BYE_GREETINGS, ROCK_SONG, SADNESS, GAME_PROPOSAL, GAME_START_INSTRUCTION, INTRODUCTION_PHRASE, CORRECT_PHRASE, WRONG_PHRASE, FACTS_1, FACTS_2, FACTS_3, FACTS_4, FACTS_5, 
+enum Track { A, GREETINGS, ADVERTISE, QRCODE,  BYE_GREETINGS, ROCK_SONG, SADNESS, GAME_PROPOSAL, GAME_START_INSTRUCTION, INTRODUCTION_PHRASE, 
+            CORRECT_PHRASE, WRONG_PHRASE, FACTS_1, FACTS_2, FACTS_3, FACTS_4, FACTS_5, 
             LETS_SEE, VERY_BAD, BAD, GOOD, VERY_GOOD, PERFECT};
 
 //variable for timers
@@ -73,7 +77,7 @@ void setup() {
   Serial1.begin(115200);
   Serial1.setTimeout(1);
   Serial.begin(115200);
-  Serial3.begin(115200);
+  
 
   serial_write_debug("START");
   
