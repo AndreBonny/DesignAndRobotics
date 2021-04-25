@@ -1,5 +1,3 @@
-LedControl lc = LedControl(DATA_PIN, CLK_PIN, CS_PIN, 2);
-
 void eyes_setup() {
   //we have already set the number of devices when we created the LedControl
   int devices = lc.getDeviceCount();

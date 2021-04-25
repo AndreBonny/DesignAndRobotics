@@ -67,6 +67,9 @@ int phase;
 
 DFRobotDFPlayerMini dfplayer;
 
+//used for the eyes
+LedControl lc = LedControl(DATA_PIN, CLK_PIN, CS_PIN, 2);
+
 double Setpoint, Input, Output;
 int Speed_R, Speed_L;
 
