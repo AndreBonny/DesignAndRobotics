@@ -1,5 +1,5 @@
 #include <AFMotor.h>
-#include <PID_v1.h>
+//#include <PID_v1.h>
 #include "LedControl.h"
 
 //define of pins
@@ -61,7 +61,7 @@ double Setpoint, Input, Output;
 int Speed_R, Speed_L;
 
 double Kp = V, Ki = 0 , Kd = 0;
-PID PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+//PID PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 int i = 2;
 unsigned long timer;
 

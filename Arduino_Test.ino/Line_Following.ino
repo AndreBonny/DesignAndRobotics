@@ -18,9 +18,9 @@ void Inizializza_sensori() {
   pinMode(RS_PIN, INPUT);
   pinMode(LS_PIN, INPUT);
   pinMode(LLS_PIN, INPUT);
-  PID.SetMode(AUTOMATIC);
-  PID.SetSampleTime(1);
-  PID.SetOutputLimits(-500, 500);
+//  PID.SetMode(AUTOMATIC);
+//  PID.SetSampleTime(1);
+//  PID.SetOutputLimits(-500, 500);
 }
 
 bool following_PID() {
@@ -30,7 +30,7 @@ bool following_PID() {
 
   if (Input != 10) {
 
-    PID.Compute();
+//    PID.Compute();
     //errore negativo -> Output negativo -> giro a destra
 
     if (Output > 0) {

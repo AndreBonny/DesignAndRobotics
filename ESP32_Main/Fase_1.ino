@@ -16,7 +16,10 @@ void phase1() {
        Move head while waiting for the END_MOV
     */
     case SCANNING:
-      data = serial_read();
+      while (scan()) {}
+      ledcAnalogWrite(pan_ch, pan_center);
+      c_state = LOOKING;
+      /*data = serial_read();
       if (data.length() > 0 && data == END_MOV_1) {
         //body has finished to move
         ledcAnalogWrite(pan_ch, pan_center);
@@ -26,7 +29,7 @@ void phase1() {
       else
       {
         scan();
-      }
+      }*/
       break;
 
     /* Interaction with rock
@@ -34,7 +37,7 @@ void phase1() {
     case LOOKING:
       //Messaggio arduino parlare
       serial_write(ROCK_INT);
-      while(rock_interaction) {}
+      while (rock_interaction) {}
       center_head();
       c_state = SEARCHING;
       break;
