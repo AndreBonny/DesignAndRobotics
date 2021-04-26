@@ -88,7 +88,7 @@ void phase1() {
         Serial.println(SADNESS);
         draw_sad_start();
         no_play_count = 0;
-        while (no_play_count < 4) //check end of track
+        while (no_play_count < 2) //check end of track
         {
           if (df_not_playing())
             no_play_count++;
