@@ -7,10 +7,11 @@ void dfplayer_setup() {
   }
   serial_write_debug(F("DFPlayer Mini online."));
 
-  dfplayer.volume(20);  //Set volume value. From 0 to 30
+  dfplayer.volume(30);  //Set volume value. From 0 to 30
 }
 
 void play(Track track) {
+  dfplayer.start();
   dfplayer.playMp3Folder(track);
 }
 

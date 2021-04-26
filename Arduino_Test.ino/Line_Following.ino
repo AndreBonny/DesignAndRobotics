@@ -81,31 +81,31 @@ bool following_forward() {
 
   if (!(digitalRead(LS_PIN)) && digitalRead(RS_PIN)) // Turn right
   {
-    indietro(MOT_R, V);
+    indietro(MOT_R, V * 1.1);
     //fermo(MOT_R);
-    avanti(MOT_L, V);
+    avanti(MOT_L, V * 1.1);
   }
 
   if (digitalRead(LS_PIN) && !(digitalRead(RS_PIN))) // turn left
   {
-    avanti(MOT_R, V);
-    indietro(MOT_L, V);
+    avanti(MOT_R, V * 1.1);
+    indietro(MOT_L, V * 1.1);
     //fermo(MOT_L);
   }
 
-  /*if (digitalRead(LS_PIN)) && (digitalRead(RS_PIN)) // stop
-    {
-    fermo(MOT_R);
-    fermo(MOT_L);
-    return true;
-    }*/
-
-  if (digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(LLS_PIN) && digitalRead(RRS_PIN)) // stop
+  if (digitalRead(LS_PIN) && digitalRead(RS_PIN)) // stop
   {
     fermo(MOT_R);
     fermo(MOT_L);
     return true;
   }
+  /*
+    if (digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(LLS_PIN) && digitalRead(RRS_PIN)) // stop
+    {
+      fermo(MOT_R);
+      fermo(MOT_L);
+      return true;
+    }*/
   return false;
 }
 
@@ -121,27 +121,27 @@ bool following_forward2() {
 
   if (Input == 1) // Turn right
   {
-    indietro(MOT_R, V);
-    avanti(MOT_L, V);
+    indietro(MOT_R, V * 0.8);
+    avanti(MOT_L, V*0.9);
   }
 
   if (Input == 2 || Input == 3) // Turn right
   {
-    indietro(MOT_R, V + 50);
-    avanti(MOT_L, V + 50);
+    indietro(MOT_R, V * 0.8);
+    avanti(MOT_L, V *0.9);
   }
 
   if (Input == -1) // turn left
   {
-    avanti(MOT_R, V);
-    indietro(MOT_L, V);
+    avanti(MOT_R, 230);
+    indietro(MOT_L, 230);
   }
 
 
-  if (Input == -2 || Input == -3) // Turn right
+  if (Input == -2 || Input == -3) // Turn left
   {
-    avanti(MOT_R, V + 50);
-    indietro(MOT_L, V + 50);
+    avanti(MOT_R, 230);
+    indietro(MOT_L, 230);
   }
 
   if (Input == 10) // stop
@@ -185,10 +185,10 @@ void following_backward() {
 void follow() {
 
   Serial3.println("Seguo Linea");
-  while (!following_forward()) {
+  while (!following_forward2()) {
   }
   Serial3.println("Arrivato");
-  delay(3000);
+  delay(2000);
   Serial3.println("Riparto");
   move_forward(400, V);
   Serial3.println("Mosso");
@@ -206,27 +206,32 @@ double readSens() {
   if (digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && !digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
     x = -e3;
   }
-  if (digitalRead(LLS_PIN) && digitalRead(LS_PIN) && !digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
+  else if (digitalRead(LLS_PIN) && digitalRead(LS_PIN) && !digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
     x = -e2;
   }
-  if (!digitalRead(LLS_PIN) && digitalRead(LS_PIN) && !digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
+  else if (!digitalRead(LLS_PIN) && digitalRead(LS_PIN) && !digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
     x = -e1;
   }
-  if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && !digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
+  else if (!digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
     x = 0;
   }
-  if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
+  else if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
     x = e1;
   }
-  if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
+  else if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
     x = e2;
   }
-  if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && !digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
-    x = e2;
+  else if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && !digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
+    x = e3;
   }
-  if (digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
+  else if (digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
     x = 10;
   }
+  else{
+    x=0;}
+  /*if (digitalRead(LS_PIN) && digitalRead(RS_PIN)) {
+    x = 10;
+    }*/
 
   Serial.println(x);
 

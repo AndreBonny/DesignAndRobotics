@@ -38,7 +38,7 @@ void sleep() {
  myDFPlayer.sleep();
 }
 
-bool dfNotPlaying()
+bool df_not_playing()
 {
   if (digitalRead(BUSY_PIN) == LOW)
   {
