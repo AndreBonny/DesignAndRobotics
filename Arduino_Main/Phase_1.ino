@@ -83,14 +83,14 @@ void phase1() {
       {
         //we read a stop signal from esp
         stop_play();
+        no_play_count = 0;
         play(SADNESS);
         draw_sad_start();
-        no_play_count = 0;
         while (no_play_count < 2) //check end of track
         {
           if (df_not_playing())
             no_play_count++;
-          if (millis() - t > 4000)
+          if (millis() - t > 4000) //timer for blink
           {
             t = millis();
             draw_sad_blink();
