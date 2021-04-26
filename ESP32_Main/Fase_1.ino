@@ -34,10 +34,7 @@ void phase1() {
     case LOOKING:
       //Messaggio arduino parlare
       serial_write(ROCK_INT);
-      do {
-        data = serial_read();
-        rock_interaction();
-      } while (data.length() <= 0 || data != END_ROCK_INT);
+      while(rock_interaction) {}
       center_head();
       c_state = SEARCHING;
       break;

@@ -208,7 +208,7 @@ void phase2() {
         draw_angry_end();
 
       }
-      else if (tot_answers > 25) //bad
+      else if (tot_answers > 25 && tot_answers < 50) //bad
       {
 
         track = BAD;
@@ -229,7 +229,7 @@ void phase2() {
         }
         draw_sad_end();
       }
-      else if (tot_answers > 50)//good
+      else if (tot_answers >= 50 && tot_answers < 75)//good
       {
         track = GOOD;
         no_play_count = 0;
@@ -251,7 +251,7 @@ void phase2() {
         draw_happy_close();
         draw_happy_end();
       }
-      else if (tot_answers > 75 && tot_answers < 95) //very good
+      else if (tot_answers >= 75 && tot_answers < 95) //very good
       {
 
         track = VERY_GOOD;

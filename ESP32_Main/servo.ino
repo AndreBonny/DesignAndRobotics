@@ -79,83 +79,108 @@ bool search_person() {
   return false;
 }
 
-void rock_interaction() {
+bool rock_interaction() {
 
+  int pan_start = pan_center-15;
+  int pan_end = pan_center+15;
   int tilt_start = 135;
 
-  int t_stop = 200;
+  int t_stop = 100;
   int pan_passo = 7;
-  int tilt_passo = 3;
+  int tilt_passo = 2;
 
-  ledcAnalogWrite(pan_ch, pan_center);
   ledcAnalogWrite(tilt_ch, tilt_start);
 
   int tilt_pos = 0;
   int pan_pos = 0;
 
-  tilt_pos = tilt_start + 2 * tilt_passo;
+  for(int i=pan_start; i<=pan_end; i+=pan_passo) {
+    ledcAnalogWrite(pan_ch, i);
+    delay(t_stop);
+    ledcAnalogWrite(tilt_ch, random(-1,1)*(tilt_passo)+tilt_start);
+    delay(t_stop);
+    if(serial_read() == END_ROCK_INT) {
+      false;
+    }
+  }
+  
+  for(int i=pan_end; i>=pan_start; i-=pan_passo) {
+    ledcAnalogWrite(pan_ch, i);
+    delay(t_stop);
+    ledcAnalogWrite(tilt_ch, random(-1,1)*(tilt_passo)+tilt_start);
+    delay(t_stop);
+    if(serial_read() == END_ROCK_INT) {
+      false;
+    }
+  }
+
+  /*tilt_pos = tilt_start + 2 * tilt_passo;
   ledcAnalogWrite(tilt_ch, tilt_pos); // (0,-2)
   delay(t_stop);
+  
   pan_pos = pan_center + pan_passo;
   ledcAnalogWrite(pan_ch, pan_pos);  // (-1,-2)
   delay(t_stop);
+  
   pan_pos += pan_passo;
   ledcAnalogWrite(pan_ch, pan_pos);  // (-2,-2)
   tilt_pos -= tilt_passo;
   delay(t_stop);
+  
   ledcAnalogWrite(tilt_ch, tilt_pos);  // (-2,-1)
   delay(t_stop);
-  //pan_pos += pan_passo;
-  //ledcAnalogWrite(pan_ch, pan_pos);  // (-3,-1)
-  //delay(t_stop);
+  
   tilt_pos -= tilt_passo;
   ledcAnalogWrite(tilt_ch, tilt_pos);  // (-3,0)
   delay(t_stop);
+  
   tilt_pos -= tilt_passo;
   ledcAnalogWrite(tilt_ch, tilt_pos);  // (-3,1)
   delay(t_stop);
+  
   pan_pos -= pan_passo;
   ledcAnalogWrite(pan_ch, pan_pos);  // (-1,1)
   delay(t_stop);
+  
   tilt_pos -= tilt_passo;
   ledcAnalogWrite(tilt_ch, tilt_pos);  // (-1,2)
   delay(t_stop);
+  
   pan_pos -= pan_passo;
   ledcAnalogWrite(pan_ch, pan_pos);  // (0,2)
   delay(t_stop);
+  
   pan_pos -= pan_passo;
   ledcAnalogWrite(pan_ch, pan_pos);  // (1,2)
   delay(t_stop);
+  
   pan_pos -= pan_passo;
   ledcAnalogWrite(pan_ch, pan_pos);  // (2,2)
   delay(t_stop);
-  //pan_pos -= pan_passo;
-  //ledcAnalogWrite(pan_ch, pan_pos);  // (2,2)
-  //delay(t_stop);
+  
   tilt_pos += tilt_passo;
   ledcAnalogWrite(tilt_ch, tilt_pos);  // (2,1)
   delay(t_stop);
-  //pan_pos -= pan_passo;
-  //ledcAnalogWrite(pan_ch, pan_pos);  // (3,1)
-  //delay(t_stop);
+  
   tilt_pos += tilt_passo;
   ledcAnalogWrite(tilt_ch, tilt_pos);  // (3,0)
   delay(t_stop);
+  
   tilt_pos += tilt_passo;
   ledcAnalogWrite(tilt_ch, tilt_pos);  // (3,-1)
   delay(t_stop);
+  
   pan_pos += pan_passo;
   ledcAnalogWrite(pan_ch, pan_pos);  // (2,-1)
   delay(t_stop);
+  
   tilt_pos += tilt_passo;
   ledcAnalogWrite(tilt_ch, tilt_pos);  // (2,-2)
   delay(t_stop);
+  
   pan_pos += pan_passo;
   ledcAnalogWrite(pan_ch, pan_pos);  // (1,-2)
   delay(t_stop);
-  //pan_pos += pan_passo;
-  //ledcAnalogWrite(pan_ch, pan_pos);  // (0,-2)
-  //delay(t_stop);
 
 
   /*for (int i = tilt_start; i <= tilt_end; i += pan_passo) {
