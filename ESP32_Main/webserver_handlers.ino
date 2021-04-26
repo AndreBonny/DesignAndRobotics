@@ -10,7 +10,7 @@ void handle_home_page() {
   center_head();
   
   initialize_random_questions();
-
+  
   handle_page("/home_p.html", false);
 }
 

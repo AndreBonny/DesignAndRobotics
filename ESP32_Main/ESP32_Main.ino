@@ -2,6 +2,9 @@
 #include <WebServer.h>
 #include <AutoConnect.h>
 
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
+
 #include "SPIFFS.h"
 #include "esp_camera.h"
 #include "fd_forward.h"
@@ -64,6 +67,8 @@ String data;
 void setup() {
   Serial.begin(115200);
   Serial.setTimeout(1);
+
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
 
   initialize_servo();
   initialize_camera();

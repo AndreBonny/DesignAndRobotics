@@ -60,7 +60,7 @@ bool following_forward() {
 
 bool following_forward2() {
 
-  Input = readSens();
+  int Input = readSens();
 
   if (Input == 0) // Move Forward
   {

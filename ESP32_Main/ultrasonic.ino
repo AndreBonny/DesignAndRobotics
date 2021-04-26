@@ -24,7 +24,7 @@ bool check_person(int angle, int t_stop) {
       distance = get_distance();
       // Serial.printf("l2: %li cm Angle = %d \n", distance, angle);
       if (distance <= SOGLIA_DIST && distance > 0) {
-        ledcAnalogWrite(tilt_ch, tilt_center);
+        //ledcAnalogWrite(tilt_ch, tilt_center);
         return true;
       }
     }

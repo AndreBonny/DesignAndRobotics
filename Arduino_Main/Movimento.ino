@@ -45,12 +45,12 @@ void indietro(int mot, int speed) {
   }
 };
 
-void moveRandom(){
-  while(!checkLine){
-    avanti(MOT_L,V);
-    avanti(MOT_R,V);
+void moveRandom() {
+  while (!checkLine()) {
+    avanti(MOT_L, V);
+    avanti(MOT_R, V);
   }
-   Stop();
+  Stop();
 }
 
 void move_forward(int t, int speed) {

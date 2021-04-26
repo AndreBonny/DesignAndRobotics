@@ -80,10 +80,13 @@ void initialize_random_questions() {
 
 int initialize_webserver() {
 
+  Serial.println("Entering webserver");
+  
+  connected = false;
   server = new WebServer(80);
   Portal = new AutoConnect(*server);
   
-  WiFi.mode(WIFI_AP);
+  //WiFi.mode(WIFI_AP);
   
   // Serial.println("Initializing webserver");
 

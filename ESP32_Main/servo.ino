@@ -57,6 +57,7 @@ bool scan() {
     delay(t_stop);
   }
   delay(300);
+  return true;
 }
 
 bool search_person() {
@@ -100,7 +101,7 @@ bool rock_interaction() {
 
   for (int i = pan_start; i <= pan_end; i += pan_passo) {
     if (serial_read() == END_ROCK_INT) {
-      false;
+      return false;
     }
     ledcAnalogWrite(pan_ch, i);
     delay(t_stop);
@@ -110,11 +111,12 @@ bool rock_interaction() {
   delay(200);
   for (int i = pan_end; i >= pan_start; i -= pan_passo) {
     if (serial_read() == END_ROCK_INT) {
-      false;
+      return false;
     }
     ledcAnalogWrite(pan_ch, i);
     delay(t_stop);
     ledcAnalogWrite(tilt_ch, random(-1, 1) * (tilt_passo) + tilt_start);
     delay(t_stop);
   }
+  return true;
 }

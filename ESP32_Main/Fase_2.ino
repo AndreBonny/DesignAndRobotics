@@ -36,7 +36,7 @@ void phase2() {
       for (int i = 0; i < 4 && !founded; i++) {
         founded = search_person();
       }
-
+      
       if (founded) {
         c_state = TRACKING;
         founded = false;
@@ -91,7 +91,7 @@ void phase2() {
        Send RESEt and change state
     */
     case BACK:
-      //// Serial.println("BACK");
+      // Serial.println("BACK");
       center_head();
       serial_write(RES_POS_2);
       c_state = WAIT;
@@ -120,6 +120,7 @@ void phase2() {
     case INGAME:
       // lower head to show the QR code
       ledcAnalogWrite(tilt_ch, tilt_center+30);
+      Serial.println("Entering ingame");
       
       if(!initialize_webserver() && !connected) {
         close_portal();
