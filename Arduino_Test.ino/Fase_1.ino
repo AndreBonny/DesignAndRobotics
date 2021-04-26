@@ -80,7 +80,7 @@
         noPlayCount = 0;
         while (noPlayCount < 2) //check end of track
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           if (millis() - t > 4000)
           {
@@ -96,7 +96,7 @@
       {
         if (noPlayCount < 2) //margin is needed for false positive when a track starts
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           if (millis() - t > 4000)
           {

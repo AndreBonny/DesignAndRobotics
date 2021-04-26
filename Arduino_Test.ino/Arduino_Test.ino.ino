@@ -11,7 +11,7 @@
 //define for movement
 #define MOT_R 3
 #define MOT_L 4
-#define V  150
+#define V  160
 #define Omega  240
 #define T_turn 1500
 #define T_straight 2000
@@ -46,8 +46,8 @@
 #define WRONG_ANSWER "26"
 
 //enum of the tracks on SD card
-enum Track { A, GREETINGS, ADVERTISE, QRCODE,  BYE_GREETINGS, ROCK_SONG, SADNESS, GAME_PROPOSAL, GAME_START_INSTRUCTION, INTRODUCTION_PHRASE, CORRECT_PHRASE, WRONG_PHRASE, FACTS_1, FACTS_2, FACTS_3, FACTS_4, FACTS_5,
-             LETS_SEE, VERY_BAD, BAD, GOOD, VERY_GOOD, PERFECT
+enum Track { A, GREETINGS, ADVERTISE, QRCODE,  BYE_GREETINGS, SADNESS, GAME_PROPOSAL, GAME_START_INSTRUCTION, INTRODUCTION_PHRASE, CORRECT_PHRASE, WRONG_PHRASE, FACTS_1, FACTS_2, FACTS_3, FACTS_4, FACTS_5,
+             LETS_SEE, VERY_BAD, BAD, GOOD, VERY_GOOD, PERFECT, ROCK_SONG
            };
 
 //variable for timers
@@ -108,16 +108,19 @@ void setup() {
 
   //ready to start
   //draw_openclose();
-  delay(1000);
+  delay(2000);
   Serial.println("Start");
   //play(1);
   timer = millis();
 }
 
 void loop() {
+
+
   /*phase = digitalRead(PHASE_PIN);
-  Serial.println(phase);*/
-  //follow();
+    Serial.println(phase);*/
+
+  follow();
   /*Serial.println("PLAY");
     play(ADVERTISE);
     delay(10000);
@@ -170,7 +173,7 @@ void loop() {
         noPlayCount = 0;
         while (noPlayCount < 2) //check end of track
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           if (millis() - t > 2500)
           {
@@ -186,7 +189,7 @@ void loop() {
       {
         if (noPlayCount < 2) //margin is needed for false positive when a track starts
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           if (millis() - t > 2500)
           {
@@ -230,40 +233,40 @@ void loop() {
     }*/
 
 
-
+/*
   draw_happy_open();
-    delay(500);
-    draw_happy_blink();
-    delay(500);
-    draw_happy_blink();
-    delay(500);
-    draw_happy_blink();
-    delay(500);
-    draw_happy_close();
-    draw_happy_end();
-    delay(500);
+  delay(500);
+  draw_happy_blink();
+  delay(500);
+  draw_happy_blink();
+  delay(500);
+  draw_happy_blink();
+  delay(500);
+  draw_happy_close();
+  draw_happy_end();
+  delay(500);
 
 
-    draw_sad_start();
-    delay(500);
-    draw_sad_blink();
-    delay(500);
-    draw_sad_blink();
-    delay(500);
+  draw_sad_start();
+  delay(500);
+  draw_sad_blink();
+  delay(500);
+  draw_sad_blink();
+  delay(500);
 
-    draw_sad_end();
+  draw_sad_end();
 
-    draw_correct_eye_start();
-    delay(1000);
-    draw_correct_eye_end();
-    draw_openclose();
-    draw_wrong_eye_start();
-    delay(1000);
-    draw_wrong_eye_end();
-    draw_openclose();
-    draw_angry_start();
-    delay(2000);
-    draw_angry_blink();
+  draw_correct_eye_start();
+  delay(1000);
+  draw_correct_eye_end();
+  draw_openclose();
+  draw_wrong_eye_start();
+  delay(1000);
+  draw_wrong_eye_end();
+  draw_openclose();
+  draw_angry_start();
+  delay(2000);
+  draw_angry_blink();
   /* move_forward(T_straight,V);
     delay(2000);
     move_backward(T_straight,V);

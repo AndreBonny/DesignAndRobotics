@@ -82,9 +82,11 @@ void phase1() {
       if (serial_read() == STOP_SPEAK_1)
       {
         //we read a stop signal from esp
+        Serial.println("Ricevuto stop speak");
         stop_play();
         no_play_count = 0;
         play(SADNESS);
+        Serial.println(SADNESS);
         draw_sad_start();
         while (no_play_count < 2) //check end of track
         {
@@ -97,6 +99,7 @@ void phase1() {
           }
           delay(500);
         }
+        Serial.println(no_play_count);
         end_sp = true;
         draw_sad_end();
       }

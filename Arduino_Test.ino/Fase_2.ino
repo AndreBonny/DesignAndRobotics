@@ -39,7 +39,7 @@ void phase2() {
     t = millis();
     while (noPlayCount < 2) //check end of track
     {
-      if (dfNotPlaying())
+      if (df_not_playing())
         noPlayCount++;
       delay(50);
     }
@@ -55,7 +55,7 @@ void phase2() {
 
     while (noPlayCount < 2) //check end of track
     {
-      if (dfNotPlaying())
+      if (df_not_playing())
         noPlayCount++;
       if (millis() - t > 4000) //timer between each blink
       {
@@ -104,7 +104,7 @@ void phase2() {
     play(track);
     while (noPlayCount < 2) //check end of track
     {
-      if (dfNotPlaying())
+      if (df_not_playing())
         noPlayCount++;
       if (millis() - t > 4000) //timer between each blink
       {
@@ -127,7 +127,7 @@ void phase2() {
         draw_correct_eye_start();
         while (noPlayCount < 2) //check end of track
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           delay(50);
         }
@@ -144,7 +144,7 @@ void phase2() {
         draw_wrong_eye_start();
         while (noPlayCount < 2) //check end of track
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           delay(50);
         }
@@ -170,7 +170,7 @@ void phase2() {
       play(track);
       while (noPlayCount < 2) //check end of track
       {
-        if (dfNotPlaying())
+        if (df_not_playing())
           noPlayCount++;
         if (millis() - t > 4000) //timer between each blink
         {
@@ -189,7 +189,7 @@ void phase2() {
         draw_angry_start();
         while (noPlayCount < 2) //check end of track
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           if (millis() - t > 4000) //timer between each blink
           {
@@ -211,7 +211,7 @@ void phase2() {
         draw_sad_start();
         while (noPlayCount < 2) //check end of track
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           if (millis() - t > 4000) //timer between each blink
           {
@@ -232,7 +232,7 @@ void phase2() {
         draw_happy_open();
         while (noPlayCount < 2) //check end of track
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           if (millis() - t > 4000) //timer between each blink
           {
@@ -255,7 +255,7 @@ void phase2() {
         draw_happy_open();
         while (noPlayCount < 2) //check end of track
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           if (millis() - t > 4000) //timer between each blink
           {
@@ -277,7 +277,7 @@ void phase2() {
         draw_happy_open();
         while (noPlayCount < 2) //check end of track
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           if (millis() - t > 4000) //timer between each blink
           {
@@ -327,7 +327,7 @@ void phase2() {
         noPlayCount = 0;
         while (noPlayCount < 2) //wait for the ende of the track
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           if (millis() - t > 4000)
           {
@@ -343,7 +343,7 @@ void phase2() {
       {
         if (noPlayCount < 2) //margin is needed for false positive when a track starts
         {
-          if (dfNotPlaying())
+          if (df_not_playing())
             noPlayCount++;
           draw_happy_blink();
           delay(500);
