@@ -20,7 +20,7 @@
 //define for movement
 #define MOT_R 3
 #define MOT_L 4
-#define V  150
+#define V  140
 #define T_back 1400
 
 
@@ -53,9 +53,10 @@
 #define WRONG_ANSWER "26"
 
 //enum of the tracks on SD card
-enum Track { A, GREETINGS, ADVERTISE, QRCODE,  BYE_GREETINGS, SADNESS, GAME_PROPOSAL, GAME_START_INSTRUCTION, INTRODUCTION_PHRASE, 
-            CORRECT_PHRASE, WRONG_PHRASE, FACTS_1, FACTS_2, FACTS_3, FACTS_4, FACTS_5, 
-            LETS_SEE, VERY_BAD, BAD, GOOD, VERY_GOOD, PERFECT, ROCK_SONG};
+enum Track { A, GREETINGS, ADVERTISE, QRCODE,  BYE_GREETINGS, SADNESS, GAME_PROPOSAL, GAME_START_INSTRUCTION, INTRODUCTION_PHRASE,
+             CORRECT_PHRASE, WRONG_PHRASE, FACTS_1, FACTS_2, FACTS_3, FACTS_4, FACTS_5,
+             LETS_SEE, VERY_BAD, BAD, GOOD, VERY_GOOD, PERFECT, ROCK_SONG
+           };
 
 //variable for timers
 unsigned long t;
@@ -71,10 +72,10 @@ void setup() {
   Serial1.begin(115200);
   Serial1.setTimeout(1);
   Serial.begin(115200);
-  
+
 
   serial_write_debug("START");
-  
+
   //wait for message from esp
   while (serial_read() != ESP_READY) {
   }
@@ -91,7 +92,7 @@ void setup() {
   pinMode(LASER_PIN_R, OUTPUT);
   digitalWrite(LASER_PIN_R, LOW);
   //Inizializza Switch Phase
-  pinMode(PHASE_PIN,INPUT_PULLUP);
+  pinMode(PHASE_PIN, INPUT_PULLUP);
 
   //comunicate to ESP that initialization has finished
   serial_write(ARD_READY);
@@ -107,7 +108,7 @@ void setup() {
 
   //random for phase 2
   randomSeed(analogRead(31));
-  
+
   //ready to start
   draw_openclose();
   delay(500);
@@ -115,7 +116,6 @@ void setup() {
 
 
 void loop() {
-
   if (phase == 1) {
     phase1();
   }

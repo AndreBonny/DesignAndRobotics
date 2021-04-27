@@ -22,7 +22,7 @@ void phase1() {
     draw_scanning_L();
     t = millis();
     move_forward(400, V);// forward movement to pass the stop line
-    while (!following_forward()) {
+    while (!following_forward2()) {
       //Follow the line
     }
     Stop();

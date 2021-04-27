@@ -70,7 +70,7 @@ bool following_forward2() {
 
   if (Input == 1 || Input == 2 || Input == 3) // Turn right
   {
-    indietro(MOT_R, V * 0.8);
+    indietro(MOT_R, V );
     avanti(MOT_L, V*0.9);
   }
 /*
@@ -82,8 +82,8 @@ bool following_forward2() {
 
   if (Input == -1 || Input == -2 || Input == -3) // turn left
   {
-    avanti(MOT_R, 230);
-    indietro(MOT_L, 230);
+    avanti(MOT_R, V*1.4);
+    indietro(MOT_L, V*0.8);
   }
 
 /*
@@ -115,7 +115,7 @@ void following_backward() {
   if (!(digitalRead(LS_PIN)) && digitalRead(RS_PIN)) // Turn right
   {
     indietro(MOT_R, int(V * 1.2));
-    avanti(MOT_L, int(V * 1.1));
+    avanti(MOT_L, int(V * 1.0));
   }
 
   if (digitalRead(LS_PIN) && !(digitalRead(RS_PIN))) // turn left
@@ -172,6 +172,12 @@ double readSens() {
   }
   else if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && !digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
     x = e3;
+  }
+  else if (digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
+    x = 10;
+  }
+  else if (!digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
+    x = 10;
   }
   else if (digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
     x = 10;
