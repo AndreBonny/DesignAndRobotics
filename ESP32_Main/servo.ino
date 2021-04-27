@@ -69,7 +69,7 @@ bool search_person() {
   tilt_position = tilt_center;
   ledcAnalogWrite(tilt_ch, tilt_position);
   ledcAnalogWrite(pan_ch, pan_start);
-
+  delay(300);
   for (int angle = pan_start; angle <= pan_end; angle += pan_passo) {
     ledcAnalogWrite(pan_ch, angle);
     if (check_person(angle, t_stop))

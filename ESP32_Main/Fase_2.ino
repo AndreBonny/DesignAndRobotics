@@ -20,7 +20,7 @@ void phase2() {
       if (data.length() > 0 && data == END_MOV_2) {
         //body has finished to move
         ledcAnalogWrite(pan_ch, pan_center);
-        
+
         c_state = SEARCHING;
 
         //delay(500);
@@ -36,7 +36,7 @@ void phase2() {
       for (int i = 0; i < 4 && !founded; i++) {
         founded = search_person();
       }
-      
+
       if (founded) {
         c_state = TRACKING;
         founded = false;
@@ -53,36 +53,47 @@ void phase2() {
     case TRACKING:
       serial_write(SPEAK_2);
       ledcAnalogWrite(tilt_ch, tilt_tracking);
-      
+
       //stop message read inside face_tracking function
-      end_t = face_tracking();
-      
-      if (end_t == 0) {
-        serial_write(STOP_SPEAK_2);
-        c_state = SAD;
+      /* end_t = face_tracking();
+
+        if (end_t == 0) {
+         serial_write(STOP_SPEAK_2);
+         c_state = SAD;
+        }
+        else if (end_t == 2) {
+         c_state = INGAME;
+        }
+        else {
+         c_state = BACK;
+        }*/
+      while (serial_read() != START_GAME)
+     {
       }
-      else if (end_t == 2) {
-        c_state = INGAME;
-      }
-      else {
-        c_state = BACK;
-      }
+      c_state = INGAME;
+
+
       break;
 
     case EXPLAINING:
       ledcAnalogWrite(tilt_ch, tilt_tracking);
       //stop message read inside face_tracking function
-      
-      end_t = face_tracking();
-      
-      if (end_t == 0) {
+
+      /*
+        end_t = face_tracking();
+
+        if (end_t == 0) {
         serial_write(STOP_SPEAK_2);
         c_state = SAD;
-      }
-      else if ( end_t == 1) {
+        }
+        else if ( end_t == 1) {
         c_state = BACK;
-      }
-      else {
+        }
+        else {
+        c_state = BACK;
+        }*/
+      data = serial_read();
+      if (data.length() > 0 && data == END_SPEAK_2) {
         c_state = BACK;
       }
       break;
@@ -104,38 +115,38 @@ void phase2() {
       data = serial_read();
       if (data.length() > 0 && data == END_RES_POS_2) {
         //restart for a new cycle
-        delay(5000);
+        delay(2000);
         c_state = READY;
       }
       break;
 
     case SAD:
       ledcAnalogWrite(tilt_ch, 110);
-      
+
       while (serial_read() != END_SPEAK_2) {}
-      
+
       c_state = BACK;
       break;
 
     case INGAME:
       // lower head to show the QR code
-      ledcAnalogWrite(tilt_ch, tilt_center+30);
-      Serial.println("Entering ingame");
-      
-      if(!initialize_webserver() && !connected) {
+      ledcAnalogWrite(tilt_ch, tilt_center + 50);
+      // Serial.println("Entering ingame");
+
+      if (!initialize_webserver() && !connected) {
         close_portal();
         serial_write(START_GAME_NO);
-        
+
         center_head();
-        
+
         c_state = EXPLAINING;
       } else {
         connected = false;
-        while(serial_read() != END_SPEAK_2) {}
+        while (serial_read() != END_SPEAK_2) {}
         c_state = BACK;
       }
       break;
-    
+
 
     default:
       break;

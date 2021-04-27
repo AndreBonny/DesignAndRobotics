@@ -99,9 +99,9 @@ void phase2() {
 
   if (str == START_GAME_YES) {
 
-    int correct_answers = 0;
-    int wrong_answers = 0;
-    int tot_answers;
+    double correct_answers = 0;
+    double wrong_answers = 0;
+    double tot_answers;
 
     track = INTRODUCTION_PHRASE;
     no_play_count = 0;

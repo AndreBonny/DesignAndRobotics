@@ -68,30 +68,30 @@ bool following_forward2() {
     avanti(MOT_L, V);
   }
 
-  if (Input == 1) // Turn right
+  if (Input == 1 || Input == 2 || Input == 3) // Turn right
   {
     indietro(MOT_R, V * 0.8);
     avanti(MOT_L, V*0.9);
   }
-
+/*
   if (Input == 2 || Input == 3) // Turn right
   {
     indietro(MOT_R, V * 0.8);
     avanti(MOT_L, V *0.9);
-  }
+  }*/
 
-  if (Input == -1) // turn left
+  if (Input == -1 || Input == -2 || Input == -3) // turn left
   {
     avanti(MOT_R, 230);
     indietro(MOT_L, 230);
   }
 
-
+/*
   if (Input == -2 || Input == -3) // Turn left
   {
     avanti(MOT_R, 230);
     indietro(MOT_L, 230);
-  }
+  }*/
 
   if (Input == 10) // stop
   {

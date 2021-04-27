@@ -21,9 +21,6 @@
 #define MOT_R 3
 #define MOT_L 4
 #define V  150
-#define Omega  240
-#define T_turn 1500
-#define T_straight 2000
 #define T_back 1400
 
 

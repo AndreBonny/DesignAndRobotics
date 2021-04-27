@@ -47,7 +47,7 @@ void phase1() {
        then change state according to the result
     */
     case SEARCHING:
-      delay(2000);
+      delay(1000);
       for (int i = 0; i < 4 && !founded; i++) {
         founded = search_person();
       }
