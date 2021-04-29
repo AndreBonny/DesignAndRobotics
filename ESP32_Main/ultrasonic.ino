@@ -10,6 +10,7 @@ long get_distance() {
   return d;
 }
 
+// check if the sonar sensor finds something in the current direction
 bool check_person(int angle, int t_stop) {
   long distance = 0;
   unsigned long timer = millis();
@@ -17,14 +18,12 @@ bool check_person(int angle, int t_stop) {
   while (millis() - timer < t_stop) {
     if (n == 1) {
       distance = get_distance();
-      // Serial.printf("l: %li cm Angle = %d \n", distance, angle);
       n = 2;
     }
+    // do a double mesurament to have move resiliance
     if (distance <= SOGLIA_DIST && distance > 0) {
       distance = get_distance();
-      // Serial.printf("l2: %li cm Angle = %d \n", distance, angle);
       if (distance <= SOGLIA_DIST && distance > 0) {
-        //ledcAnalogWrite(tilt_ch, tilt_center);
         return true;
       }
     }

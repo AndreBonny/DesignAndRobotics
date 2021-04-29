@@ -15,6 +15,7 @@
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
+// initialize the camera
 bool init_camera_settings() {
   camera_config_t config;
 
@@ -80,6 +81,9 @@ int pixel_to_degree(int distance) {
   return (int)(distance / 8);
 }
 
+/* core of the face tracking. For each box (face) founded, try to
+   move the center of the face in the center of the camera
+*/
 void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
   int x, y, h_w, h_h;
   int img_center_x, img_center_y;
@@ -88,7 +92,7 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
   img_center_y = (int)(image_matrix->h / 2);
 
   for (int i = 0; i < boxes->len; i++) {
-    //do {
+
     x = ((int)boxes->box[i].box_p[0]);
     h_w = ((int)boxes->box[i].box_p[2] - x + 1) / 2;
 
@@ -109,9 +113,6 @@ void draw_face_boxes(dl_matrix3du_t *image_matrix, box_array_t *boxes) {
     ledcAnalogWrite(tilt_ch, tilt_position);
     delay(100);
 
-
-    // Serial.printf("(face_center_x, face_center_y), (img_center_x, img_center_y)\n");
-    // Serial.printf("(%d, %d), (%d, %d)\n", face_center_x, face_center_y, img_center_x, img_center_y);
   }
 }
 
@@ -122,6 +123,7 @@ int face_tracking() {
   String data;
   String msg;
 
+  // choose the right stop message
   if (phase == 1) {
     msg = END_SPEAK_1;
   }
@@ -151,10 +153,11 @@ int face_tracking() {
 
     distance = get_distance();
 
+    // the sonar or the camera have found someone
     if ((distance < SOGLIA_DIST && distance > 0) || boxes != NULL) {
       count = 0;
     }
-    else {
+    else {      // no one is detected
       count++;
     }
 

@@ -1,12 +1,13 @@
 WebServer* server;
 AutoConnect* Portal;
 
-const int total_questions = 13;
-const int num_questions = 7;
+const int total_questions = 13;   // total number of questions
+const int num_questions = 7;      // number of questions of the questionnaire
 int current_question = 0;
 
 int num_correct;
 
+// define some questions and relative answer
 String questions[] = {
   "The first U.S. space shuttle has been launched in 1975?",                            // 1
   "Was Sputnik the first artificial satellite?",                                        // 2
@@ -42,6 +43,7 @@ String answers[] = {
 String randomQuestions[num_questions];
 String randomAnswers[num_questions];
 
+// support function
 int contains(int *indexes, int num, int leng) {
   for (int i = 0; i < leng; i++) {
     if (indexes[i] == num)
@@ -50,6 +52,7 @@ int contains(int *indexes, int num, int leng) {
   return 0;
 }
 
+// finds some random indexes to get random questions
 int* get_random_indexes(int length, int upper_bound) {
   int* indexes = (int*) malloc(length * sizeof(int));
   for (int i = 0; i < length; i++)
@@ -70,6 +73,7 @@ int* get_random_indexes(int length, int upper_bound) {
   return indexes;
 }
 
+// generates the random questions
 void initialize_random_questions() {
   int* indexes = get_random_indexes(num_questions, total_questions);
   for (int i = 0; i < num_questions; i++) {
@@ -79,19 +83,14 @@ void initialize_random_questions() {
 }
 
 int initialize_webserver() {
-
-  // Serial.println("Entering webserver");
   
   connected = false;
   server = new WebServer(80);
   Portal = new AutoConnect(*server);
-  
-  //WiFi.mode(WIFI_AP);
-  
-  // Serial.println("Initializing webserver");
 
   num_correct = 0;
 
+  // define all the endpoints of the server
   server->on("/style.css", handle_css);
   server->on("/", handle_home_page);
   server->on("/start", handle_question);
@@ -115,6 +114,7 @@ int initialize_webserver() {
   return Portal->begin();
 }
 
+// portal configuration (AutoConnect.h)
 void configure_portal() {
   AutoConnectConfig  Config("Steeve", "");
 
@@ -126,6 +126,7 @@ void configure_portal() {
   Portal->config(Config);                        // Configure AutoConnect
 }
 
+// load an image from the file system
 void getSpiffImg(String path, String TyPe) {
   if (SPIFFS.exists(path)) {
     File file = SPIFFS.open(path, "r");

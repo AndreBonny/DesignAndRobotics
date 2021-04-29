@@ -1,5 +1,5 @@
 void handle_css() {
-  handle_page("/style.css", true);
+  server->send(200, "text/css", sendCss());
 }
 
 void handle_home_page() {
@@ -11,10 +11,11 @@ void handle_home_page() {
   
   initialize_random_questions();
   
-  handle_page("/home_p.html", false);
+  server->send(200, "text/html", sendHomePage());
 }
 
 void handle_question() {
+  // if there are other questions to do
   if (current_question < num_questions) {
     current_question++;
     server->send(200, "text/html", sendQuestionPage(current_question, randomQuestions[current_question - 1]));
@@ -49,28 +50,10 @@ void handle_next(String res) {
 }
 
 void handle_disconnect() {
-  handle_page("/disconnected.html", false);
-
   delay(1000);
   delay(50);
   serial_write(END_GAME);
   close_portal();
-}
-
-void handle_page(String page_name, bool is_css) {
-  File file = SPIFFS.open(page_name, "r");
-  String page = "";
-  if (file) {
-    while (file.available()) {
-      page += (char)file.read();
-    }
-    if (is_css)
-      server->send(200, "text/css", page);
-    else
-      server->send(200, "text/html", page);
-  } else {
-    // Serial.println("Failed to get page");
-  }
 }
 
 void handle_not_found() {

@@ -54,44 +54,16 @@ void phase2() {
       serial_write(SPEAK_2);
       ledcAnalogWrite(tilt_ch, tilt_tracking);
 
-      //stop message read inside face_tracking function
-      /* end_t = face_tracking();
-
-        if (end_t == 0) {
-         serial_write(STOP_SPEAK_2);
-         c_state = SAD;
-        }
-        else if (end_t == 2) {
-         c_state = INGAME;
-        }
-        else {
-         c_state = BACK;
-        }*/
-      while (serial_read() != START_GAME)
-     {
-      }
+      // stop message read inside face_tracking function
+      while (serial_read() != START_GAME) {}
       c_state = INGAME;
-
-
       break;
 
+    /* Tell an interesting curiosity if the visitor 
+       does not want to play the game
+    */
     case EXPLAINING:
       ledcAnalogWrite(tilt_ch, tilt_tracking);
-      //stop message read inside face_tracking function
-
-      /*
-        end_t = face_tracking();
-
-        if (end_t == 0) {
-        serial_write(STOP_SPEAK_2);
-        c_state = SAD;
-        }
-        else if ( end_t == 1) {
-        c_state = BACK;
-        }
-        else {
-        c_state = BACK;
-        }*/
       data = serial_read();
       if (data.length() > 0 && data == END_SPEAK_2) {
         c_state = BACK;
@@ -109,7 +81,7 @@ void phase2() {
       break;
 
     /* Waiting state, we wait for the end of the RESET,
-      wait 1 sec and then go to START
+       wait 1 sec and then go to START
     */
     case WAIT:
       data = serial_read();
@@ -122,17 +94,15 @@ void phase2() {
 
     case SAD:
       ledcAnalogWrite(tilt_ch, 110);
-
       while (serial_read() != END_SPEAK_2) {}
-
       c_state = BACK;
       break;
 
     case INGAME:
       // lower head to show the QR code
       ledcAnalogWrite(tilt_ch, tilt_center + 50);
-      // Serial.println("Entering ingame");
 
+      // the visitor does not want to play
       if (!initialize_webserver() && !connected) {
         close_portal();
         serial_write(START_GAME_NO);
@@ -140,13 +110,12 @@ void phase2() {
         center_head();
 
         c_state = EXPLAINING;
-      } else {
+      } else {        // the visitor has connected to the server
         connected = false;
         while (serial_read() != END_SPEAK_2) {}
         c_state = BACK;
       }
       break;
-
 
     default:
       break;

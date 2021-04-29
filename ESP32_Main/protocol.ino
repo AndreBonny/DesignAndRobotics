@@ -1,3 +1,4 @@
+// write a message on the serial connection
 void serial_write(String input) {
   char* cString = (char*) malloc(sizeof(char) * (input.length() + 1));
   input.toCharArray(cString, input.length() + 1);
@@ -11,6 +12,7 @@ void serial_write_debug(String input) {
   Serial.write(cString);
 }
 
+// read a message from the serial connection
 String serial_read() {
   if (Serial.available() > 0) {
     return Serial.readString();

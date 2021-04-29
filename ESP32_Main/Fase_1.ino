@@ -19,17 +19,6 @@ void phase1() {
       while (scan()) {}
       ledcAnalogWrite(pan_ch, pan_center);
       c_state = LOOKING;
-      /*data = serial_read();
-      if (data.length() > 0 && data == END_MOV_1) {
-        //body has finished to move
-        ledcAnalogWrite(pan_ch, pan_center);
-        c_state = LOOKING;
-        //delay(500);
-      }
-      else
-      {
-        scan();
-      }*/
       break;
 
     /* Interaction with rock
@@ -62,7 +51,7 @@ void phase1() {
       break;
 
     /* Second searching state
-       Start Face Trackin and cont the cycles where a face is found
+       Start Face Trackin and count the cycles where a face is found
     */
     case TRACKING:
       serial_write(SPEAK_1);
@@ -104,7 +93,7 @@ void phase1() {
       break;
 
     /* Waiting state, we wait for the end of the RESET,
-      wait 1 sec and then go to START
+       wait 1 sec and then go to STAR  
     */
     case WAIT:
       data = serial_read();

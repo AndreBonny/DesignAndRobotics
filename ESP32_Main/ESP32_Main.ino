@@ -12,6 +12,7 @@
 enum State {READY, SCANNING, LOOKING, SEARCHING , TRACKING, BACK, WAIT, INGAME, SAD, MOVEMENT, EXPLAINING };
 State c_state;
 
+// define all the messages
 #define ARD_READY "1"
 #define ESP_READY "2"
 #define phase_1 "3"
@@ -55,7 +56,6 @@ int tilt_tracking = 90;
 int tilt_position;
 int pan_position;
 
-
 bool founded = false;
 bool connected = false;
 
@@ -68,8 +68,6 @@ void setup() {
   Serial.begin(115200);
   Serial.setTimeout(1);
 
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
-
   initialize_servo();
   initialize_camera();
 
@@ -81,12 +79,14 @@ void setup() {
   serial_write(ESP_READY);
   delay(10);
 
+  // wait the arduino ready message
   while (serial_read() != ARD_READY) {
   }
 
   delay(10);
 
   do {
+    // read the phase variable
     msg = serial_read();
 
     if (msg == phase_1) {

@@ -1,3 +1,4 @@
+// function to move servos with the esp
 void ledcAnalogWrite(uint8_t channel, uint32_t value) {
   if (channel == tilt_ch && value < 85)
     value = 85;
@@ -32,6 +33,7 @@ void center_head() {
   ledcAnalogWrite(pan_ch, pan_center);
 }
 
+// moves the head right and left, while looking on the bottom
 bool scan() {
   tilt_position = 145;
   ledcAnalogWrite(tilt_ch, tilt_position);
@@ -60,15 +62,20 @@ bool scan() {
   return true;
 }
 
+// search if there is someone in some position
 bool search_person() {
 
   int pan_start = 70;
   int pan_end = 130;
   int t_stop = 40;
   int pan_passo = 2;
+
+  // set the right initial positions
   tilt_position = tilt_center;
   ledcAnalogWrite(tilt_ch, tilt_position);
   ledcAnalogWrite(pan_ch, pan_start);
+
+  // move the head looking for someone
   delay(300);
   for (int angle = pan_start; angle <= pan_end; angle += pan_passo) {
     ledcAnalogWrite(pan_ch, angle);
@@ -84,6 +91,7 @@ bool search_person() {
   return false;
 }
 
+// movement of the head when the robot is looking to the rock
 bool rock_interaction() {
 
   int pan_start = pan_center - 15;
@@ -99,6 +107,7 @@ bool rock_interaction() {
   int tilt_pos = 0;
   int pan_pos = 0;
 
+  // move the head horizontally and randomly vertically
   for (int i = pan_start; i <= pan_end; i += pan_passo) {
     if (serial_read() == END_ROCK_INT) {
       return false;
