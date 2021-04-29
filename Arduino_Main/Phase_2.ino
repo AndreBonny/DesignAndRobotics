@@ -1,6 +1,7 @@
+int no_play_count;
+
 void phase2() {
 
-  int no_play_count;
   Track track;
   bool end_sp;
 
@@ -277,9 +278,9 @@ void refresh_eyes(int eye_type) {
         draw_openclose();
       else if (eye_type == 1)
         draw_angry_blink();
-      else if (eye_tipe == 2)
+      else if (eye_type == 2)
         draw_sad_blink();
-      else if (eye_tipe == 3)
+      else if (eye_type == 3)
         draw_happy_blink();
     }
     delay(50);

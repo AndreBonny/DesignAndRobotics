@@ -2,9 +2,6 @@
 #include <WebServer.h>
 #include <AutoConnect.h>
 
-#include "soc/soc.h"
-#include "soc/rtc_cntl_reg.h"
-
 #include "SPIFFS.h"
 #include "esp_camera.h"
 #include "fd_forward.h"
