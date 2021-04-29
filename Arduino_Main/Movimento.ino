@@ -6,8 +6,7 @@ void motor_setup() {
   motoreL.run(RELEASE);
 }
 
-
-void fermo(int mot) {
+void stop(int mot) {
   switch (mot) {
     case MOT_R:
       motoreR.run(RELEASE);
@@ -18,7 +17,7 @@ void fermo(int mot) {
   }
 };
 
-void avanti(int mot, int speed) {
+void forward(int mot, int speed) {
   switch (mot) {
     case MOT_R:
       motoreR.setSpeed(speed);
@@ -32,7 +31,7 @@ void avanti(int mot, int speed) {
   }
 };
 
-void indietro(int mot, int speed) {
+void backward(int mot, int speed) {
   switch (mot) {
     case MOT_R:
       motoreR.setSpeed(speed);
@@ -45,47 +44,47 @@ void indietro(int mot, int speed) {
   }
 };
 
-void moveRandom() {
+void move_random() {
   while (!checkLine()) {
-    avanti(MOT_L, V);
-    avanti(MOT_R, V);
+    forward(MOT_L, V);
+    forward(MOT_R, V);
   }
   Stop();
 }
 
 void move_forward(int t, int speed) {
-  avanti(MOT_R, speed);
-  avanti(MOT_L, speed);
+  forward(MOT_R, speed);
+  forward(MOT_L, speed);
   delay(t);
-  fermo(MOT_R);
-  fermo(MOT_L);
+  stop(MOT_R);
+  stop(MOT_L);
 }
 
 void move_backward(int t, int speed) {
-  indietro(MOT_R, speed);
-  indietro(MOT_L, speed);
+  backward(MOT_R, speed);
+  backward(MOT_L, speed);
   delay(t);
-  fermo(MOT_R);
-  fermo(MOT_L);
+  stop(MOT_R);
+  stop(MOT_L);
 }
 
 void turn_right(int t, int speed) {
-  avanti(MOT_L, speed);
-  indietro(MOT_R, speed);
+  forward(MOT_L, speed);
+  backward(MOT_R, speed);
   delay(t);
-  fermo(MOT_R);
-  fermo(MOT_L);
+  stop(MOT_R);
+  stop(MOT_L);
 }
 
 void turn_left(int t, int speed) {
-  indietro(MOT_L, speed);
-  avanti(MOT_R, speed);
+  backward(MOT_L, speed);
+  forward(MOT_R, speed);
   delay(t);
-  fermo(MOT_R);
-  fermo(MOT_L);
+  stop(MOT_R);
+  stop(MOT_L);
 }
 
 void Stop() {
-  fermo(MOT_R);
-  fermo(MOT_L);
+  stop(MOT_R);
+  stop(MOT_L);
 }

@@ -2,29 +2,30 @@
 #include "LedControl.h"
 #include "DFRobotDFPlayerMini.h"
 
-//define of pins
+// define of pins
 #define PHASE_PIN 22
 #define LASER_PIN_L 52
 #define LASER_PIN_R 53
-//dfplayer
+
+// dfplayer
 #define BUSY_PIN 21
 
-//led matrix
+// led matrix
 #define DATA_PIN 38
 #define CS_PIN 40
 #define CLK_PIN 42
 
-//define for intensity of the eyes
+// define for intensity of the eyes
 #define INTENSITY 1
 
-//define for movement
+// define for movement
 #define MOT_R 3
 #define MOT_L 4
 #define V  140
 #define T_back 1400
 
 
-//define for messages exchanged between arduino and ESP
+// define for messages exchanged between arduino and ESP
 #define ARD_READY "1"
 #define ESP_READY "2"
 #define PHASE_1 "3"
@@ -52,20 +53,20 @@
 #define CORRECT_ANSWER "25"
 #define WRONG_ANSWER "26"
 
-//enum of the tracks on SD card
+// enum of the tracks on SD card
 enum Track { A, GREETINGS, ADVERTISE, QRCODE,  BYE_GREETINGS, SADNESS, GAME_PROPOSAL, GAME_START_INSTRUCTION, INTRODUCTION_PHRASE,
              CORRECT_PHRASE, WRONG_PHRASE, FACTS_1, FACTS_2, FACTS_3, FACTS_4, FACTS_5,
              LETS_SEE, VERY_BAD, BAD, GOOD, VERY_GOOD, PERFECT, ROCK_SONG
            };
 
-//variable for timers
+// variable for timers
 unsigned long t;
-//variable for phase
+// variable for phase
 int phase;
 
 DFRobotDFPlayerMini dfplayer;
 
-//used for the eyes
+// used for the eyes
 LedControl lc = LedControl(DATA_PIN, CLK_PIN, CS_PIN, 2);
 
 void setup() {
@@ -73,43 +74,44 @@ void setup() {
   Serial1.setTimeout(1);
   Serial.begin(115200);
 
-
   serial_write_debug("START");
 
-  //wait for message from esp
+  // wait for message from esp
   while (serial_read() != ESP_READY) {
   }
   serial_write_debug("ESP READY");
 
-  //initialization of arduino
+  // initialization of arduino
   sensor_setup();
   motor_setup();
   eyes_setup();
   dfplayer_setup();
-  //Inizializza Laser
+
+  // Inizializza Laser
   pinMode(LASER_PIN_L, OUTPUT);
   digitalWrite(LASER_PIN_L, LOW);
   pinMode(LASER_PIN_R, OUTPUT);
   digitalWrite(LASER_PIN_R, LOW);
-  //Inizializza Switch Phase
+
+  // Inizializza Switch Phase
   pinMode(PHASE_PIN, INPUT_PULLUP);
 
-  //comunicate to ESP that initialization has finished
+  // comunicate to ESP that initialization has finished
   serial_write(ARD_READY);
   delay(10);
   serial_write_debug("ARDUINO READY");
 
-  //read current phase
+  // read current phase
   phase = digitalRead(PHASE_PIN);
   if (phase == 1)
     serial_write(PHASE_1);
   if (phase == 0)
     serial_write(PHASE_2);
 
-  //random for phase 2
+  // random for phase 2
   randomSeed(analogRead(31));
 
-  //ready to start
+  // ready to start
   draw_openclose();
   delay(500);
 }

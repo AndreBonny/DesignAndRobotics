@@ -12,7 +12,6 @@ void eyes_setup() {
   }
 }
 
-
 byte open_eye_1_0[8] = {
   B00000000,
   B00111000,
@@ -695,8 +694,6 @@ byte angry_eye_L_3[8] = {
   B00011100
 };
 
-
-
 void write_eye(byte eye[8], int index, int del) {
   int row = 0, col = 7;
   while (row < 8 && col >= 0) {
@@ -706,7 +703,8 @@ void write_eye(byte eye[8], int index, int del) {
   }
 }
 
-void draw_openclose() {  // duration 600 millis
+// duration 600 millis
+void draw_openclose() {
   write_eye(open_eye_1_0, 0, 0);
   write_eye(open_eye_1_1, 1, 0);
   delay(50);
@@ -736,10 +734,10 @@ void draw_openclose() {  // duration 600 millis
   delay(1000);
 }
 
-//divided in two parts, it has to hold "scared" for some time
-//then it has to be reset
-void draw_scared_start() //duration 800 mills
-{
+// divided in two parts, it has to hold "scared" for some time
+// then it has to be reset
+// duration 800 millis
+void draw_scared_start() {
   write_eye(open_eye_1_0, 0, 0);
   write_eye(open_eye_1_1, 1, 0);
   delay(50);
@@ -762,8 +760,7 @@ void draw_scared_start() //duration 800 mills
   write_eye(scared_eye_7_1, 1, 500);
 }
 
-void draw_scared_end()
-{
+void draw_scared_end() {
   write_eye(scared_eye_7_0, 0, 500);
   write_eye(scared_eye_7_1, 1, 500);
   delay(150);
@@ -787,8 +784,7 @@ void draw_scared_end()
   delay(1000);
 }
 
-void draw_surprised_start()
-{
+void draw_surprised_start() {
   write_eye(open_eye_1_0, 0, 0);
   write_eye(open_eye_1_1, 1, 0);
   delay(50);
@@ -817,8 +813,7 @@ void draw_surprised_start()
   write_eye(surprised_eye_4, 1, 50);
 }
 
-void draw_surprised_end()
-{
+void draw_surprised_end() {
   write_eye(surprised_eye_4, 0, 50);
   write_eye(surprised_eye_4, 1, 50);
   delay(25);
@@ -848,8 +843,7 @@ void draw_surprised_end()
   delay(1000);
 }
 
-void draw_sad_start()
-{
+void draw_sad_start() {
   write_eye(open_eye_1_0, 0, 0);
   write_eye(open_eye_1_1, 1, 0);
   delay(50);
@@ -879,8 +873,7 @@ void draw_sad_start()
   delay(150);
 }
 
-void draw_sad_end()
-{
+void draw_sad_end() {
   write_eye(sad_eye_R_3, 0, 50);
   write_eye(sad_eye_L_3, 1, 50);
   delay(100);
@@ -909,8 +902,7 @@ void draw_sad_end()
   write_eye(open_eye_1_1, 1, 0);
   delay(300);
 }
-void draw_sad_blink()
-{
+void draw_sad_blink() {
   write_eye(sad_eye_R_3, 0, 50);
   write_eye(sad_eye_L_3, 1, 50);
   delay(65);
@@ -936,8 +928,9 @@ void draw_sad_blink()
   write_eye(sad_eye_L_3, 1, 50);
   delay(65);
 }
-void draw_happy_start() //to do the first time there's a transition between neutral and happy
-{
+
+// to do the first time there's a transition between neutral and happy
+void draw_happy_start() {
   write_eye(open_eye_1_0, 0, 0);
   write_eye(open_eye_1_1, 1, 0);
   delay(50);
@@ -954,8 +947,9 @@ void draw_happy_start() //to do the first time there's a transition between neut
   write_eye(closed_eye_1, 1, 200);
   delay(50);
 }
-void draw_happy_end()//needs a draw_happy_close() before
-{
+
+// needs a draw_happy_close() before
+void draw_happy_end() {
   write_eye(open_eye_4_0, 0, 50);
   write_eye(open_eye_4_1, 1, 50);
   delay(50);
@@ -969,8 +963,8 @@ void draw_happy_end()//needs a draw_happy_close() before
   write_eye(open_eye_1_1, 1, 50);
   delay(1000);
 }
-void draw_happy_open()
-{
+
+void draw_happy_open() {
   write_eye(happy_eye_R_1, 0, 200);
   write_eye(happy_eye_L_1, 1, 200);
   delay(50);
@@ -982,9 +976,7 @@ void draw_happy_open()
   delay(50);
 }
 
-void draw_happy_close()
-{
-
+void draw_happy_close() {
   write_eye(happy_eye_R_3, 0, 200);
   write_eye(happy_eye_L_3, 1, 200);
   delay(50);
@@ -1000,8 +992,7 @@ void draw_happy_close()
 
 }
 
-void draw_happy_blink()
-{
+void draw_happy_blink() {
   draw_happy_close();
   draw_happy_open();
 }
@@ -1023,8 +1014,7 @@ void draw_scanning_L() {
 }
 
 
-void draw_correct_eye_start()
-{
+void draw_correct_eye_start() {
   write_eye(shrinking_eye_1, 0, 0);
   write_eye(shrinking_eye_1, 1, 0);
   delay(65);
@@ -1060,8 +1050,7 @@ void draw_correct_eye_start()
 
 }
 
-void draw_correct_eye_end()
-{
+void draw_correct_eye_end() {
   write_eye(correct_eye_8, 0, 500);
   write_eye(correct_eye_8, 1, 500);
   delay(30);
@@ -1084,8 +1073,7 @@ void draw_correct_eye_end()
   write_eye(open_eye_1_1, 1, 50);
 }
 
-void draw_wrong_eye_start()
-{
+void draw_wrong_eye_start() {
   write_eye(shrinking_eye_1, 0, 0);
   write_eye(shrinking_eye_1, 1, 0);
   delay(65);
@@ -1108,8 +1096,7 @@ void draw_wrong_eye_start()
   write_eye(wrong_eye_3, 1, 500);
   delay(65);
 }
-void draw_wrong_eye_end()
-{
+void draw_wrong_eye_end() {
   write_eye(wrong_eye_3, 0, 500);
   write_eye(wrong_eye_3, 1, 500);
   delay(65);
@@ -1138,8 +1125,7 @@ void draw_wrong_eye_end()
   write_eye(open_eye_1_1, 1, 50);
 }
 
-void draw_question_start()
-{
+void draw_question_start() {
   write_eye(shrinking_eye_1, 0, 0);
   write_eye(shrinking_eye_1, 1, 0);
   delay(65);
@@ -1172,8 +1158,7 @@ void draw_question_start()
   delay(30);
 }
 
-void draw_question_end()
-{
+void draw_question_end() {
   write_eye(question_eye_6, 0, 50);
   write_eye(question_eye_6, 1, 50);
   delay(30);
@@ -1209,8 +1194,7 @@ void draw_question_end()
 
 }
 
-void draw_angry_start()
-{
+void draw_angry_start() {
   write_eye(open_eye_1_0, 0, 0);
   write_eye(open_eye_1_1, 1, 0);
   delay(50);
@@ -1237,8 +1221,7 @@ void draw_angry_start()
   delay(50);
 }
 
-void draw_angry_end()
-{
+void draw_angry_end() {
   write_eye(angry_eye_R_3, 0, 50);
   write_eye(angry_eye_L_3, 1, 50);
   delay(50);
@@ -1266,8 +1249,7 @@ void draw_angry_end()
 
 }
 
-void draw_angry_blink()
-{
+void draw_angry_blink() {
   write_eye(angry_eye_R_3, 0, 50);
   write_eye(angry_eye_L_3, 1, 50);
   delay(50);

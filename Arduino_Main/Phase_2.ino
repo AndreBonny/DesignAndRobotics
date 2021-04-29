@@ -17,10 +17,7 @@ void phase2() {
   if (str == MOV_2) {
     serial_write_debug("Ricevuto MOV");
     //Movimento Random
-    moveRandom();
-    /* while (!following_forward()) {
-       //Follow the line
-      }*/
+    move_random();
     Stop();
     delay(200);
     serial_write(END_MOV_2);
@@ -35,42 +32,25 @@ void phase2() {
 
     track = GAME_PROPOSAL;
     no_play_count = 0;
-    //PLAY GAME_PROPOSAL
 
+    // play GAME_PROPOSAL
     play(track);
 
     draw_question_start();
     t = millis();
-    while (no_play_count < 2) //check end of track
-    {
-      if (df_not_playing())
-        no_play_count++;
-      delay(50);
-    }
+
+    refresh_eyes(-1);
     draw_question_end();
 
     serial_write(START_GAME);
     track = GAME_START_INSTRUCTION;
     no_play_count = 0;
-    //PLAY GAME_START_INSTRUCTION
+
+    //play GAME_START_INSTRUCTION
     play(track);
     draw_openclose();
 
-
-    while (no_play_count < 2) //check end of track
-    {
-      if (df_not_playing())
-        no_play_count++;
-      if (millis() - t > 4000) //timer between each blink
-      {
-        t = millis();
-        draw_openclose();
-      }
-      delay(50);
-    }
-
-    //send START_GAME to ESP to move to next phases
-
+    refresh_eyes(0);
   }
 
   /* In a similar way as in phase 1, once all the interactions have ended
@@ -80,8 +60,7 @@ void phase2() {
   if (str == RES_POS_2) {
     serial_write_debug("Riccevuto RES_POS");
     draw_openclose();
-    move_backward(T_back,V);
-    //move_forward(400, V);
+    move_backward(T_back, V);
     Stop();
     delay(200);
     draw_openclose();
@@ -105,199 +84,119 @@ void phase2() {
 
     track = INTRODUCTION_PHRASE;
     no_play_count = 0;
-    //PLAY INTRODUCTION_PHRASE
 
+    // play INTRODUCTION_PHRASE
     play(track);
-    while (no_play_count < 2) //check end of track
-    {
-      if (df_not_playing())
-        no_play_count++;
-      if (millis() - t > 4000) //timer between each blink
-      {
-        t = millis();
-        draw_openclose();
-      }
-      delay(50);
-    }
 
-    do
-    {
+    refresh_eyes(0);
+
+    do {
       str = serial_read();
       Serial.println(str);
-      if (str == CORRECT_ANSWER)
-      {
+
+      if (str == CORRECT_ANSWER) {
         track = CORRECT_PHRASE;
-        no_play_count = 0;
-        //PLAY CORRECT_PHRASE
+
+        // play CORRECT_PHRASE
         play(track);
         draw_correct_eye_start();
-        while (no_play_count < 2) //check end of track
-        {
-          if (df_not_playing())
-            no_play_count++;
-          delay(50);
-        }
+
+        refresh_eyes(-1);
         correct_answers++;
         draw_correct_eye_end();
       }
 
-      if (str == WRONG_ANSWER)
-      {
+      if (str == WRONG_ANSWER) {
         track = WRONG_PHRASE;
-        no_play_count = 0;
-        //PLAY WRONG_PHRASE
+
+        //play WRONG_PHRASE
         play(track);
         draw_wrong_eye_start();
-        while (no_play_count < 2) //check end of track
-        {
-          if (df_not_playing())
-            no_play_count++;
-          delay(50);
-        }
+        refresh_eyes(-1);
         wrong_answers++;
         draw_wrong_eye_end();
       }
-
     } while (str != END_GAME);
     Serial.println("ricevuto end game");
     Serial.println(correct_answers + wrong_answers);
-    if (correct_answers + wrong_answers == 0)
-    {
+
+    if (correct_answers + wrong_answers == 0) {
       //recieved END_GAME before any answer was submitted
       Serial.println("recieved END_GAME before any answer was submitted");
-
     }
-    else
-    {
+
+    else {
       tot_answers = (correct_answers / (correct_answers + wrong_answers)) * 100;
       Serial.println(tot_answers);
       track = LETS_SEE;
       no_play_count = 0;
-      // PLAY LETS_SEE
-      play(track);
-      while (no_play_count < 2) //check end of track
-      {
-        if (df_not_playing())
-          no_play_count++;
-        if (millis() - t > 4000) //timer between each blink
-        {
-          t = millis();
-          draw_openclose();
-        }
-        delay(50);
-      }
 
-      if (tot_answers <= 25) //very bad
-      {
+      // play LETS_SEE
+      play(track);
+      refresh_eyes(0);
+
+      // very bad
+      if (tot_answers <= 25) {
+
         track = VERY_BAD;
-        no_play_count = 0;
-        //PLAY VERY_BAD
+        // play VERY_BAD
         play(track);
         draw_angry_start();
-        while (no_play_count < 2) //check end of track
-        {
-          if (df_not_playing())
-            no_play_count++;
-          if (millis() - t > 4000) //timer between each blink
-          {
-            t = millis();
-            draw_angry_blink();
-          }
-          delay(50);
-        }
+        refresh_eyes(1);
         draw_angry_end();
 
       }
-      else if (tot_answers > 25 && tot_answers < 50) //bad
-      {
+      // bad
+      else if (tot_answers > 25 && tot_answers < 50) {
 
         track = BAD;
-        no_play_count = 0;
-        //PLAY BAD
+        // play BAD
         play(track);
         draw_sad_start();
-        while (no_play_count < 2) //check end of track
-        {
-          if (df_not_playing())
-            no_play_count++;
-          if (millis() - t > 4000) //timer between each blink
-          {
-            t = millis();
-            draw_sad_blink();
-          }
-          delay(50);
-        }
+        refresh_eyes(2);
         draw_sad_end();
+
       }
-      else if (tot_answers >= 50 && tot_answers < 75)//good
-      {
+      // good
+      else if (tot_answers >= 50 && tot_answers < 75) {
+
         track = GOOD;
-        no_play_count = 0;
         //PLAY GOOD
         play(track);
         draw_happy_start();
         draw_happy_open();
-        while (no_play_count < 2) //check end of track
-        {
-          if (df_not_playing())
-            no_play_count++;
-          if (millis() - t > 4000) //timer between each blink
-          {
-            t = millis();
-            draw_happy_blink();
-          }
-          delay(50);
-        }
+        refresh_eyes(3);
         draw_happy_close();
         draw_happy_end();
+
       }
-      else if (tot_answers >= 75 && tot_answers < 95) //very good
-      {
+      //very good
+      else if (tot_answers >= 75 && tot_answers < 95) {
 
         track = VERY_GOOD;
-        no_play_count = 0;
         //PLAY VERY_GOOD
         play(track);
         draw_happy_start();
         draw_happy_open();
-        while (no_play_count < 2) //check end of track
-        {
-          if (df_not_playing())
-            no_play_count++;
-          if (millis() - t > 4000) //timer between each blink
-          {
-            t = millis();
-            draw_happy_blink();
-          }
-          delay(50);
-        }
+        refresh_eyes(3);
         draw_happy_close();
         draw_happy_end();
+
       }
-      else //perfect
-      {
+      // perfect
+      else {
+
         track = PERFECT;
-        no_play_count = 0;
-        //PLAY PERFECT
+        // play PERFECT
         play(track);
         draw_happy_start();
         draw_happy_open();
-        while (no_play_count < 2) //check end of track
-        {
-          if (df_not_playing())
-            no_play_count++;
-          if (millis() - t > 4000) //timer between each blink
-          {
-            t = millis();
-            draw_happy_blink();
-          }
-          delay(50);
-        }
+        refresh_eyes(3);
         draw_happy_close();
         draw_happy_end();
+
       }
     }
-
     //notify the ESP that arduino has finished speaking
     serial_write(END_SPEAK_2);
   }
@@ -310,12 +209,13 @@ void phase2() {
   */
 
   if (str == START_GAME_NO) {
-    //Play informazioni sul museo
-    //controlla STOP_SPEAK_2
-    //Finisce con END_SPEAK_2
+    // Play informazioni sul museo
+    // controlla STOP_SPEAK_2
+    // Finisce con END_SPEAK_2
 
     no_play_count = 0;
     end_sp = false;
+
     //prepare a new random fact (between 0011 and  0015)
     track = static_cast<Track>(random(11, 15));
 
@@ -332,17 +232,7 @@ void phase2() {
         play(SADNESS);
         draw_sad_start();
         no_play_count = 0;
-        while (no_play_count < 2) //wait for the ende of the track
-        {
-          if (df_not_playing())
-            no_play_count++;
-          if (millis() - t > 4000)
-          {
-            t = millis();
-            draw_sad_blink();
-          }
-          delay(500);
-        }
+        refresh_eyes(2);
         end_sp = true;
         draw_sad_end();
       }
@@ -368,4 +258,30 @@ void phase2() {
     serial_write_debug("Invio END_SPEAK");
   }
 
+}
+
+void refresh_eyes(int eye_type) {
+
+  no_play_count = 0;
+
+  while (no_play_count < 2) //check end of track
+  {
+    if (df_not_playing())
+      no_play_count++;
+
+    // timer between each blink
+    if (millis() - t > 4000 && eye_type != -1) {
+      t = millis();
+
+      if (eye_type == 0)
+        draw_openclose();
+      else if (eye_type == 1)
+        draw_angry_blink();
+      else if (eye_tipe == 2)
+        draw_sad_blink();
+      else if (eye_tipe == 3)
+        draw_happy_blink();
+    }
+    delay(50);
+  }
 }

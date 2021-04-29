@@ -3,16 +3,12 @@
 #define LS_PIN 47
 #define LLS_PIN 46
 
-#define e1 1
-#define e2 2
-#define e3 3
-
 double RRS;
 double RS;
 double LS;
 double LLS;
 
-
+// setup the sensors
 void sensor_setup() {
   pinMode(RRS_PIN, INPUT);
   pinMode(RS_PIN, INPUT);
@@ -20,130 +16,102 @@ void sensor_setup() {
   pinMode(LLS_PIN, INPUT);
 }
 
+// uses only the central sensors
 bool following_forward() {
 
-  if (!digitalRead(LS_PIN) && !digitalRead(RS_PIN)) // Move Forward
-  {
-    avanti(MOT_R, V);
-    avanti(MOT_L, V);
+  // none of the central sensors see the black line
+  // Move Forward
+  if (!digitalRead(LS_PIN) && !digitalRead(RS_PIN)) {
+    forward(MOT_R, V);
+    forward(MOT_L, V);
   }
 
-  if (!(digitalRead(LS_PIN)) && digitalRead(RS_PIN)) // Turn right
-  {
-    indietro(MOT_R, V * 1.1);
-    //fermo(MOT_R);
-    avanti(MOT_L, V * 1.1);
+  // the central right sensor sees the line, while the central left one doesn't
+  // Turn right
+  if (!(digitalRead(LS_PIN)) && digitalRead(RS_PIN)) {
+    backward(MOT_R, V * 1.1);
+    forward(MOT_L, V * 1.1);
   }
 
-  if (digitalRead(LS_PIN) && !(digitalRead(RS_PIN))) // turn left
-  {
-    avanti(MOT_R, V * 1.1);
-    indietro(MOT_L, V * 1.1);
-    //fermo(MOT_L);
+  // the central left sensor sees the line, while the central right one doesn't
+  // turn left
+  if (digitalRead(LS_PIN) && !(digitalRead(RS_PIN))) {
+    forward(MOT_R, V * 1.1);
+    backward(MOT_L, V * 1.1);
   }
 
-  if (digitalRead(LS_PIN) && digitalRead(RS_PIN)) // stop
-  {
-    fermo(MOT_R);
-    fermo(MOT_L);
+  // both of the central sensors see the black line
+  // stop
+  if (digitalRead(LS_PIN) && digitalRead(RS_PIN)) {
+    stop(MOT_R);
+    stop(MOT_L);
     return true;
   }
-  /*
-    if (digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(LLS_PIN) && digitalRead(RRS_PIN)) // stop
-    {
-      fermo(MOT_R);
-      fermo(MOT_L);
-      return true;
-    }*/
+
   return false;
 }
 
+// uses all the four sensors
 bool following_forward2() {
 
   int Input = readSens();
 
-  if (Input == 0) // Move Forward
-  {
-    avanti(MOT_R, V);
-    avanti(MOT_L, V);
+  // Move Forward
+  if (Input == 0) {
+    forward(MOT_R, V);
+    forward(MOT_L, V);
   }
 
-  if (Input == 1 || Input == 2 || Input == 3) // Turn right
-  {
-    indietro(MOT_R, V );
-    avanti(MOT_L, V*0.9);
-  }
-/*
-  if (Input == 2 || Input == 3) // Turn right
-  {
-    indietro(MOT_R, V * 0.8);
-    avanti(MOT_L, V *0.9);
-  }*/
-
-  if (Input == -1 || Input == -2 || Input == -3) // turn left
-  {
-    avanti(MOT_R, V*1.4);
-    indietro(MOT_L, V*0.8);
+  // Turn right
+  if (Input == 1 || Input == 2 || Input == 3) {
+    backward(MOT_R, V );
+    forward(MOT_L, V * 0.9);
   }
 
-/*
-  if (Input == -2 || Input == -3) // Turn left
-  {
-    avanti(MOT_R, 230);
-    indietro(MOT_L, 230);
-  }*/
+  // turn left
+  if (Input == -1 || Input == -2 || Input == -3) {
+    forward(MOT_R, V * 1.4);
+    backward(MOT_L, V * 0.8);
+  }
 
-  if (Input == 10) // stop
-  {
-    fermo(MOT_R);
-    fermo(MOT_L);
+  // stop
+  if (Input == 10) {
+    stop(MOT_R);
+    stop(MOT_L);
     return true;
   }
 
   return false;
 }
 
-
 void following_backward() {
 
-  if (!digitalRead(LS_PIN) && !digitalRead(RS_PIN)) // Move Forward
-  {
-    indietro(MOT_R, V);
-    indietro(MOT_L, V);
+  // Move Forward
+  if (!digitalRead(LS_PIN) && !digitalRead(RS_PIN)) {
+    backward(MOT_R, V);
+    backward(MOT_L, V);
   }
 
-  if (!(digitalRead(LS_PIN)) && digitalRead(RS_PIN)) // Turn right
-  {
-    indietro(MOT_R, int(V * 1.2));
-    avanti(MOT_L, int(V * 1.0));
+  // Turn right
+  if (!(digitalRead(LS_PIN)) && digitalRead(RS_PIN)) {
+    backward(MOT_R, int(V * 1.2));
+    forward(MOT_L, int(V * 1.0));
   }
 
-  if (digitalRead(LS_PIN) && !(digitalRead(RS_PIN))) // turn left
-  {
-    avanti(MOT_R, int(V * 1.1));
-    indietro(MOT_L, int(V * 1.2));
+  // turn left
+  if (digitalRead(LS_PIN) && !(digitalRead(RS_PIN))) {
+    forward(MOT_R, int(V * 1.1));
+    backward(MOT_L, int(V * 1.2));
   }
 
-  if ((digitalRead(LS_PIN)) && (digitalRead(RS_PIN))) // stop
-  {
-    fermo(MOT_R);
-    fermo(MOT_L);
+  // stop
+  if ((digitalRead(LS_PIN)) && (digitalRead(RS_PIN))) {
+    stop(MOT_R);
+    stop(MOT_L);
   }
 }
 
-void follow() {
-
-  Serial3.println("Seguo Linea");
-  while (!following_forward2()) {
-  }
-  Serial3.println("Arrivato");
-  delay(2000);
-  Serial3.println("Riparto");
-  move_forward(400, V);
-  Serial3.println("Mosso");
-}
-
-
+// returns how much the robot should rotate
 double readSens() {
 
   LLS = 0;
@@ -152,43 +120,31 @@ double readSens() {
   RRS = 0;
   double x;
 
-  if (digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && !digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
-    x = -e3;
-  }
-  else if (digitalRead(LLS_PIN) && digitalRead(LS_PIN) && !digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
-    x = -e2;
-  }
-  else if (!digitalRead(LLS_PIN) && digitalRead(LS_PIN) && !digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
-    x = -e1;
-  }
-  else if (!digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
-    x = 0;
-  }
-  else if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
-    x = e1;
-  }
-  else if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
-    x = e2;
-  }
-  else if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && !digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
-    x = e3;
-  }
-  else if (digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) {
-    x = 10;
-  }
-  else if (!digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
-    x = 10;
-  }
-  else if (digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(RRS_PIN)) {
-    x = 10;
-  }
-  else{
-    x=0;}
-  Serial.println(x);
+  // left
+  if (digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && !digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) { x = -3; }
+  else if (digitalRead(LLS_PIN) && digitalRead(LS_PIN) && !digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) { x = -2; }
+  else if (!digitalRead(LLS_PIN) && digitalRead(LS_PIN) && !digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) { x = -1; }
+  
+  // forward
+  else if (!digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) { x = 0; }
+  
+  // right
+  else if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) { x = 1; }
+  else if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(RRS_PIN)) { x = 2; }
+  else if (!digitalRead(LLS_PIN) && !digitalRead(LS_PIN) && !digitalRead(RS_PIN) && digitalRead(RRS_PIN)) { x = 3; }
+
+  // stop
+  else if (digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && !digitalRead(RRS_PIN)) { x = 10; }
+  else if (!digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(RRS_PIN)) { x = 10; }
+  else if (digitalRead(LLS_PIN) && digitalRead(LS_PIN) && digitalRead(RS_PIN) && digitalRead(RRS_PIN)) { x = 10; }
+  
+  // forward
+  else { x = 0; }
 
   return x;
 }
 
+// returns true if any of the sensors detect the line, else returns false
 bool checkLine() {
   if (digitalRead(LLS_PIN) || digitalRead(LS_PIN) || digitalRead(RS_PIN) || digitalRead(RRS_PIN))
     return true;

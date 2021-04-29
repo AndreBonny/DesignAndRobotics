@@ -15,21 +15,19 @@ void play(Track track) {
   dfplayer.playMp3Folder(track);
 }
 
-void stop_play()
-{
+void stop_play() {
   dfplayer.pause();
 }
 
-bool df_not_playing()
-{
-   if(digitalRead(BUSY_PIN) == LOW)
-    {
-      return false;
-    }
-    return true;
+bool df_not_playing() {
+  if (digitalRead(BUSY_PIN) == LOW)
+  {
+    return false;
+  }
+  return true;
 }
 
-
+// support function to know the status
 void print_detail(uint8_t type, int value) {
   switch (type) {
     case TimeOut:

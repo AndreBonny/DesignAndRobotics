@@ -1,9 +1,10 @@
-
-
 void phase1() {
+
   int no_play_count = 0;
   String str = serial_read();
+
   if (str.length() > 0) {
+    // to write on the serial port also the messages from the ESP
     serial_write_debug("MSG = ");
     serial_write_debug(str);
   }
@@ -15,16 +16,16 @@ void phase1() {
   */
   if (str == MOV_1) {
     serial_write_debug("Ricevuto MOV");
-    delay(20); //sicurezza per  Laser??
+
+    delay(20);
     digitalWrite(LASER_PIN_L, HIGH); //Laser ON
     digitalWrite(LASER_PIN_R, HIGH); //Laser ON
     draw_scanning_R();
     draw_scanning_L();
+
     t = millis();
     move_forward(400, V);// forward movement to pass the stop line
-    while (!following_forward2()) {
-      //Follow the line
-    }
+    while (!following_forward2()) {}
     Stop();
     delay(200);
     serial_write(END_MOV_1);
@@ -32,9 +33,8 @@ void phase1() {
     draw_openclose();
   }
 
-
-  /* The robot has reached a "point of interest" namenely a rock.
-     The ESP has recievd END_MOV_1 and responded with ROCK_INT
+  /* The robot has reached a "point of interest", namenely a rock.
+     The ESP has recieved END_MOV_1 and responded with ROCK_INT
      which signals the start of the interaction.
      The interaction now consists in "scanning" the rock with
      the laser ponters and reproducing a track.
@@ -70,11 +70,14 @@ void phase1() {
     // Keep playing the track until the thing finishes or we recieve a STOP_SPEAK
     serial_write_debug("Ricevuto SPEAK");
     draw_openclose();
+
+    // initial track
     Track track = GREETINGS;
     no_play_count = 0;
     play(track);
     draw_happy_start();
     draw_happy_open();
+
     delay(1500);
     t = millis();
     do
